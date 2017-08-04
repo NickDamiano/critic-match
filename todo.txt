@@ -1,3 +1,16 @@
+Order of tasks:
+1. Create the models
+2. Create the Scraper
+3. Scrape movie reviews
+  - Get the movie name and save info for movie
+  - Get critic review and save info for critic, and critic review
+  - Hit next page 
+  (alternatively might be able to do it by critic and get all reviews or by publication)
+4. Create minimal front end with form and ajax that loads the next. maybe it just does one at a time anyway? 
+5. Fill out front end with bootstrap and styling
+6. Create Daily Scraper / Cronjob / rake task and set it to run
+
+
 Models
 
 - create user model with
@@ -44,17 +57,10 @@ Integration
 5 buttons, haven't seen button, thumbnail, title
 
 Possible algorithms for matching
-- Look at the metacritic score for that movie. If user is + 20, find critic scores that are between + 10 and + 30 or something like that
-- save the critic objects to an hash if new and if after new, iterate the hash value to match the results
-- Continue until when? What's a good number of matching reviews? ok so how about this, it's not number of matches that indicates success, it's percentage of matches. 
-- So the hash object is like this critic_id: [match_integer, not match_itenger, percentage_match] so after 20 or 30 reviews, the highest percentage is displayed or top 3. Maybe the way we can tell it's done is if the percentage for top 3 or top 5 stops changing much?
-- Before I get too into the front end stuff, I should scrape, have a basic button system for the movie reviews, and get the results constantly shown on the bottom.
-- Maybe after a certain number of reviews, the user is just shown the percentages for top 5 matching critics and they have the option to continue to refine or stay
-with the results. This is probably the best option. I think after 10 matching reviews or a specific number for top match then it triggers the review percentage
-with a bar filled up and the percentage and possibly a color scheme for each one to differentiate. also maybe a thumbnail of the picture of the critic
-- Maybe instead of 1,2,3,4,5 we have 1,2,3. So 1, didn't like it, 2 liked it, 3 loved it. so metacritic score is divided into 0 - 33, 34 - 67, 68 - 100. The problem 
-with this one is that if someone scores it 33 and the critic is 34 then they don't get matched. so it's a constant battle between making it easier/harder for users to score movies and decreasing/increasing accuracy
-
+- scores possible 1,2,3,4 hated it, meh, liked it, loved it and a box to type in a score 0-100 for people who want the most accurate result. It's one row of movies and the number of movies is based on the width of the screen where one or two movies for a phone. 
+- It might be easier to pull all critics out into a hash with points set to zero so i dont have to logically add them in as it goes and matches
+- the hash has number of reviews and then we calculate average difference not total. 
+- { movie_id: 1, critics: [{critic_id: 1, number_of_reviews: 8, point_difference: 83}], {critic_id: 2 }] }
 
 Initial Scraper
 - Go to movies page http://www.metacritic.com/browse/movies/title/dvd

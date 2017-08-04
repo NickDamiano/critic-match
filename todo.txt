@@ -1,0 +1,75 @@
+Models
+
+- create user model with
+	- email
+	- password
+	(this is a stretch goal)
+
+- create temp user model
+	- id
+	- puts encyrpted thing in browser?
+
+- create a movie model
+	- title
+	- year
+	- genre
+	- Metacritic score
+	- Rotten tomatoes score
+- Create a critic model
+	- first name
+	- last name
+	- publications [ array ]
+	- link to their movie reviews?
+	- active boolean. have they posted a review in the last two months?
+- UserReview
+	- user_id
+	- movie_id
+	- score (1-5) integer
+- CriticReview
+	- critic_id
+	- movie_id 
+	- score (1-5) type integer
+	- Higher than metacritic - boolean
+	- lower than metacritic - boolean
+	- difference from metacritic - integer +30 or -50
+
+Controllers
+- Rating
+	- new
+		creates a new userReview record - hit with ajax
+	- 
+
+Integration
+- Landing page has the banner, the selection for genre, and when the button is clicked, shows the next partial which has at least one film with the appropriate
+5 buttons, haven't seen button, thumbnail, title
+
+Possible algorithms for matching
+- Look at the metacritic score for that movie. If user is + 20, find critic scores that are between + 10 and + 30 or something like that
+- save the critic objects to an hash if new and if after new, iterate the hash value to match the results
+- Continue until when? What's a good number of matching reviews? ok so how about this, it's not number of matches that indicates success, it's percentage of matches. 
+- So the hash object is like this critic_id: [match_integer, not match_itenger, percentage_match] so after 20 or 30 reviews, the highest percentage is displayed or top 3. Maybe the way we can tell it's done is if the percentage for top 3 or top 5 stops changing much?
+- Before I get too into the front end stuff, I should scrape, have a basic button system for the movie reviews, and get the results constantly shown on the bottom.
+- Maybe after a certain number of reviews, the user is just shown the percentages for top 5 matching critics and they have the option to continue to refine or stay
+with the results. This is probably the best option. I think after 10 matching reviews or a specific number for top match then it triggers the review percentage
+with a bar filled up and the percentage and possibly a color scheme for each one to differentiate. also maybe a thumbnail of the picture of the critic
+- Maybe instead of 1,2,3,4,5 we have 1,2,3. So 1, didn't like it, 2 liked it, 3 loved it. so metacritic score is divided into 0 - 33, 34 - 67, 68 - 100. The problem 
+with this one is that if someone scores it 33 and the critic is 34 then they don't get matched. so it's a constant battle between making it easier/harder for users to score movies and decreasing/increasing accuracy
+
+
+Initial Scraper
+- Go to movies page http://www.metacritic.com/browse/movies/title/dvd
+- Open a movie title
+- Click critic reviews
+- loop through all movie reviews capturing score, critic, and publication. When you finish callback to do the next movie
+- When that page is full, if there are more pages in pagination, go to the next and loop through it all
+- Then go back through on http://www.metacritic.com/browse/movies/title/theater for all theater results
+
+Daily Scraper ( Rake Task / Chron-job )
+- Go to http://www.metacritic.com/browse/movies/release-date/theaters/date and check the first 30 films. 
+- For each film, look to see if the critic review count has changed and if it has, find the newest reviews that match and save them
+- For each new film, scrape all reviews
+
+Additional thoughts
+- The movies asked about should continue to be from the last 2-3 years and be automated to update. movies that are rarely reviewed or marked as not seen less than 25% of the time should maybe be removed from being questioned if they are older than a certain date?
+- It should be movies from last 4 years at the oldest probably, and also it should look for only active critics. 
+

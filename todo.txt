@@ -24,7 +24,7 @@ Models
 
 - create a movie model
 	- title
-	- year
+	- release_date
 	- genre
 	- Metacritic score
 	- Rotten tomatoes score

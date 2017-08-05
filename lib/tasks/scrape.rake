@@ -1,10 +1,10 @@
 namespace :scrape do
-  desc "TODO"
+  desc "Scrapes all from zero"
   task all: :environment do
   	puts 'snarffff'
   end
 
-  desc "TODO"
+  desc "Scrapes only the latest reviews not in db"
   task update: :environment do
   	puts "farttt buttz"
   end

@@ -10,20 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170805052822) do
+ActiveRecord::Schema.define(version: 20170805054501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "critic_movies", force: :cascade do |t|
-    t.bigint "critics_id"
-    t.bigint "movies_id"
+    t.bigint "critic_id"
+    t.bigint "movie_id"
     t.integer "score"
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["critics_id"], name: "index_critic_movies_on_critics_id"
-    t.index ["movies_id"], name: "index_critic_movies_on_movies_id"
+    t.index ["critic_id"], name: "index_critic_movies_on_critic_id"
+    t.index ["movie_id"], name: "index_critic_movies_on_movie_id"
   end
 
   create_table "critics", force: :cascade do |t|

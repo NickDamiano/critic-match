@@ -1,4 +1,4 @@
 class Movie < ApplicationRecord
-	has_many :critics_movies
-	has_many :critics, through: :critics_movies
+	has_many :critic_movies
+	has_many :critics, through: :critic_movies
 end

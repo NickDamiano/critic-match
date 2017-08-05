@@ -15,6 +15,22 @@ class ScrapeTest
 		page = @agent.get(uri)
 	end
 
+	def scrape_for_index(letter)
+		url = "http://www.metacritic.com/browse/movies/title/dvd/#{letter}"
+		letter_pages = [url]
+		page = @agent.get(url)
+		page_count = page.search(".page_num").count
+		# start the count at page_count minus 1 because of pushing url above
+		page_count = page_count -1 
+		index = 1
+		page_count.times do 
+			letter_pages.push(url + "?page=#{index}")
+			index += 1
+		end
+		binding.pry
+		p 'fart'
+	end
+
 	def scrape_for_movies(uri)
 		movies_uri = []
 		page = @agent.get(uri)
@@ -48,16 +64,10 @@ class ScrapeTest
 				review_collection.push({score: score, author_name: author_name, author_uri: author_uri, 
 					publication_name: publication_name, publication_uri: publication_uri })
 			end
-
-
-			p 'meow'
 		end
-		binding.pry 
-
-		p 'hi farty'
 	end
 end
 
 scraper = ScrapeTest.new
 # result = scraper.scrape_for_movies('http://www.metacritic.com/browse/movies/title/dvd')
-result = scraper.scrape_reviews("http://www.metacritic.com/movie/500-days-of-summer/critic-reviews")
+result = scraper.scrape_for_index("p")

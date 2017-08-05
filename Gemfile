@@ -28,6 +28,9 @@ gem 'jbuilder', '~> 2.5'
 
 # Make rails console pretty
 gem 'hirb', '~>0.7.3'
+
+# Web scraper Mechanize
+gem 'mechanize', '~>2.7'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

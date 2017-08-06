@@ -7,18 +7,30 @@ namespace :scrape do
   	scraper = MetacriticScraper.new 
   	# A-Z Scraper - Load the first # page then loop through a-z
   	index_pages.push(scraper.scrape_for_index('#'))
-  	alphabet = ("a".."z").to_a
+  	alphabet = ("a".."b").to_a
   	alphabet.each do |letter|
   		result = scraper.scrape_for_index(letter)
   		p "LETTER #{letter} RESULT BELOW!!!!!!!!"
   		index_pages.push(result)
   		sleep(5)
   	end
+  	index_pages.flatten!
   	# Movie Links scraper
+  	movies_pages = []
   	index_pages.each do | index_page |
-  		
+  		result = scraper.scrape_for_movies(index_page)
+  		movies_pages.push("http://www.metacritic.com/#{result}")
+  		p "CURRENT INDEX PAGE IS #{index_page}"
+  		sleep(rand(2..5))
   	end
-  	p index_pages
+
+  	# Reviews Links Scraper
+  	reviews = []
+  	movies_pages.each do | movie_page |
+  		result = scraper.scrape_reviews(movie_page)
+
+  	end
+  	p movies_pages
   end
 
   desc "Scrapes only the latest reviews not in db"

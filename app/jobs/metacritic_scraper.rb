@@ -78,14 +78,10 @@ class MetacriticScraper
 				publication_uri = reviews[0].search(".source a")[0].attributes["href"].value
 				review_collection.push({score: score, author_name: author_name, author_uri: author_uri, 
 					publication_name: publication_name, publication_uri: publication_uri, movie_title: movie_title,
-					image_thumbnail: image_thumbnail, release_date: release_date, movie_uri = movie_uri_base, 
+					image_thumbnail: image_thumbnail, release_date: release_date, movie_uri: movie_uri_base, 
 					metacritic_score: metacritic_score })
 			end
 		end
 		review_collection
 	end
 end
-
-# scraper = MetacriticScraper.new
-# results = scraper.scrape_reviews("http://www.metacritic.com/movie/20-feet-from-stardom/critic-reviews")
-# p results.count 

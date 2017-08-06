@@ -1,5 +1,7 @@
 Order of tasks:
-1. X Create the models 
+- modify movie to include img src
+- modify scraper to get the image location
+
 2. Create the Scraper
 3. Scrape movie reviews
   - Get the movie name and save info for movie
@@ -10,6 +12,7 @@ Order of tasks:
 5. Fill out front end with bootstrap and styling
 6. Create Daily Scraper / Cronjob / rake task and set it to run
 
+For serving movies - it should start with movies in the last 3 years with reviews over 40, randomized, once that's exhausted it should go to above 30, above 20, etc and how does it keep track of the ones they've already reviewed? For first timers it has to load up a thing for movies, maybe 200 list
 
 Models
 

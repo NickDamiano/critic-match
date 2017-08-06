@@ -3,35 +3,56 @@
 namespace :scrape do
   desc "Scrapes all from zero"
   task :all => :environment do
+
   	index_pages = []
   	scraper = MetacriticScraper.new 
   	# A-Z Scraper - Load the first # page then loop through a-z
   	index_pages.push(scraper.scrape_for_index('#'))
   	alphabet = ("a".."b").to_a
-  	alphabet.each do |letter|
-  		result = scraper.scrape_for_index(letter)
-  		p "LETTER #{letter} RESULT BELOW!!!!!!!!"
-  		index_pages.push(result)
-  		sleep(5)
-  	end
+  	# alphabet.each do |letter|
+  	# 	result = scraper.scrape_for_index(letter)
+  	# 	p "LETTER #{letter} RESULT BELOW!!!!!!!!"
+  	# 	index_pages.push(result)
+  	# 	sleep(5)
+  	# end
   	index_pages.flatten!
   	# Movie Links scraper
   	movies_pages = []
   	index_pages.each do | index_page |
   		result = scraper.scrape_for_movies(index_page)
-  		movies_pages.push("http://www.metacritic.com/#{result}")
+  		movies_pages += result
   		p "CURRENT INDEX PAGE IS #{index_page}"
-  		sleep(rand(2..5))
+  		sleep(rand(2..3))
   	end
 
   	# Reviews Links Scraper
   	reviews = []
   	movies_pages.each do | movie_page |
-  		result = scraper.scrape_reviews(movie_page)
-
+      p "ABOUT TO SCRAPE #{movie_page}"
+  		result = scraper.scrape_reviews("http://www.metacritic.com#{movie_page}")
+      # the above takes back all reviews for one movie. so we should be able to 
+        # grab the first review, get the movie information, and save it to the database
+        first = result.first 
+        Saver.save_movie(first)
+        # iterate through each review, save critic if not already in the database and if in database, get id for critic
+        # save the actual review into the database with movie_id and critic_id
+  		reviews.push(result)
   	end
-  	p movies_pages
+    # call review saver. 
+    # save movie if not in database
+    # save critic if not in database
+    # save review if not in database
+    # should save the movie into the database and return AR object with id - call save movie
+    # then when the critic info is collected below, it should save the critic if they don't exist call save critic
+    # then it should create the review (movie_critics) with both ids associated and call save review
   end
+
+
+
+
+
+
+
 
   desc "Scrapes only the latest reviews not in db"
   task update: :environment do

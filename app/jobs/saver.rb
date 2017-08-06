@@ -13,7 +13,7 @@ class Saver
 		begin
 			movie = Movie.create(title: movie_title, release_date: release_date,
 				metacritic_score: metacritic_score, movie_uri: movie_uri,
-				image_thumbnail: image_thumbnail )
+				image_uri: image_thumbnail )
 		rescue ActiveRecord::RecordNotUnique
 			p "duplicate record"
 		end

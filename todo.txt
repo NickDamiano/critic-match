@@ -1,5 +1,5 @@
 Order of tasks:
-1. Create the models
+1. X Create the models 
 2. Create the Scraper
 3. Scrape movie reviews
   - Get the movie name and save info for movie

@@ -1,6 +1,11 @@
 Order of tasks:
-- modify movie to include img src
-- modify scraper to get the image location
+- add unique constraints for author first, last, and publication (has to be all three) for critic table
+-get scraper completely good
+- build recent movies in theater scraper
+- build rss scraper
+-write tests for scraper
+
+
 
 2. Create the Scraper
 3. Scrape movie reviews

@@ -8,6 +8,7 @@ class MetacriticScraper
 	def initialize
 		@agent = Mechanize.new
 		@agent.user_agent_alias = 'Mac Firefox'
+		
 	end
 
 	def scrape(uri)

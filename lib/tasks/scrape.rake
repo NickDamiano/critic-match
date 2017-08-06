@@ -4,31 +4,32 @@ namespace :scrape do
   desc "Scrapes all from zero"
   task :all => :environment do
 
-  	index_pages = []
+  	# index_pages = []
   	scraper = MetacriticScraper.new 
-  	# A-Z Scraper - Load the first # page then loop through a-z
-  	index_pages.push(scraper.scrape_for_index('#'))
-  	alphabet = ("a".."b").to_a
-  	alphabet.each do |letter|
-  		result = scraper.scrape_for_index(letter)
-  		p "LETTER #{letter} RESULT BELOW!!!!!!!!"
-  		index_pages.push(result)
-  		sleep(5)
-  	end
-  	index_pages.flatten!
+  	# # A-Z Scraper - Load the first # page then loop through a-z
+  	# index_pages.push(scraper.scrape_for_index('#'))
+  	# alphabet = ("a".."b").to_a
+  	# alphabet.each do |letter|
+  	# 	result = scraper.scrape_for_index(letter)
+  	# 	p "LETTER #{letter} RESULT BELOW!!!!!!!!"
+  	# 	index_pages.push(result)
+  	# 	sleep(5)
+  	# end
+  	# index_pages.flatten!
 
-  	# Movie Links scraper
-  	movies_pages = []
-  	index_pages.each do | index_page |
-  		result = scraper.scrape_for_movies(index_page)
-  		movies_pages += result
-  		p "CURRENT INDEX PAGE IS #{index_page}"
-  		sleep(rand(2..3))
-  	end
+  	# # Movie Links scraper
+  	# movies_pages = []
+  	# index_pages.each do | index_page |
+  	# 	result = scraper.scrape_for_movies(index_page)
+  	# 	movies_pages += result
+  	# 	p "CURRENT INDEX PAGE IS #{index_page}"
+  	# 	sleep(rand(2..3))
+  	# end
 
   	# Reviews Links Scraper
   	reviews = []
     saver = Saver.new
+    movies_pages = saver.get_movie_uris
   	movies_pages.each do | movie_page |
       p "ABOUT TO SCRAPE #{movie_page}"
   		result = scraper.scrape_reviews("http://www.metacritic.com#{movie_page}")
@@ -37,8 +38,8 @@ namespace :scrape do
       first = result.first 
       movie = saver.save_movie(first)
       result.each do | review | 
-        critic = save_critic(review)
-        review = save_review(review, movie, critic)
+        critic = saver.save_critic(review)
+        review = saver.save_review(review, movie, critic)
       end
         # iterate through each review, save critic if not already in the database and if in database, get id for critic
         # save the actual review into the database with movie_id and critic_id

@@ -25,11 +25,18 @@ class Saver
 
 	def save_critic(critic_info)
 		p "about to save critic #{critic_info[:author_name]}"
-		first_name = critic_info[:author_name].split(" ")[0]
-		last_name  = critic_info[:author_name].split(" ")[-1]
-		critic_uri = critic_info[:author_uri]
-		publication = critic_info[:publication_name]
-		publication_uri = critic_info[:publication_uri]
+		first_name = critic_info[:author_name].split(" ")[0].downcase
+		last_name  = critic_info[:author_name].split(" ")[-1].downcase
+		critic_uri = critic_info[:author_uri].downcase
+		publication = critic_info[:publication_name].downcase
+		publication_uri = critic_info[:publication_uri].downcase
+		# critic = Critic. this line gets critic record if it exists and skips below block
+		critic = Critic.find_by(first_name: first_name, last_name: last_name, publication: 
+			publication)
+		if critic 
+			return critic 
+		end
+
 		begin
 			critic = Critic.create(first_name: first_name, last_name: last_name,
 				critic_uri: critic_uri, publication: publication,
@@ -42,6 +49,7 @@ class Saver
 
 	# takes hash below and objects for movie and critic to save with review
 	def save_review(review_info, movie_object, critic_object)
+		# also have code to prevent duplicate record
 		p "about to save the review for #{review_info[:author_name]} review of #{review_info[:movie_title]}  }"
 		review = critic_object.critic_movies.create(movie_id: movie_object.id, 
 			score: review_info[:score])

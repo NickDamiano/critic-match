@@ -1,6 +1,3 @@
-require 'mechanize'
-require 'pry-byebug'
-
 class MetacriticScraper
 
 	attr_accessor :agent
@@ -8,7 +5,7 @@ class MetacriticScraper
 	def initialize
 		@agent = Mechanize.new
 		@agent.user_agent_alias = 'Mac Firefox'
-		
+
 	end
 
 	def scrape(uri)
@@ -53,6 +50,11 @@ class MetacriticScraper
 
 	def scrape_reviews(movie_uri_base)
 		review_collection = []
+		# some movies are linked then resolved to a different name but /critic-reviews does not resolve
+		# twelve-years-a-slave resolves to 12-years-a-slave but gives 404 if adding critic-reviews
+		if movie_uri_base == "http://www.metacritic.com/movie/twelve-years-a-slave"
+			movie_uri = "http://www.metacritic.com/movie/12-years-a-slave"
+		end
 		movie_uri = movie_uri_base + "/critic-reviews"
 		page = @agent.get(movie_uri)
 		reviews = page.search("#mantle_skin .pad_top1")

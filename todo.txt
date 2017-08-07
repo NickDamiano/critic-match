@@ -1,5 +1,6 @@
 Order of tasks:
 - add unique constraints for author first, last, and publication (has to be all three) for critic table
+-downcase for saving movies and things into database
 -get scraper completely good
 - build recent movies in theater scraper
 - build rss scraper

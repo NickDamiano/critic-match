@@ -1,3 +1,5 @@
+require 'Mechanize'
+
 class MetacriticScraper
 
 	attr_accessor :agent
@@ -20,7 +22,7 @@ class MetacriticScraper
 		end
 		letter_pages = [url]
 		page = @agent.get(url)
-		page_count = page.search(".page_num").count
+		page_count = page.search(".last_page .page_num").text.to_i 
 		# start the count at page_count minus 1 because of pushing url above
 		page_count = page_count -1 
 		index = 1
@@ -88,3 +90,4 @@ class MetacriticScraper
 		review_collection
 	end
 end
+

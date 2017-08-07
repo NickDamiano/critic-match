@@ -1,96 +1,38 @@
-# require '/scraper.rb'
-
 namespace :scrape do
-  desc "Scrapes all from zero"
-  task :all => :environment do
 
-  	index_pages = []
-  	scraper = MetacriticScraper.new 
-  	# # A-Z Scraper - Load the first # page then loop through a-z
-  	index_pages.push(scraper.scrape_for_index('#'))
-  	# alphabet = ("a".."b").to_a
-  	# alphabet.each do |letter|
-  	# 	result = scraper.scrape_for_index(letter)
-  	# 	p "LETTER #{letter} RESULT BELOW!!!!!!!!"
-  	# 	index_pages.push(result)
-  	# 	sleep(5)
-  	# end
-  	index_pages.flatten!
 
-  	# Movie Links scraper
-  	movies_pages = []
-  	index_pages.each do | index_page |
-  		result = scraper.scrape_for_movies(index_page)
-  		movies_pages += result
-  		p "CURRENT INDEX PAGE IS #{index_page}"
-  		sleep(rand(2..3))
-  	end
-
-  	# Reviews Links Scraper
-  	reviews = []
-    saver = Saver.new
-    # movies_pages = saver.get_movie_uris
-  	movies_pages.each do | movie_page |
-      p "ABOUT TO SCRAPE #{movie_page}"
-  		result = scraper.scrape_reviews("http://www.metacritic.com#{movie_page}")
-      # the above takes back all reviews for one movie. so we should be able to 
-        # grab the first review, get the movie information, and save it to the database
-      first = result.first 
-      if first.nil?
-        binding.pry 
-        p 'uh oh spaghetti-os'
-      end
-      movie = saver.save_movie(first)
-      result.each do | review | 
-        critic = saver.save_critic(review)
-        review = saver.save_review(review, movie, critic)
-      end
-        # iterate through each review, save critic if not already in the database and if in database, get id for critic
-        # save the actual review into the database with movie_id and critic_id
-  		reviews.push(result)
-  	end
-    # call review saver. 
-    # save movie if not in database
-    # save critic if not in database
-    # save review if not in database
-    # should save the movie into the database and return AR object with id - call save movie
-    # then when the critic info is collected below, it should save the critic if they don't exist call save critic
-    # then it should create the review (movie_critics) with both ids associated and call save review
+  desc "Scrapes all index pages into a yaml file index_pages.yml"
+  task :index => :environment do 
+    rake_support = RakeSupport.new
+    rake_support.scrape_all_indices
   end
 
+  desc "Scrapes all movie links"
+  task :movie_links => :environment do 
+    rake_support = RakeSupport.new 
+    rake_support.scrape_all_movies
+  end
 
+  desc "Scrapes all reviews"
+  task :reviews => :environment do 
+    rake_support = RakeSupport.new
+    rake_support.scrape_all_reviews
+  end
 
-
-
-
-
+  desc "Scrapes all from zero"
+  task :all => :environment do
+  
+    # instantiate RakeSupport
+    # call scrape all indices
+    # call scrape all movies
+    # call scrape all reviews
+  end
 
   desc "Scrapes only the latest reviews not in db"
   task update: :environment do
   	puts "farttt buttz"
   end
-
-  desc "rails magic needed"
-  task test: :environment do 
-    movie_info = {:score=>"100",
-    :author_name=>"Joe Walsh",
-    :author_uri=>"/critic/joe-walsh?filter=movies",
-    :publication_name=>"CineVue",
-    :publication_uri=>"/publication/cinevue?filter=movies",
-    :movie_title=>"12 Years a Slave",
-    :image_thumbnail=>
-     "http://static.metacritic.com/images/products/movies/2/3910c2e8cfefeb21fcd6079451336f86-98.jpg",
-    :release_date=>"October 18, 2013",
-    :movie_uri=>"http://www.metacritic.com/movie/12-years-a-slave",
-    :metacritic_score=>"96"}
-
-    saver = Saver.new
-    saver.save_movie(movie_info)
-    end
 end
-
-require 'mechanize'
-require 'pry-byebug'
 
 
 # TODO for Sunday -

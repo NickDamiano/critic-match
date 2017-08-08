@@ -39,31 +39,50 @@ class RakeSupport
 	def scrape_all_reviews
   		reviews = []
   		scraper = MetacriticScraper.new
-    	saver = Saver.new
-    	movies_pages = saver.get_movie_uris
+    	movies_pages = YAML.load_file('movies_list.yml')
   		movies_pages.each do | movie_page |
       		p "ABOUT TO SCRAPE #{movie_page}"
+      		sleep(10)
   			result = scraper.scrape_reviews("http://www.metacritic.com#{movie_page}")
-      		# the above takes back all reviews for one movie. so we should be able to 
-        	# grab the first review, get the movie information, and save it to the database
-      		first = result.first 
-      		if first.nil?
-        		binding.pry 
-        		p 'uh oh spaghetti-os'
+      		# Grab first review to pull movie info out and save it
+      		unless result.nil?
+      			save_data(result, movie_page)
+      			# pop off first line (this movie) and save back to yaml
+      			movies_pages.shift
+      			File.open("movies_list.yml", "w+") do |f|
+      				f.write(movies_pages.to_yaml)
+      			end
       		end
-      		movie = saver.save_movie(first)
-      		result.each do | review | 
-        		critic = saver.save_critic(review)
-        		review = saver.save_review(review, movie, critic)
-      		end
-	        # iterate through each review, save critic if not already in the database and if in database, get id for critic
-	        # save the actual review into the database with movie_id and critic_id
-	  		reviews.push(result)
   		end
 	end
 
-	def save_movie
+	def save_data(result, movie_page)
+		first = result.first 
+  		if first.nil?
+			File.open("failed_movie_scrapes.yml", "a") do |f|
+      			f.write(movie_page.to_yaml)
+      			return
+      		end
+  		end
+
+  		saver = Saver.new
+  		movie = saver.save_movie(first)
+  		result.each do | review | 
+    		critic = saver.save_critic(review)
+    		review = saver.save_review(review, movie, critic)
+  		end
+
 	end
 
-
+	def scrape_recent
+		recent_movies = []
+		scraper = MetacriticScraper.new
+		# import file with recent reviews hash that shows movie-uri and number of reviews
+		recent_movie_links = scraper.scrape_recent_movies
+		recent_movie_links.each_with_index do | movie_link, i |
+			movie_uri = movie_link.attributes["href"].value
+			reviews = scraper.scrape_reviews("http://www.metacritic.com#{movie_uri}")
+			save_data(reviews, movie_uri)
+		end
+	end
 end

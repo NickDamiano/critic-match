@@ -1,17 +1,26 @@
 require 'Mechanize'
+require 'pry-byebug'
 
 class MetacriticScraper
 
 	attr_accessor :agent
 
+	# Agent necessary to prevent forbidden errors from metacritic
 	def initialize
 		@agent = Mechanize.new
 		@agent.user_agent_alias = 'Mac Firefox'
-
 	end
 
-	def scrape(uri)
-		page = @agent.get(uri)
+	def scrape_recent_movies
+		uri = "http://www.metacritic.com/browse/movies/release-date/theaters/date"
+		page = ''
+		begin
+			page = @agent.get(uri)
+		rescue Net::HTTPTooManyRequests
+			sleep(61)
+			page = @agent.get(uri)
+		end
+		movie_links = page.search("#mantle_skin .title_wrapper a")
 	end
 
 	def scrape_for_index(letter)
@@ -21,7 +30,12 @@ class MetacriticScraper
 			url = "http://www.metacritic.com/browse/movies/title/dvd/#{letter}"
 		end
 		letter_pages = [url]
-		page = @agent.get(url)
+		begin
+			page = @agent.get(uri)
+		rescue Net::HTTPTooManyRequests
+			sleep(61)
+			page = @agent.get(uri)
+		end
 		page_count = page.search(".last_page .page_num").text.to_i 
 		# start the count at page_count minus 1 because of pushing url above
 		page_count = page_count -1 
@@ -35,7 +49,12 @@ class MetacriticScraper
 
 	def scrape_for_movies(uri)
 		movies_uri = []
-		page = @agent.get(uri)
+		begin
+			page = @agent.get(uri)
+		rescue Net::HTTPTooManyRequests
+			sleep(61)
+			page = @agent.get(uri)
+		end
 		# gets array of movies
 		movies = page.search("#mantle_skin .title a")
 		movies.each_with_index do |movie, i| 
@@ -46,21 +65,40 @@ class MetacriticScraper
 	end
 
 	def scrape_thumbnail(movie_uri_base)
-		page = @agent.get(movie_uri_base)
+		begin
+			page = @agent.get(movie_uri_base)
+		rescue Net::HTTPTooManyRequests
+			sleep(120)
+			page = @agent.get(movie_uri_base)
+		end
 		image_uri = page.search(".fl.inset_right2 img")[0].attributes["src"].value
 	end
 
+	def log_failed(movie_uri)
+		File.open("failed_movie_scrapes.yml", "a") do |f|
+	      f.write(movie_uri.to_yaml)
+	    end
+	end
+
 	def scrape_reviews(movie_uri_base)
+		p "scraping #{movie_uri_base}"
 		review_collection = []
-		# some movies are linked then resolved to a different name but /critic-reviews does not resolve
-		# twelve-years-a-slave resolves to 12-years-a-slave but gives 404 if adding critic-reviews
-		if movie_uri_base == "http://www.metacritic.com/movie/twelve-years-a-slave"
-			movie_uri = "http://www.metacritic.com/movie/12-years-a-slave"
+		movie_uri = "#{movie_uri_base}/critic-reviews"
+		
+		begin
+			page = @agent.get(movie_uri)
+		rescue
+			log_failed(movie_uri)
+			sleep(60)
 		end
-		movie_uri = movie_uri_base + "/critic-reviews"
-		page = @agent.get(movie_uri)
 		reviews = page.search("#mantle_skin .pad_top1")
-		image_thumbnail = scrape_thumbnail(movie_uri_base)
+		if reviews.nil?
+			log_failed(movie_uri_base)
+			return nil
+		end
+		thumbnail_link = movie_uri[0..-16]
+		image_thumbnail = scrape_thumbnail(thumbnail_link)
+
 
 		# iterate through reviews
 		reviews.each_with_index do |review, i|
@@ -68,6 +106,7 @@ class MetacriticScraper
 			# Not all author's have their own page so we check
 			author_uri = reviews[i].search(".author a")
 			author_uri = author_uri.empty? ? "none" : author_uri[0].attributes["href"].value
+			 # call oh-boy movie and see if review is empty
 
 			#this unless block is necessary because of occasional ads in the body.
 			# gets info about review and pushes it into review_collection hash

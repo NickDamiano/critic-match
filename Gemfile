@@ -47,6 +47,10 @@ group :development, :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
+  # VCR test for mocking http requests
+  gem 'vcr', '~>3.0.1'
+  # webmock needed for vcr
+  gem 'webmock'
 end
 
 group :development do

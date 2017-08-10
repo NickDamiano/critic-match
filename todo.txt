@@ -1,11 +1,19 @@
 Order of tasks:
-- add unique constraints for author first, last, and publication (has to be all three) for critic table
--downcase for saving movies and things into database
+
+- OK So scraper only saves every other movie which is why the movies list is out of sync with the scraper. OH the reason is that it's skipping a movie. it reads every other movie from the yaml file. is it somehow popping off the wrong movie and then reading the next and popping off the next???
+- I need to write tests. absolutely priority. 
+- figure out why in theater scraper fails at "rought night" saying 
+NoMethodError: undefined method `search' for nil:NilClass
+/Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_reviews'
+- add exception for Mechanize::ResponseReadError: Content-Length (19428) does not match response body length (17099)
+
+-figure out a way to start the scrape all and restart it when it fails - no clue
 -get scraper completely good
+- every api call should handle too many requests
+
 - build recent movies in theater scraper
 - build rss scraper
 -write tests for scraper
-
 
 
 2. Create the Scraper
@@ -88,3 +96,31 @@ Additional thoughts
 - The movies asked about should continue to be from the last 2-3 years and be automated to update. movies that are rarely reviewed or marked as not seen less than 25% of the time should maybe be removed from being questioned if they are older than a certain date?
 - It should be movies from last 4 years at the oldest probably, and also it should look for only active critics. 
 
+
+
+# TODO for Sunday -
+#scrapers
+#  create rake tasks to scrape all, scrape letter range
+#  create method/class that can scrape http://www.metacritic.com/browse/movies/release-date/theaters/date
+#  create daily cron job to look for new movies in rss feed (XML) maybe using just a api request thing
+#  write tests for scrapers and use vcr gem
+#modify models for columns for review_uri and critic_uri etc also add image thumbnails
+#scrape the reviews (make sure no additions needed for models
+#  setup api for ajax return for queries on movie
+#start frontend
+# create title thing, initially log results in console
+# build css for movie element and have the page display approipriate number based on width
+# after you click on each element for the review have it reload with the appropriate number (checking
+	#media query again each time in case of resize or phone turn)
+# set up local storage logging for user reviews
+# when user clicks, ajax fires, gets all reviews as api, then javascript loops through each review, 
+# calculates point difference for that critic, updates local storage by critic id with point differential
+# and increments number of matched review and adds a percentage match field
+# log the top 3 with name, percentage, and count of reviews (skews towards an inactive critic who you match with a lot)
+# maybe we need a minimum match
+# do CSS styling for matching bars
+#stretch goals!
+# create critic page where it shows which movies, your score, their score, differential (but i need to store that)
+# create authentication
+# create ability to type in number 1-100
+# TESTS!

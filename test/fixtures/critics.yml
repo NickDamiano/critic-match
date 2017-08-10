@@ -3,11 +3,11 @@
 one:
   first_name: MyString
   last_name: MyString
-  publications: 
+  publication: 
   active: false
 
 two:
   first_name: MyString
   last_name: MyString
-  publications: 
+  publication: 
   active: false

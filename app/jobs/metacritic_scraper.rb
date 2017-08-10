@@ -16,7 +16,7 @@ class MetacriticScraper
 		page = ''
 		begin
 			page = @agent.get(uri)
-		rescue Net::HTTPTooManyRequests
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
 			sleep(61)
 			page = @agent.get(uri)
 		end
@@ -30,14 +30,12 @@ class MetacriticScraper
 			url = "http://www.metacritic.com/browse/movies/title/dvd/#{letter}"
 		end
 		letter_pages = [url]
-		begin
-			page = @agent.get(uri)
-		rescue Net::HTTPTooManyRequests
-			sleep(61)
-			page = @agent.get(uri)
-		end
+		page = @agent.get(url)
+
+		# this gets the number of pages of movie reviews for this letter
 		page_count = page.search(".last_page .page_num").text.to_i 
-		# start the count at page_count minus 1 because of pushing url above
+
+		# Needed because page 1 has no number on it, page 2 uri shows page 1
 		page_count = page_count -1 
 		index = 1
 		page_count.times do 
@@ -51,7 +49,7 @@ class MetacriticScraper
 		movies_uri = []
 		begin
 			page = @agent.get(uri)
-		rescue Net::HTTPTooManyRequests
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
 			sleep(61)
 			page = @agent.get(uri)
 		end
@@ -66,8 +64,9 @@ class MetacriticScraper
 
 	def scrape_thumbnail(movie_uri_base)
 		begin
+			sleep(30)
 			page = @agent.get(movie_uri_base)
-		rescue Net::HTTPTooManyRequests
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
 			sleep(120)
 			page = @agent.get(movie_uri_base)
 		end
@@ -90,6 +89,7 @@ class MetacriticScraper
 		rescue
 			log_failed(movie_uri)
 			sleep(60)
+			return nil
 		end
 		reviews = page.search("#mantle_skin .pad_top1")
 		if reviews.nil?

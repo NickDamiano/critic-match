@@ -1,4 +1,5 @@
 class RakeSupport 
+	
 	def scrape_all_indices
 		index_pages = []
 	    scraper = MetacriticScraper.new 
@@ -10,7 +11,7 @@ class RakeSupport
 	      result = scraper.scrape_for_index(letter)
 	      p "LETTER #{letter} RESULT BELOW!!!!!!!!"
 	      index_pages.push(result)
-	      sleep(10)
+	      # sleep(10)
 	    end
 
 	    index_pages.flatten!
@@ -42,9 +43,10 @@ class RakeSupport
     	movies_pages = YAML.load_file('movies_list.yml')
   		movies_pages.each do | movie_page |
       		p "ABOUT TO SCRAPE #{movie_page}"
-      		sleep(10)
+      		sleep(20)
   			result = scraper.scrape_reviews("http://www.metacritic.com#{movie_page}")
       		# Grab first review to pull movie info out and save it
+      		binding.pry
       		unless result.nil?
       			save_data(result, movie_page)
       			# pop off first line (this movie) and save back to yaml
@@ -65,7 +67,7 @@ class RakeSupport
       		end
   		end
 
-  		saver = Saver.new
+  		saver = DatabaseSaver.new
   		movie = saver.save_movie(first)
   		result.each do | review | 
     		critic = saver.save_critic(review)
@@ -81,6 +83,7 @@ class RakeSupport
 		recent_movie_links = scraper.scrape_recent_movies
 		recent_movie_links.each_with_index do | movie_link, i |
 			movie_uri = movie_link.attributes["href"].value
+			binding.pry
 			reviews = scraper.scrape_reviews("http://www.metacritic.com#{movie_uri}")
 			save_data(reviews, movie_uri)
 		end

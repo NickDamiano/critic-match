@@ -1,5 +1,5 @@
 require 'pry-byebug'
-class DatabaseSaver
+class Saver
 
 	# takes a hash
 	def save_movie(movie_info)

@@ -1,10 +1,17 @@
 Order of tasks:
 
 - OK So scraper only saves every other movie which is why the movies list is out of sync with the scraper. OH the reason is that it's skipping a movie. it reads every other movie from the yaml file. is it somehow popping off the wrong movie and then reading the next and popping off the next???
+- it's looping through the array, but not reading in the new array, so 
+movie1
+movie2
+movie3
+
+it does movie1, pops off the first item, but then the array goes to the second one which is actually now the third one because first one is erased.
+so solution is either in the loop (which is count of entire array) open, process, shift close in the entire thing
 - I need to write tests. absolutely priority. 
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
-/Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_reviews'
+/Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
 - add exception for Mechanize::ResponseReadError: Content-Length (19428) does not match response body length (17099)
 
 -figure out a way to start the scrape all and restart it when it fails - no clue

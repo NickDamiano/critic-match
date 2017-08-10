@@ -63,12 +63,12 @@ class MetacriticScraper
 	end
 
 	def scrape_thumbnail(movie_uri_base)
+		# thumbnail_link = movie_uri_base[0..-16]
 		begin
-			sleep(30)
 			page = @agent.get(movie_uri_base)
 		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
 			sleep(120)
-			page = @agent.get(movie_uri_base)
+			scrape_thumbnail(movie_uri_base)
 		end
 		image_uri = page.search(".fl.inset_right2 img")[0].attributes["src"].value
 	end
@@ -76,10 +76,11 @@ class MetacriticScraper
 	def log_failed(movie_uri)
 		File.open("failed_movie_scrapes.yml", "a") do |f|
 	      f.write(movie_uri.to_yaml)
+	      f.close
 	    end
 	end
 
-	def scrape_reviews(movie_uri_base)
+	def scrape_one_movies_reviews(movie_uri_base)
 		p "scraping #{movie_uri_base}"
 		review_collection = []
 		movie_uri = "#{movie_uri_base}/critic-reviews"
@@ -89,30 +90,29 @@ class MetacriticScraper
 		rescue
 			log_failed(movie_uri)
 			sleep(60)
-			return nil
+			scrape_one_movies_reviews(movie_uri_base)
 		end
 		reviews = page.search("#mantle_skin .pad_top1")
-		if reviews.nil?
+		if reviews.nil? || reviews.empty?
 			log_failed(movie_uri_base)
 			return nil
 		end
-		thumbnail_link = movie_uri[0..-16]
-		image_thumbnail = scrape_thumbnail(thumbnail_link)
-
+		image_thumbnail = scrape_thumbnail(movie_uri_base)
 
 		# iterate through reviews
 		reviews.each_with_index do |review, i|
 			score = reviews[i].search(".metascore_w")
+
 			# Not all author's have their own page so we check
 			author_uri = reviews[i].search(".author a")
 			author_uri = author_uri.empty? ? "none" : author_uri[0].attributes["href"].value
-			 # call oh-boy movie and see if review is empty
 
 			#this unless block is necessary because of occasional ads in the body.
 			# gets info about review and pushes it into review_collection hash
 			unless score.empty?
 				score = score.children[0].text
 				p "about to scrape the review for index #{i}"
+
 				# some authors don't have names
 				metacritic_score = page.search(".larger").text
 				movie_title = page.css("h1").text

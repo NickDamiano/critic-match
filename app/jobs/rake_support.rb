@@ -1,5 +1,5 @@
 class RakeSupport 
-	
+
 	def scrape_all_indices
 		index_pages = []
 	    scraper = MetacriticScraper.new 
@@ -18,6 +18,7 @@ class RakeSupport
 
 	    File.open("index_pages.yml", "w+") do |f|
 	      f.write(index_pages.to_yaml)
+	      f.close
 	    end
 	end
 
@@ -34,6 +35,7 @@ class RakeSupport
 
   		File.open("movies_list.yml", "w+") do |f|
 	      f.write(movies_pages.to_yaml)
+	      f.close
 	    end
 	end
 
@@ -41,18 +43,25 @@ class RakeSupport
   		reviews = []
   		scraper = MetacriticScraper.new
     	movies_pages = YAML.load_file('movies_list.yml')
-  		movies_pages.each do | movie_page |
+    	# we have to update the yaml as we go because there are thousands upon thousands
+    		# of movies and if the scraper fails, we don't want to start from the beginning
+  		movies_pages.count.times do
+  			movie_list = YAML.load_file('movies_list.yml')
+  			movie_page = movie_list.first
       		p "ABOUT TO SCRAPE #{movie_page}"
-      		sleep(20)
-  			result = scraper.scrape_reviews("http://www.metacritic.com#{movie_page}")
+      		sleep(40)
+  			result = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_page}")
+  			p "removing the first movie from the list"
       		# Grab first review to pull movie info out and save it
-      		binding.pry
       		unless result.nil?
+      			p "in scrape_all_reviews about to save data"
       			save_data(result, movie_page)
       			# pop off first line (this movie) and save back to yaml
-      			movies_pages.shift
+      			movie_list.shift
       			File.open("movies_list.yml", "w+") do |f|
-      				f.write(movies_pages.to_yaml)
+      				f.write(movie_list.to_yaml)
+      				f.close
+      			p "closing the file, movie_page is #{movie_page}"
       			end
       		end
   		end
@@ -63,11 +72,12 @@ class RakeSupport
   		if first.nil?
 			File.open("failed_movie_scrapes.yml", "a") do |f|
       			f.write(movie_page.to_yaml)
+      			f.close
       			return
       		end
   		end
 
-  		saver = DatabaseSaver.new
+  		saver = Saver.new
   		movie = saver.save_movie(first)
   		result.each do | review | 
     		critic = saver.save_critic(review)
@@ -83,8 +93,7 @@ class RakeSupport
 		recent_movie_links = scraper.scrape_recent_movies
 		recent_movie_links.each_with_index do | movie_link, i |
 			movie_uri = movie_link.attributes["href"].value
-			binding.pry
-			reviews = scraper.scrape_reviews("http://www.metacritic.com#{movie_uri}")
+			reviews = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_uri}")
 			save_data(reviews, movie_uri)
 		end
 	end

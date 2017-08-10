@@ -51,6 +51,7 @@ group :development, :test do
   gem 'vcr', '~>3.0.1'
   # webmock needed for vcr
   gem 'webmock'
+  gem 'simplecov', '~> 0.14.1'
 end
 
 group :development do

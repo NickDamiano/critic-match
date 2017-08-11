@@ -1,13 +1,6 @@
 Order of tasks:
 
-- OK So scraper only saves every other movie which is why the movies list is out of sync with the scraper. OH the reason is that it's skipping a movie. it reads every other movie from the yaml file. is it somehow popping off the wrong movie and then reading the next and popping off the next???
-- it's looping through the array, but not reading in the new array, so 
-movie1
-movie2
-movie3
-
-it does movie1, pops off the first item, but then the array goes to the second one which is actually now the third one because first one is erased.
-so solution is either in the loop (which is count of entire array) open, process, shift close in the entire thing
+- I need to abandon a movie after it fails 3 or 4 times, delete it and move to the next
 - I need to write tests. absolutely priority. 
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
@@ -131,3 +124,5 @@ Additional thoughts
 # create authentication
 # create ability to type in number 1-100
 # TESTS!
+
+major bugs, why is it looping every other thing in the array

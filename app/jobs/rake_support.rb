@@ -52,8 +52,8 @@ class RakeSupport
       		sleep(40)
   			result = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_page}")
   			p "removing the first movie from the list"
-      		# Grab first review to pull movie info out and save it
-      		unless result.nil?
+      		# Grab first review to pull movie info out and save it if it's not nil
+      		if result
       			p "in scrape_all_reviews about to save data"
       			save_data(result, movie_page)
       			# pop off first line (this movie) and save back to yaml
@@ -63,7 +63,16 @@ class RakeSupport
       				f.close
       			p "closing the file, movie_page is #{movie_page}"
       			end
+      			# TODO refactor this and above 
+      		elsif result.nil?
+      			movie_list.shift
+      			File.open("movies_list.yml", "w+") do |f|
+      				f.write(movie_list.to_yaml)
+      				f.close
+      			p "closing the file, movie_page is #{movie_page}"
+      			end
       		end
+
   		end
 	end
 

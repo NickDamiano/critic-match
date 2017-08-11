@@ -25,6 +25,37 @@
         null,
         null
       ],
+      "/Users/nickdamiano/code/critic-match/critic-match/test/units/saver_test.rb": [
+        1,
+        null,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null
+      ],
       "/Users/nickdamiano/code/critic-match/critic-match/test/units/scraper_test.rb": [
         1,
         1,
@@ -207,13 +238,14 @@
         null,
         null,
         1,
+        null,
+        2,
+        2,
         2,
         2,
         2,
         null,
-        2,
-        2,
-        null,
+        0,
         0,
         0,
         0,
@@ -258,6 +290,6 @@
         null
       ]
     },
-    "timestamp": 1502376277
+    "timestamp": 1502449920
   }
 }

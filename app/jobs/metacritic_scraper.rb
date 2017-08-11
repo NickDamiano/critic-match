@@ -18,7 +18,7 @@ class MetacriticScraper
 			page = @agent.get(uri)
 		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
 			sleep(61)
-			page = @agent.get(uri)
+			return nil
 		end
 		movie_links = page.search("#mantle_skin .title_wrapper a")
 	end
@@ -81,16 +81,17 @@ class MetacriticScraper
 	end
 
 	def scrape_one_movies_reviews(movie_uri_base)
+
 		p "scraping #{movie_uri_base}"
 		review_collection = []
 		movie_uri = "#{movie_uri_base}/critic-reviews"
-		
 		begin
 			page = @agent.get(movie_uri)
 		rescue
+			p "in review scraper rescue block"
 			log_failed(movie_uri)
-			sleep(60)
-			scrape_one_movies_reviews(movie_uri_base)
+			sleep(100)
+			return nil
 		end
 		reviews = page.search("#mantle_skin .pad_top1")
 		if reviews.nil? || reviews.empty?

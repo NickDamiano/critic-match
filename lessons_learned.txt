@@ -1,0 +1,11 @@
+Learned
+
+- handling exceptions
+- active record queries
+	- grouping
+	- joins
+- rails api returns
+
+Bugs
+- would scrape the link, then try to go to critic-reviews of that link, main link would resolve to different name with number changed to number but that wouldn't happen for critic reviews
+- 

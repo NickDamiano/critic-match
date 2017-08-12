@@ -1,14 +1,53 @@
+- so i need to create an api controller, then render as json. so in javascript i can do an ajax call for reviews associated with a movie like
+	http://critic-matcher/api/roll-bounce/reviews
+	and then render as json and i can sort through it OH WHAT A BREAKTHROUGH
+	
+Movie.where("release_date > ?", 3.years.ago).joins(:critic_movies).group('movies.id').having('count(movie_id) > 10') # should get movies less than 3 years old with more than 10 reviews
 Order of tasks:
 
-- I need to abandon a movie after it fails 3 or 4 times, delete it and move to the next
-- I need to write tests. absolutely priority. 
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
 - add exception for Mechanize::ResponseReadError: Content-Length (19428) does not match response body length (17099)
 
--figure out a way to start the scrape all and restart it when it fails - no clue
--get scraper completely good
+This weekend also add log for challenges, UI decisions, and try to capture bugs you've solved
+
+-front page part 1 (Saturday)
+	- load movie info and console log the movie info
+	- type 1-4 to rate it maybe 5 for haven't seen
+	- the number is captured, pull local storage for hash for critic matches
+	- each review for that movie is iterated through
+		- update critic hash so it's like [1: {match: 2, difference: 50, percentage: 75}] (then for critic when you click it shows /critic/id and does a db call)
+		- pull percentage, if it is higher than top 3, replace lowest score top 3 with info about critic (name, id, percentage, matches)
+	- save back into local storage
+	- log top 3 critic info with new lines between them
+	- put the next movie into console log and wait for input
+
+
+-front page part 2 (Sunday)
+	- html elements with image thumbnail, buttons
+	- clicking the button - listener hears it, runs code to create matches hash
+		-code running shouldn't happen until all movie elements are selected even though there are one
+	- html element in top part showing bars percentage for top 3 critics
+	styling for this is final
+	- loads new movie after each one is reviewed
+
+-front page part 3 (Monday / Tuesday )
+	- have media queries implemented for page width up to 5 or 6 movies
+	- if page is resized after movies are loaded it probably doesn't adjust number of movies but that'd be cool
+	- the movie results aren't matched until all are selected and disappear so it doesn't have to rewrite results hash 
+	- Get recent scraper done, and cron job to keep it updated
+
+-front page part 4 (Tuesday/Wednesday/Thursday)
+	- create restful critic page that shows all matched movies with closest matched at top and cool graphics
+	- create a button to wipe out results and start over
+	- have front end tests
+	- Get domain all set up
+	- post project in makersquare facebook and slack. 
+
+Goal - be done by next Thursday night
+
+-get scraper completely good (mostly good)
 - every api call should handle too many requests
 
 - build recent movies in theater scraper

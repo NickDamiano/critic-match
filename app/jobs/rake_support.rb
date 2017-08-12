@@ -46,12 +46,11 @@ class RakeSupport
     	# we have to update the yaml as we go because there are thousands upon thousands
     		# of movies and if the scraper fails, we don't want to start from the beginning
   		movies_pages.count.times do
-  			movie_list = YAML.load_file('movies_list.yml')
+  			movie_list = YAML.load_file('movies_list.yml').reverse
   			movie_page = movie_list.first
       		p "ABOUT TO SCRAPE #{movie_page}"
-      		sleep(40)
+      		sleep(80)
   			result = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_page}")
-  			p "removing the first movie from the list"
       		# Grab first review to pull movie info out and save it if it's not nil
       		if result
       			p "in scrape_all_reviews about to save data"

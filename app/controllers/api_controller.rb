@@ -15,4 +15,15 @@ class ApiController < ApplicationController
 		reviews = reviews.to_a.map(&:serializable_hash).to_json
 		render :json => reviews
 	end
+
+	def get_review
+		review_id = params[:id].to_i
+		# return api call for just one review
+	end
+
+	def get_select_reiews
+		# movie_ids separated by comma, import them
+		# return {movie_id: 1, reviews: [{some movies}]} 
+		
+	end
 end

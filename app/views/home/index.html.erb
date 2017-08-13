@@ -7,5 +7,38 @@
 <div id="movies"></div>
 
 <script type="text/javascript">
-	var movies = "<%= @movies || 'null' %>";
+	var movies;
+	var movies_active;
+	var critics_results;
+	var reviews_active;
+
+	function getMovies()  {
+		$.ajax({
+				dataType: 'json',
+				url: '/api/movies',
+				success: function(data) {
+					console.log('success', data);
+					movies = data;
+				}						
+		})
+	}
+
+	result = getMovies();
+	
+	// call api/movies store into array movies
+	// Get first movie from array into array active_movies
+	// call api/reviews/1,2,3,4,5 to get reviews for active movies into array of hashes active_reviews
+
+	// list the movies info - for console just name
+
+	// take input, convert to integer, call a javascript method check reviews (unless they selected didn't see it then do nothing)
+		// check_reviews - [{movie_id: 5, reviews: [{critic_id: 5, score: 30}, {critic_id: 53, score: 99}], movie_id: 10, reviews: [{critic_id: 34, 
+		//score: 50}]}]
+		// update critics - iterates through reviews for that movie and updates critic_match array
+		// [{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72}, {more critics}]
+		// so loop through it, during loop, compare each percentage if matches greater than 5, with top_three array
+		// if the percentage is higher, replace top three lowest
+		// have a function that prints out in console, top 3 critics, matches, percentage
+
+
 </script>

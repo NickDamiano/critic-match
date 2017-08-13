@@ -1,16 +1,15 @@
-- so i need to create an api controller, then render as json. so in javascript i can do an ajax call for reviews associated with a movie like
-	http://critic-matcher/api/roll-bounce/reviews
-	and then render as json and i can sort through it OH WHAT A BREAKTHROUGH
-	
 Movie.where("release_date > ?", 3.years.ago).joins(:critic_movies).group('movies.id').having('count(movie_id) > 10') # should get movies less than 3 years old with more than 10 reviews
 Order of tasks:
+
+- After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
+
+
+- when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
 
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
 - add exception for Mechanize::ResponseReadError: Content-Length (19428) does not match response body length (17099)
-
-This weekend also add log for challenges, UI decisions, and try to capture bugs you've solved
 
 -front page part 1 (Saturday)
 	- load movie info and console log the movie info

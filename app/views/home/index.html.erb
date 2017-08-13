@@ -8,7 +8,7 @@
 
 <script type="text/javascript">
 	var movies;
-	var movies_active;
+	var active_movies;
 	var critics_results;
 	var reviews_active;
 
@@ -19,11 +19,39 @@
 				success: function(data) {
 					console.log('success', data);
 					movies = data;
+					// slice values determined by media query TODO
+					active_movies = movies.slice(0,1);
+					getActiveReviews
 				}						
 		})
 	}
 
-	result = getMovies();
+	function getActiveReviews(array_of_movie_ids) {
+		// get the array and change it to a string
+		$.each(active_movies), function( index, value ) {
+			console.log(value)
+		}
+		var movie_ids = array_of_movie_ids + ""
+		$.ajax({
+			datatype: 'json',
+			url: '/api/reviews/' + movie_ids,
+			success: function(data) {
+				reviews_active = data
+				console.log('success', data);
+				console.log("fuck this javascript bullshit");
+			}
+		})
+	}
+
+	$( document ).ready(function() {
+		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
+		getMovies().then(getActiveReviews)
+	})
+
+	
+
+
+
 	
 	// call api/movies store into array movies
 	// Get first movie from array into array active_movies

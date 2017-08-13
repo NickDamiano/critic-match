@@ -1,8 +1,12 @@
 Movie.where("release_date > ?", 3.years.ago).joins(:critic_movies).group('movies.id').having('count(movie_id) > 10') # should get movies less than 3 years old with more than 10 reviews
 Order of tasks:
 
-- After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
+- create api calls for first 10, and remaining movies
+- set the javascript to call those api calls and store results appropariately
+- set routes to handle api calls
+- figure out the promises
 
+- After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
 
 - when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
 

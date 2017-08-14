@@ -11,41 +11,46 @@
 	var active_movies;
 	var critics_results;
 	var reviews_active;
+	var array_of_movie_ids =[];
 
-	function getMovies()  {
-		$.ajax({
+	function getFirstMovies()  {
+		return $.ajax({
 				dataType: 'json',
-				url: '/api/movies',
+				url: '/api/movies/first-movies',
 				success: function(data) {
 					console.log('success', data);
-					movies = data;
-					// slice values determined by media query TODO
-					active_movies = movies.slice(0,1);
-					getActiveReviews
+					active_movies = data;				
 				}						
 		})
 	}
 
-	function getActiveReviews(array_of_movie_ids) {
-		// get the array and change it to a string
-		$.each(active_movies), function( index, value ) {
-			console.log(value)
+	function setMovieIdArray(){
+		var count;
+		for(count = 0; count < active_movies.length; count++){
+			array_of_movie_ids.push(active_movies[count].id)
 		}
+		return array_of_movie_ids;
+	}
+
+	function getActiveReviews() {
+		// get the array and change it to a string
 		var movie_ids = array_of_movie_ids + ""
-		$.ajax({
+		return $.ajax({
 			datatype: 'json',
 			url: '/api/reviews/' + movie_ids,
 			success: function(data) {
-				reviews_active = data
+				reviews_active = data;
 				console.log('success', data);
-				console.log("fuck this javascript bullshit");
 			}
 		})
+		return reviews_active;
 	}
 
 	$( document ).ready(function() {
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
-		getMovies().then(getActiveReviews)
+		getFirstMovies()
+		.then(setMovieIdArray)
+		.then(getActiveReviews)
 	})
 
 	

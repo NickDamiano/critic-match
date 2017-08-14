@@ -8,7 +8,6 @@ Later
 - when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
 
 Bugs
--handle tba date for reviews
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'

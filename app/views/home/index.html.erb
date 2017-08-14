@@ -48,8 +48,7 @@
 
 	// Sets the variable for array of movies in preparation for getting the reviews for active
 	function setMovieIdArray(){
-		var count;
-		for(count = 0; count < active_movies.length; count++){
+		for(var count = 0; count < active_movies.length; count++){
 			array_of_movie_ids.push(active_movies[count].id)
 		}
 		return array_of_movie_ids;
@@ -74,9 +73,20 @@
 	function updateDomWithMovies(){
 		var movies_html_id = document.querySelector("#movies");
 		active_movies.forEach((movie, i)=>{
-			var newDiv = document.createElement('div');
+			var newDiv 	= document.createElement('div');
+			var image 	= document.createElement('img');
+			var buttons = document.createElement('div');
+			for(var i=1; i < 5; i++){
+				var button = document.createElement('button');
+				button.innerHTML = i;
+				buttons.appendChild(button);
+			}
+			var havent_seen_button = document.createElement('button');
+			havent_seen_button.innerHTML = "Have not seen";
+			buttons.appendChild(havent_seen_button);
 			newDiv.innerHTML = movie.title;
 			movies_html_id.appendChild(newDiv);
+			movies_html_id.appendChild(buttons);
 		})
 	}
 

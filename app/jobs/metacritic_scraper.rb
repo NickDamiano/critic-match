@@ -118,6 +118,10 @@ class MetacriticScraper
 				metacritic_score = page.search(".larger").text
 				movie_title = page.css("h1").text
 				release_date = page.css(".label+ span").text
+				# some movies never get a release date on metacritic so scrape first review date
+				if release_date == "TBA"
+					release_date = page.css(".pad_btm1:nth-child(1) .date").text
+				end
 				author_name = reviews[i].search(".author").empty? ? "none" : reviews[i].search(".author").children[0].text
 				publication_name = reviews[i].search(".source a")[0].nil? ? "none" : reviews[i].search(".source a")[0].text
 				publication_uri = reviews[0].search(".source a")[0].attributes["href"].value

@@ -1,23 +1,21 @@
-- Idea - See critics who are reviewing movies today that have been active up to 20 years, if it's significant, try it with them where you find a list of cult movies and mix those in with each page. also probably have to see first last name and maybe combine
-
-
-Movie.where("release_date > ?", 3.years.ago).joins(:critic_movies).group('movies.id').having('count(movie_id) > 10') # should get movies less than 3 years old with more than 10 reviews
 Order of tasks:
 
-- create api calls for first 10, and remaining movies
-- set the javascript to call those api calls and store results appropariately
-- set routes to handle api calls
-- figure out the promises
+Now
 
+
+Later
 - After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
-
 - when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
 
+Bugs
 -handle tba date for reviews
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
 - add exception for Mechanize::ResponseReadError: Content-Length (19428) does not match response body length (17099)
+
+Ideas for later
+See critics who are reviewing movies today that have been active up to 20 years, if it's significant, try it with them where you find a list of cult movies and mix those in with each page. also probably have to see first last name and maybe combine
 
 -front page part 1 (Saturday)
 	- load movie info and console log the movie info

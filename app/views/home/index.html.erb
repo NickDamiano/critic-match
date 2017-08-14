@@ -1,18 +1,27 @@
 <div class="container">
 	<div class="row">
-		<a href="localhost:3000" class="col-lg-6 offset-md-3" id="top_element">Critic Matcher</a>
+		<a href="localhost:3000" class="col-md-6 offset-md-3" id="top_element">Critic Matcher</a>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div id="movies" class= "col-md-6 offset-md-3">blah
+		</div>
 	</div>
 </div>
 
-<div id="movies"></div>
-
 <script type="text/javascript">
-	var movies;
+
+	// Variables
+	var all_movies;
 	var active_movies;
 	var critics_results;
 	var reviews_active;
 	var array_of_movie_ids =[];
 
+	// Functions
+
+	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
 		return $.ajax({
 				dataType: 'json',
@@ -24,6 +33,20 @@
 		})
 	}
 
+	//Gets all matching movies as a follow up to draw from for reviews
+	function getAllMovies()  {
+		return $.ajax({
+				dataType: 'json',
+				url: '/api/movies',
+				success: function(data) {
+					console.log('success', data);
+					all_movies = data;	
+					// delete the active movies from it			
+				}						
+		})
+	}
+
+	// Sets the variable for array of movies in preparation for getting the reviews for active
 	function setMovieIdArray(){
 		var count;
 		for(count = 0; count < active_movies.length; count++){
@@ -32,6 +55,7 @@
 		return array_of_movie_ids;
 	}
 
+	//Gets the reviews for the active movies being rated by the user
 	function getActiveReviews() {
 		// get the array and change it to a string
 		var movie_ids = array_of_movie_ids + ""
@@ -46,21 +70,32 @@
 		return reviews_active;
 	}
 
+	//Update DOM with active movies
+	function updateDomWithMovies(){
+		var movies_html_id = document.querySelector("#movies");
+		active_movies.forEach((movie, i)=>{
+			var newDiv = document.createElement('div');
+			newDiv.innerHTML = movie.title;
+			movies_html_id.appendChild(newDiv);
+		})
+	}
+
+	//Main
 	$( document ).ready(function() {
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
+		.then(updateDomWithMovies)
 		.then(setMovieIdArray)
 		.then(getActiveReviews)
+		.then(function(){
+			for(var i = 0; i < active_movies.length; i++){
+				console.log(active_movies[i].title)
+			}
+		})
+		.then(getAllMovies)
 	})
 
 	
-
-
-
-	
-	// call api/movies store into array movies
-	// Get first movie from array into array active_movies
-	// call api/reviews/1,2,3,4,5 to get reviews for active movies into array of hashes active_reviews
 
 	// list the movies info - for console just name
 

@@ -5,7 +5,7 @@
 </div>
 <div class="container">
 	<div class="row">
-		<div id="movies" class= "col-md-6 offset-md-3">blah
+		<div id="movies" class= "col-md-6 offset-md-3">
 		</div>
 	</div>
 </div>
@@ -57,7 +57,7 @@
 	//Gets the reviews for the active movies being rated by the user
 	function getActiveReviews() {
 		// get the array and change it to a string
-		var movie_ids = array_of_movie_ids + ""
+		var movie_ids = array_of_movie_ids
 		return $.ajax({
 			datatype: 'json',
 			url: '/api/reviews/' + movie_ids,
@@ -69,23 +69,48 @@
 		return reviews_active;
 	}
 
+	// Reorganizes reviews to be easily called by id number
+	function reorganizeReviews(){
+		var active_reviews = {};
+		for(var i=0; i < reviews_active.length; i++){
+			id = reviews_active[i][i].movie_id + ''
+			active_reviews[id] = reviews_active[i]
+		}
+		reviews_active = active_reviews;
+	}
+	// button is clicked
+	// user review hash is updated with movie_id and rating
+	// figure out which movie id it is, grab that movie id hash, loop through each review
+	// for each review, get critic review, id, name. update critics hash with 
 	//Update DOM with active movies
 	function updateDomWithMovies(){
 		var movies_html_id = document.querySelector("#movies");
 		active_movies.forEach((movie, i)=>{
-			var newDiv 	= document.createElement('div');
+			var movieTitle 	= document.createElement('div');
+			movieTitle.className = 'title_' + (i+1);
 			var image 	= document.createElement('img');
 			var buttons = document.createElement('div');
+			$(buttons).attr('id', movie.id);
+			console.log(buttons + ' is buttons')
 			for(var i=1; i < 5; i++){
 				var button = document.createElement('button');
+				button.className = 'review_button_' + i;
+				button.addEventListener('click', function() { 
+					console.log(this);
+
+				})
 				button.innerHTML = i;
 				buttons.appendChild(button);
 			}
 			var havent_seen_button = document.createElement('button');
+			havent_seen_button.className = 'havent_seen';
 			havent_seen_button.innerHTML = "Have not seen";
+			havent_seen_button.addEventListener('click', function() { 
+					console.log(this.parentNode);
+				})
 			buttons.appendChild(havent_seen_button);
-			newDiv.innerHTML = movie.title;
-			movies_html_id.appendChild(newDiv);
+			movieTitle.innerHTML = movie.title;
+			movies_html_id.appendChild(movieTitle);
 			movies_html_id.appendChild(buttons);
 		})
 	}
@@ -97,6 +122,7 @@
 		.then(updateDomWithMovies)
 		.then(setMovieIdArray)
 		.then(getActiveReviews)
+		.then(reorganizeReviews)
 		.then(function(){
 			for(var i = 0; i < active_movies.length; i++){
 				console.log(active_movies[i].title)

@@ -8,6 +8,10 @@
 		<div id="movies" class= "col-md-6 offset-md-3">
 		</div>
 	</div>
+	<div class="row">
+		<div id="top_match" class= "col-md-6 offset-md-3">fart
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -15,9 +19,10 @@
 	// Variables
 	var all_movies;
 	var active_movies;
-	var critics_results;
+	var critics_reviews = []
 	var reviews_active;
 	var array_of_movie_ids =[];
+	var top_match = {percentage: 0};
 
 	// Functions
 
@@ -31,6 +36,63 @@
 					active_movies = data;				
 				}						
 		})
+	}
+
+	// pull out or create critics_results from local storage
+	function getCriticsResults(){
+		if(sessionStorage["criticsResults"] == undefined ){
+			sessionStorage.setItem('criticsResults', JSON.stringify(critics_reviews));			
+		}else if(sessionStorage["criticsResults"]){
+			critics_reviews = JSON.parse(sessionStorage['criticsResults']);
+		}
+	}
+
+	//Updates critic object upon each click of a rating
+	function updateCriticResults(movie_and_rating){
+		//convert to 0-100 to match up with critic reviews
+		var total_matches;
+		var total_points;
+		var percentage;
+		var rating 	= movie_and_rating[0] * 25;
+		var movie_id 	= movie_and_rating[1];
+		var reviews = reviews_active[movie_id];
+		for(var i=0; i < reviews.length; i++){
+			critic 				= reviews[i]["critic_id"];
+			score 				= reviews[i]["score"];
+			difference 			= Math.abs(rating - score);
+			// if critic exists do this
+			if(critic in critics_reviews){
+				critics_reviews[critic]["matches"] += 1;
+				critics_reviews[critic]["points"] += difference;
+				total_matches 	= critics_reviews[critic]["matches"];
+				total_points 	= critics_reviews[critic]["points"];
+				critics_reviews[critic]["percentage"] = 100 - (total_points / total_matches);
+				percentage = critics_reviews[critic]["percentage"]
+			}else if(!(critic in critics_reviews)){
+				critics_reviews[critic] = {
+					"matches": 1,
+					"points" : difference,
+					"percentage": (100-difference)
+				}
+			}
+			//if critic does not exist in database do this
+			// check against top match and replace top match if score is higher
+			if(percentage > top_match["percentage"] && total_matches > 3){
+				top_match = critics_reviews[critic];
+				top_match["critic_id"] = critic;
+				updateTopMatch(top_match);
+			}
+		}
+		//[{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72},
+		//get reviews_active review by rating
+	}
+
+	function updateTopMatch(top_match){
+		var top_match_html = document.querySelector("#top_match");
+		percentage = top_match["percentage"];
+		matches = top_match["matches"];
+		critic_id = top_match["critic_id"];
+		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
 	}
 
 	//Gets all matching movies as a follow up to draw from for reviews
@@ -96,8 +158,12 @@
 				var button = document.createElement('button');
 				button.className = 'review_button_' + i;
 				button.addEventListener('click', function() { 
-					console.log(this);
-
+					var movie_and_rating = []
+					movie_and_rating.push(this.innerHTML);
+					movie_and_rating.push(this.parentNode.id);
+					console.log(movie_and_rating)
+					updateCriticResults(movie_and_rating);
+					// call function to update critic object
 				})
 				button.innerHTML = i;
 				buttons.appendChild(button);
@@ -123,11 +189,7 @@
 		.then(setMovieIdArray)
 		.then(getActiveReviews)
 		.then(reorganizeReviews)
-		.then(function(){
-			for(var i = 0; i < active_movies.length; i++){
-				console.log(active_movies[i].title)
-			}
-		})
+		.then(getCriticsResults)
 		.then(getAllMovies)
 	})
 

@@ -16,14 +16,14 @@
 
 <script type="text/javascript">
 
-	// Variables
+	// *********************************** Variables ************************************
 	var all_movies;
 	var active_movies;
 	var critics_reviews = []
 	var reviews_active;
 	var array_of_movie_ids =[];
 
-	// Functions
+	// *********************************** Functions ************************************
 
 	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
@@ -37,6 +37,23 @@
 		})
 	}
 
+	// Sets an empty object in session storage if this is the first time they visit the site for user review records
+	function getUserReviews(){
+		if(sessionStorage["userReviews"] == undefined ){
+			user_reviews = {};
+			sessionStorage.setItem('userReviews', JSON.stringify(user_reviews));			
+		}
+		user_reviews = JSON.parse(sessionStorage['userReviews']);
+	}
+
+	function updateUserReviews(review){
+		var rating = review[0];
+		var movie = review[1];
+		user_reviews[movie] = rating;
+		sessionStorage.setItem('userReviews', JSON.stringify(user_reviews));
+	}
+
+	// run initially and when top critic match is identified in updateCriticResults. Updates HTML for top match
 	function updateTopMatch(top_match){
 		var top_match_html = document.querySelector("#top_match");
 		percentage = top_match["percentage"];
@@ -45,8 +62,8 @@
 		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
 	}
 
+	// Sets an empty object in session storage if this is the first time they visit the site
 	function getTopMatch(){
-
 		if(sessionStorage["topMatch"] == undefined ){
 			top_match = {percentage: 0};
 			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
@@ -177,6 +194,7 @@
 					movie_and_rating.push(this.parentNode.id);
 					console.log(movie_and_rating)
 					updateCriticResults(movie_and_rating);
+					updateUserReviews(movie_and_rating);
 					// call function to update critic object
 				})
 				button.innerHTML = i;
@@ -195,11 +213,12 @@
 		})
 	}
 
-	//Main
+	// ******************************************** Main **************************************************
 	$( document ).ready(function() {
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
 		.then(getTopMatch)
+		.then(getUserReviews)
 		.then(updateDomWithMovies)
 		.then(setMovieIdArray)
 		.then(getActiveReviews)

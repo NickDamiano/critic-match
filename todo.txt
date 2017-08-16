@@ -3,7 +3,6 @@ Order of tasks:
 Now
 - for top match, instead of looping, just have 3 different critics variables?
 
-- top match should load with the movies - should persist in session storage and be pulled out on page load
 - add code to build object in session storage for user movie reviews, movie_id and their score to keep track for when you do critics page later and need to compare. also to see which movies they've already looked at so it's like if user_reviews[movie_id] then don't load it, pop off another
 - eliminate duplicates of active from main, and anything thats been rated already from main.
 - prevent duplicate reviews - i guess this goes in hand with the above

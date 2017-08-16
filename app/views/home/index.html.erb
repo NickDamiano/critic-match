@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div id="top_match" class= "col-md-6 offset-md-3">fart
+		<div id="top_match" class= "col-md-6 offset-md-3">
 		</div>
 	</div>
 </div>
@@ -22,7 +22,6 @@
 	var critics_reviews = []
 	var reviews_active;
 	var array_of_movie_ids =[];
-	var top_match = {percentage: 0};
 
 	// Functions
 
@@ -36,6 +35,26 @@
 					active_movies = data;				
 				}						
 		})
+	}
+
+	function updateTopMatch(top_match){
+		var top_match_html = document.querySelector("#top_match");
+		percentage = top_match["percentage"];
+		matches = top_match["matches"];
+		critic_id = top_match["critic_id"];
+		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
+	}
+
+	function getTopMatch(){
+
+		if(sessionStorage["topMatch"] == undefined ){
+			top_match = {percentage: 0};
+			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
+		}
+		top_match = JSON.parse(sessionStorage['topMatch']);
+		if(top_match["percentage"] > 0){
+			updateTopMatch(top_match);
+		}
 	}
 
 	// pull out or create critics_results from local storage
@@ -81,19 +100,14 @@
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
 				updateTopMatch(top_match);
+				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 			}
 		}
 		//[{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72},
 		//get reviews_active review by rating
 	}
 
-	function updateTopMatch(top_match){
-		var top_match_html = document.querySelector("#top_match");
-		percentage = top_match["percentage"];
-		matches = top_match["matches"];
-		critic_id = top_match["critic_id"];
-		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
-	}
+	
 
 	//Gets all matching movies as a follow up to draw from for reviews
 	function getAllMovies()  {
@@ -185,6 +199,7 @@
 	$( document ).ready(function() {
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
+		.then(getTopMatch)
 		.then(updateDomWithMovies)
 		.then(setMovieIdArray)
 		.then(getActiveReviews)

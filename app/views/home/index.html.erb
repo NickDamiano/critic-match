@@ -27,14 +27,22 @@
 
 	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
-		return $.ajax({
+		all_movies_check = sessionStorage['all_movies']
+		all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;
+		if(all_movies.length > 0){
+			active_movies = all_movies.slice(0,5);
+			return Promise.resolve(true);
+		}else if (all_movies.length == 0){
+			return $.ajax({
 				dataType: 'json',
 				url: '/api/movies/first-movies',
 				success: function(data) {
 					console.log('success', data);
 					active_movies = data;				
 				}						
-		})
+			})
+
+		}
 	}
 
 	function getCriticsReviews(){
@@ -81,15 +89,6 @@
 			updateTopMatch(top_match);
 		}
 	}
-
-	// pull out or create critics_results from local storage
-	// function getCriticsResults(){
-	// 	if(sessionStorage["criticsResults"] == undefined ){
-	// 		sessionStorage.setItem('criticsResults', JSON.stringify(critics_reviews));			
-	// 	}else if(sessionStorage["criticsResults"]){
-	// 		critics_reviews = JSON.parse(sessionStorage['criticsResults']);
-	// 	}
-	// }
 
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
@@ -144,16 +143,20 @@
 	
 
 	//Gets all matching movies as a follow up to draw from for reviews
-	function getAllMovies()  {
-		return $.ajax({
+	function getAllMoviesApi()  {
+		if(all_movies.length == 0){
+			return $.ajax({
 				dataType: 'json',
 				url: '/api/movies',
 				success: function(data) {
 					console.log('success', data);
 					all_movies = data;	
+					sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 					// delete the active movies from it			
 				}						
-		})
+			})	
+		}
+		
 	}
 
 	// Sets the variable for array of movies in preparation for getting the reviews for active
@@ -186,7 +189,8 @@
 		// pop all movies out.
 		// keep the movies in session storage and if they are there don't call api calls to get new ones, just keep loading the old ones
 		// grab the next  x number of movies and push them into active_movies
-		// delete the buttons and movies from html, call update dom with movies 
+		// delete the buttons and movies from html, call update dom with movies
+		console.log('here come the new movies nicky!') 
 	}
 
 	// Reorganizes reviews to be easily called by id number
@@ -197,6 +201,21 @@
 			active_reviews[id] = reviews_active[i]
 		}
 		reviews_active = active_reviews;
+	}
+
+	//
+	function checkIfAllReviewed(){
+		var buttons = document.querySelectorAll('button');
+		var buttons_flag = true
+		for(var i = 0; i < buttons.length; i++){
+			if(buttons[i].disabled == false){
+				buttons_flag = false
+				break;
+			}
+		}
+		if( buttons_flag == true ){
+			loadNextMovies();
+		}
 	}
 
 	// button is clicked
@@ -224,6 +243,7 @@
 					// disable the buttons
 					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie.id);
 					disableButtons(".button_" + movie.id);
+					checkIfAllReviewed();
 					updateCriticResults(movie_and_rating);
 					updateUserReviews(movie_and_rating);
 					// call function to update critic object
@@ -264,7 +284,7 @@
 		.then(setMovieIdArray)
 		.then(getActiveReviews)
 		.then(reorganizeReviews)
-		.then(getAllMovies)
+		.then(getAllMoviesApi)
 	})
 
 	

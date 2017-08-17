@@ -10,7 +10,7 @@ Learned
 
 Bugs
 - would scrape the link, then try to go to critic-reviews of that link, main link would resolve to different name with number changed to number but that wouldn't happen for critic reviews
-- 
+- top match wouldn't count up because the logic was if the user review was a higher percentage but it didn't automatically update if it were the same critic
 
 design challenges
 - how do you serve movies effectively? threshold for number of reviews? ask about genre

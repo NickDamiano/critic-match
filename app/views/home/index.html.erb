@@ -43,7 +43,6 @@
 			sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));			
 		}
 		critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
-		console.log('mmmmmrr')
 	}
 
 	// Sets an empty object in session storage if this is the first time they visit the site for user review records
@@ -74,7 +73,7 @@
 	// Sets an empty object in session storage if this is the first time they visit the site
 	function getTopMatch(){
 		if(sessionStorage["topMatch"] == undefined ){
-			top_match = {percentage: 0};
+			top_match = {percentage: 0, matches: 0};
 			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
 		}
 		top_match = JSON.parse(sessionStorage['topMatch']);
@@ -122,10 +121,17 @@
 			}
 			//if critic does not exist in database do this
 			// check against top match and replace top match if score is higher
-			if(percentage > top_match["percentage"] && total_matches > 3){
+			// TODO extract this to its own method where we have a top 3 array and each is compared. 
+			if(percentage > top_match["percentage"] && total_matches > top_match["matches"]){
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
 				updateTopMatch(top_match);
+				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
+			}
+			if(top_match["critic_id"] == critic ){
+				top_match = critics_reviews[critic]
+				top_match["critic_id"] = critic;
+				updateTopMatch(top_match)
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 			}
 		}

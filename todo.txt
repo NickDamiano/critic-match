@@ -3,15 +3,19 @@ Order of tasks:
 Now
 - for top match, instead of looping, just have 3 different critics variables?
 
-- add code to build object in session storage for user movie reviews, movie_id and their score to keep track for when you do critics page later and need to compare. also to see which movies they've already looked at so it's like if user_reviews[movie_id] then don't load it, pop off another
-- eliminate duplicates of active from main, and anything thats been rated already from main.
-- prevent duplicate reviews - i guess this goes in hand with the above
-- add thing to mark movie haven't seen - part of disable action - should update user session storage with a record so it doesn't get asked again
 - get button click events so after all movies have been rated it loads the next 5
+- eliminate duplicates of active from main, and anything thats been rated already from main. 
+	- Should do this by iterating through active movies and deleting any matching ids in all movies
+		- need to convert all movies array into array of movie objects
+- prevent duplicate reviews - 
+- see if there's a bug where the top match isn't updating even though there are matches
+- add thing to mark movie haven't seen - part of disable action - should update user session storage with a record so it doesn't get asked again
 - prevent user from reviewing a movie twice by clicking the same button multiple times. Disable or update review. probably disable. 
 - creating minimal styling for top 3 critics on page and update it with the change of movies
 - Styling for css movies
 - Media queries to affect number of movies loaded
+- recent scrape and cron job scrape
+- how do you write javascript tests?
 
 Later
 - After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
@@ -27,13 +31,6 @@ Ideas for later
 See critics who are reviewing movies today that have been active up to 20 years, if it's significant, try it with them where you find a list of cult movies and mix those in with each page. also probably have to see first last name and maybe combine
 - it would be cool if the app could detect which movies they were rating and which they weren't seeing and adjust the movies it asked them, like by genre without asking them. 
 
-
--front page part 3 (Monday / Tuesday )
-	- have media queries implemented for page width up to 5 or 6 movies
-	- if page is resized after movies are loaded it probably doesn't adjust number of movies but that'd be cool
-	- the movie results aren't matched until all are selected and disappear so it doesn't have to rewrite results hash 
-	- Get recent scraper done, and cron job to keep it updated
-
 -front page part 4 (Tuesday/Wednesday/Thursday)
 	- create restful critic page that shows all matched movies with closest matched at top and cool graphics
 	- create a button to wipe out results and start over
@@ -41,7 +38,6 @@ See critics who are reviewing movies today that have been active up to 20 years,
 	- Get domain all set up
 	- post project in makersquare facebook and slack. 
 
-Goal - be done by next Thursday night
 
 -get scraper completely good (mostly good)
 - every api call should handle too many requests
@@ -157,7 +153,3 @@ Additional thoughts
 #stretch goals!
 # create critic page where it shows which movies, your score, their score, differential (but i need to store that)
 # create authentication
-# create ability to type in number 1-100
-# TESTS!
-
-major bugs, why is it looping every other thing in the array

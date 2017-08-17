@@ -19,7 +19,7 @@
 	// *********************************** Variables ************************************
 	var all_movies;
 	var active_movies;
-	var critics_reviews = []
+	var critics_reviews;
 	var reviews_active;
 	var array_of_movie_ids =[];
 
@@ -35,6 +35,15 @@
 					active_movies = data;				
 				}						
 		})
+	}
+
+	function getCriticsReviews(){
+		if(sessionStorage["criticsReviews"] == undefined ){
+			critics_reviews = {};
+			sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));			
+		}
+		critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
+		console.log('mmmmmrr')
 	}
 
 	// Sets an empty object in session storage if this is the first time they visit the site for user review records
@@ -75,13 +84,13 @@
 	}
 
 	// pull out or create critics_results from local storage
-	function getCriticsResults(){
-		if(sessionStorage["criticsResults"] == undefined ){
-			sessionStorage.setItem('criticsResults', JSON.stringify(critics_reviews));			
-		}else if(sessionStorage["criticsResults"]){
-			critics_reviews = JSON.parse(sessionStorage['criticsResults']);
-		}
-	}
+	// function getCriticsResults(){
+	// 	if(sessionStorage["criticsResults"] == undefined ){
+	// 		sessionStorage.setItem('criticsResults', JSON.stringify(critics_reviews));			
+	// 	}else if(sessionStorage["criticsResults"]){
+	// 		critics_reviews = JSON.parse(sessionStorage['criticsResults']);
+	// 	}
+	// }
 
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
@@ -102,7 +111,7 @@
 				critics_reviews[critic]["points"] += difference;
 				total_matches 	= critics_reviews[critic]["matches"];
 				total_points 	= critics_reviews[critic]["points"];
-				critics_reviews[critic]["percentage"] = 100 - (total_points / total_matches);
+				critics_reviews[critic]["percentage"] = Math.round(100 - (total_points / total_matches));
 				percentage = critics_reviews[critic]["percentage"]
 			}else if(!(critic in critics_reviews)){
 				critics_reviews[critic] = {
@@ -120,6 +129,8 @@
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 			}
 		}
+		sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));
+
 		//[{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72},
 		//get reviews_active review by rating
 	}
@@ -161,6 +172,16 @@
 		})
 		return reviews_active;
 	}
+	// Refreshes movies after all have been selected
+	//////////////////////////////////////////////////////////////////
+	function loadNextMovies(){
+		// listener for the movies. 
+		// when a movie is clicked, buttons are all disabled - should be in the updateDomwithMovies function add listener
+		// pop all movies out.
+		// keep the movies in session storage and if they are there don't call api calls to get new ones, just keep loading the old ones
+		// grab the next  x number of movies and push them into active_movies
+		// delete the buttons and movies from html, call update dom with movies 
+	}
 
 	// Reorganizes reviews to be easily called by id number
 	function reorganizeReviews(){
@@ -171,6 +192,7 @@
 		}
 		reviews_active = active_reviews;
 	}
+
 	// button is clicked
 	// user review hash is updated with movie_id and rating
 	// figure out which movie id it is, grab that movie id hash, loop through each review
@@ -187,12 +209,15 @@
 			console.log(buttons + ' is buttons')
 			for(var i=1; i < 5; i++){
 				var button = document.createElement('button');
-				button.className = 'review_button_' + i;
+				button.className = 'button_' + movie.id;
 				button.addEventListener('click', function() { 
 					var movie_and_rating = []
 					movie_and_rating.push(this.innerHTML);
 					movie_and_rating.push(this.parentNode.id);
 					console.log(movie_and_rating)
+					// disable the buttons
+					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie.id);
+					disableButtons(".button_" + movie.id);
 					updateCriticResults(movie_and_rating);
 					updateUserReviews(movie_and_rating);
 					// call function to update critic object
@@ -201,10 +226,12 @@
 				buttons.appendChild(button);
 			}
 			var havent_seen_button = document.createElement('button');
-			havent_seen_button.className = 'havent_seen';
+			havent_seen_button.className = 'button_' + movie.id;
 			havent_seen_button.innerHTML = "Have not seen";
 			havent_seen_button.addEventListener('click', function() { 
 					console.log(this.parentNode);
+					//pass [-1,movie_id] to updateUserReviews
+					disableButtons('.button_' + movie.id);
 				})
 			buttons.appendChild(havent_seen_button);
 			movieTitle.innerHTML = movie.title;
@@ -213,17 +240,24 @@
 		})
 	}
 
+	function disableButtons(button_class){
+		buttons_array = document.querySelectorAll(button_class);
+		for(var i = 0; i < buttons_array.length; i++){
+			buttons_array[i].disabled = true;
+		}
+	}
+
 	// ******************************************** Main **************************************************
 	$( document ).ready(function() {
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
 		.then(getTopMatch)
+		.then(getCriticsReviews)
 		.then(getUserReviews)
 		.then(updateDomWithMovies)
 		.then(setMovieIdArray)
 		.then(getActiveReviews)
 		.then(reorganizeReviews)
-		.then(getCriticsResults)
 		.then(getAllMovies)
 	})
 

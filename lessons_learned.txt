@@ -11,3 +11,8 @@ Learned
 Bugs
 - would scrape the link, then try to go to critic-reviews of that link, main link would resolve to different name with number changed to number but that wouldn't happen for critic reviews
 - 
+
+design challenges
+- how do you serve movies effectively? threshold for number of reviews? ask about genre
+- how many reviews per page? do you have login? do you use session or local variables?
+- 

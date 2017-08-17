@@ -25,12 +25,16 @@
 
 	// *********************************** Functions ************************************
 
+	// TODO Refactor below
 	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
-		all_movies_check = sessionStorage['all_movies']
-		all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;
+		if( typeof all_movies == 'undefined'){
+			all_movies_check = sessionStorage['all_movies']
+			all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;	
+		}
 		if(all_movies.length > 0){
-			active_movies = all_movies.slice(0,5);
+			active_movies = all_movies.splice(0,5);
+			sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 			return Promise.resolve(true);
 		}else if (all_movies.length == 0){
 			return $.ajax({
@@ -190,6 +194,12 @@
 		// keep the movies in session storage and if they are there don't call api calls to get new ones, just keep loading the old ones
 		// grab the next  x number of movies and push them into active_movies
 		// delete the buttons and movies from html, call update dom with movies
+		getFirstMovies();
+		var movie_element = document.getElementById('movies');
+		while(movie_element.firstChild){
+			movie_element.removeChild(movie_element.firstChild);
+		}
+		updateDomWithMovies();
 		console.log('here come the new movies nicky!') 
 	}
 
@@ -258,6 +268,8 @@
 					console.log(this.parentNode);
 					//pass [-1,movie_id] to updateUserReviews
 					disableButtons('.button_' + movie.id);
+					checkIfAllReviewed();
+					updateUserReviews(['-1', this.parentNode.id]);
 				})
 			buttons.appendChild(havent_seen_button);
 			movieTitle.innerHTML = movie.title;

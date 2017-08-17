@@ -1,8 +1,9 @@
 Order of tasks:
 
 Now
+#1 it's mostly working except top critic is not updated after the page refreshes with new movies. if i reload it and cilck movies it updates top movie
 - for top match, instead of looping, just have 3 different critics variables?
-
+- add styling for the number that is clicked
 - get button click events so after all movies have been rated it loads the next 5
 - eliminate duplicates of active from main, and anything thats been rated already from main. 
 	- Should do this by iterating through active movies and deleting any matching ids in all movies

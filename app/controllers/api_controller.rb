@@ -1,6 +1,6 @@
 class ApiController < ApplicationController
 	# Threshold for number of movie reviews per movie
-	CUTOFF = 30
+	CUTOFF = 40
 
 	# To quickly load landing page, only grabs 5 movies, then ajax calls the rest in the background
 	def get_first_movies

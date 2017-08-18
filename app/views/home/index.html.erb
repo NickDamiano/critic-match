@@ -49,6 +49,7 @@
 		}
 	}
 
+	// sets or pulls critic_reviews object
 	function getCriticsReviews(){
 		if(sessionStorage["criticsReviews"] == undefined ){
 			critics_reviews = {};
@@ -66,6 +67,7 @@
 		user_reviews = JSON.parse(sessionStorage['userReviews']);
 	}
 
+	// updates user review object after each rating is made
 	function updateUserReviews(review){
 		var rating = review[0];
 		var movie = review[1];
@@ -125,6 +127,7 @@
 			//if critic does not exist in database do this
 			// check against top match and replace top match if score is higher
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
+			console.log('haaaaay')
 			if(percentage > top_match["percentage"] && total_matches > top_match["matches"]){
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
@@ -143,6 +146,9 @@
 		//[{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72},
 		//get reviews_active review by rating
 	}
+
+	// evaluateTopMatch
+
 
 	
 
@@ -173,7 +179,6 @@
 
 	//Gets the reviews for the active movies being rated by the user
 	function getActiveReviews() {
-		// get the array and change it to a string
 		var movie_ids = array_of_movie_ids
 		return $.ajax({
 			datatype: 'json',
@@ -188,19 +193,26 @@
 	// Refreshes movies after all have been selected
 	//////////////////////////////////////////////////////////////////
 	function loadNextMovies(){
-		// listener for the movies. 
-		// when a movie is clicked, buttons are all disabled - should be in the updateDomwithMovies function add listener
-		// pop all movies out.
-		// keep the movies in session storage and if they are there don't call api calls to get new ones, just keep loading the old ones
-		// grab the next  x number of movies and push them into active_movies
-		// delete the buttons and movies from html, call update dom with movies
 		getFirstMovies();
 		var movie_element = document.getElementById('movies');
 		while(movie_element.firstChild){
 			movie_element.removeChild(movie_element.firstChild);
 		}
 		updateDomWithMovies();
+		setMovieIdArray();
+		getActiveReviews()
+		.then(reorganizeReviews);
 		console.log('here come the new movies nicky!') 
+
+		// 	getFirstMovies()
+		// .then(getTopMatch)
+		// .then(getCriticsReviews)
+		// .then(getUserReviews)
+		// .then(updateDomWithMovies)
+		// .then(setMovieIdArray)
+		// .then(getActiveReviews)
+		// .then(reorganizeReviews)
+		// .then(getAllMoviesApi)
 	}
 
 	// Reorganizes reviews to be easily called by id number

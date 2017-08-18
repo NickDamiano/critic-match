@@ -1,7 +1,9 @@
 Order of tasks:
 
 Now
-#1 it's mostly working except top critic is not updated after the page refreshes with new movies. if i reload it and cilck movies it updates top movie
+- Bug movie_id in id = revies_active[i][i].movie_id in reorganize reviews is nil after several reviews
+	- then it fails on reviews.length in for loop statement in updateCriticResults
+
 - for top match, instead of looping, just have 3 different critics variables?
 - add styling for the number that is clicked
 - get button click events so after all movies have been rated it loads the next 5
@@ -31,6 +33,7 @@ NoMethodError: undefined method `search' for nil:NilClass
 Ideas for later
 See critics who are reviewing movies today that have been active up to 20 years, if it's significant, try it with them where you find a list of cult movies and mix those in with each page. also probably have to see first last name and maybe combine
 - it would be cool if the app could detect which movies they were rating and which they weren't seeing and adjust the movies it asked them, like by genre without asking them. 
+- After you get a critic you can rate movies just with him or just him and the top 3 are compared to refine it the most?
 
 -front page part 4 (Tuesday/Wednesday/Thursday)
 	- create restful critic page that shows all matched movies with closest matched at top and cool graphics

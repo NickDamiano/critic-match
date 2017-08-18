@@ -102,7 +102,7 @@
 		var total_matches;
 		var total_points;
 		var percentage;
-		var rating 	= movie_and_rating[0] * 25;
+		var rating 	= (movie_and_rating[0] * 25) - 10;
 		var movie_id 	= movie_and_rating[1];
 		var reviews = reviews_active[movie_id];
 		for(var i=0; i < reviews.length; i++){
@@ -171,6 +171,7 @@
 
 	// Sets the variable for array of movies in preparation for getting the reviews for active
 	function setMovieIdArray(){
+		array_of_movie_ids = []
 		for(var count = 0; count < active_movies.length; count++){
 			array_of_movie_ids.push(active_movies[count].id)
 		}

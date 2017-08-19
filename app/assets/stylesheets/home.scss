@@ -23,9 +23,16 @@
 .title{
 	float: right;
 	display: inline-block;
+
 }
 
 img{
 	float:left;
 	display: inline-block;
+}
+
+.movie{
+	float: left;
+	overflow:auto;
+	border: solid;
 }

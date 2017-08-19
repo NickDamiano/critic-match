@@ -5,7 +5,7 @@ class ApiController < ApplicationController
 	# To quickly load landing page, only grabs 5 movies, then ajax calls the rest in the background
 	def get_first_movies
 		@movies = Movie.where("release_date > ?", 4.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
-		.limit(5).to_a
+		.limit(4).to_a
 		@movies = @movies.to_a.map(&:serializable_hash).to_json
 		render :json => @movies
 	end

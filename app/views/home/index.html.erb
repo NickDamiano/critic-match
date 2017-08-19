@@ -26,27 +26,27 @@
 
 	// *********************************** Functions ************************************
 
-	// TODO Refactor below
-	//Gets initial 5 movies to load onto landing page
-	function getFirstMovies()  {
-		if( typeof all_movies == 'undefined'){
-			all_movies_check = sessionStorage['all_movies']
-			all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;	
-		}
-		if(all_movies.length > 0){
-			active_movies = all_movies.splice(0,5);
-			sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
-			return Promise.resolve(true);
-		}else if (all_movies.length == 0){
-			return $.ajax({
-				dataType: 'json',
-				url: '/api/movies/first-movies',
-				success: function(data) {
-					console.log('success', data);
-					active_movies = data;				
-				}						
-			})
+	// *********************************** Get Session Variables section ************************************
 
+	
+
+	// sets variable which is iterated on each time a movie is reviewed
+	function getMatch(){
+		if(sessionStorage["match"] == undefined ){
+			sessionStorage.setItem('match', JSON.stringify(0));			
+		}
+		match = JSON.parse(sessionStorage['match']);
+	}
+
+	// Sets an empty object in session storage if this is the first time they visit the site
+	function getTopMatch(){
+		if(sessionStorage["topMatch"] == undefined ){
+			top_match = {percentage: 0, matches: 0};
+			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
+		}
+		top_match = JSON.parse(sessionStorage['topMatch']);
+		if(top_match["percentage"] > 0){
+			updateTopMatch(top_match);
 		}
 	}
 
@@ -68,6 +68,8 @@
 		user_reviews = JSON.parse(sessionStorage['userReviews']);
 	}
 
+	// ******************************************************* Update Functions Section ****************************************
+
 	// updates user review object after each rating is made
 	function updateUserReviews(review){
 		var rating = review[0];
@@ -83,25 +85,6 @@
 		matches = top_match["matches"];
 		critic_id = top_match["critic_id"];
 		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
-	}
-
-	// Sets an empty object in session storage if this is the first time they visit the site
-	function getTopMatch(){
-		if(sessionStorage["topMatch"] == undefined ){
-			top_match = {percentage: 0, matches: 0};
-			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
-		}
-		top_match = JSON.parse(sessionStorage['topMatch']);
-		if(top_match["percentage"] > 0){
-			updateTopMatch(top_match);
-		}
-	}
-	// sets variable which is iterated on each time a movie is reviewed
-	function getMatch(){
-		if(sessionStorage["match"] == undefined ){
-			sessionStorage.setItem('match', JSON.stringify(0));			
-		}
-		match = JSON.parse(sessionStorage['match']);
 	}
 
 	//Updates critic object upon each click of a rating
@@ -132,10 +115,8 @@
 					"percentage": (100-difference)
 				}
 			}
-			//if critic does not exist in database do this
-			// check against top match and replace top match if score is higher
+			//if critic does not exist in database do this check against top match and replace top match if score is higher
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
-			console.log('haaaaay')
 			if(percentage > top_match["percentage"] && total_matches > ( match / 2)){
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
@@ -150,15 +131,55 @@
 			}
 		}
 		sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));
-
-		//[{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72},
-		//get reviews_active review by rating
 	}
 
-	// evaluateTopMatch
+	//Update DOM with active movies
+	function updateDomWithMovies(){
+		var movies_html_id = document.querySelector("#movies");
+		active_movies.forEach((movie, i)=>{
+			var movieTitle 	= document.createElement('div');
+			movieTitle.className = 'title_' + (i+1);
+			var image 	= document.createElement('img');
+			var buttons = document.createElement('div');
+			$(buttons).attr('id', movie.id);
+			for(var i=1; i < 5; i++){
+				var button = document.createElement('button');
+				button.className = 'button_' + movie.id;
+				button.addEventListener('click', function() { 
+					var movie_and_rating = [];
+					match++;
+					sessionStorage.setItem('match', JSON.stringify(match));
+					movie_and_rating.push(this.innerHTML);
+					movie_and_rating.push(this.parentNode.id);
+					// disable the buttons
+					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie.id);
+					disableButtons(".button_" + movie.id);
+					checkIfAllReviewed();
+					updateCriticResults(movie_and_rating);
+					updateUserReviews(movie_and_rating);
+					// call function to update critic object
+				})
+				button.innerHTML = i;
+				buttons.appendChild(button);
+			}
+			var havent_seen_button = document.createElement('button');
+			havent_seen_button.className = 'button_' + movie.id;
+			havent_seen_button.innerHTML = "Have not seen";
+			havent_seen_button.addEventListener('click', function() { 
+					//TODO pass [-1,movie_id] to updateUserReviews
+					disableButtons('.button_' + movie.id);
+					checkIfAllReviewed();
+					updateUserReviews(['-1', this.parentNode.id]);
+				})
+			buttons.appendChild(havent_seen_button);
+			movieTitle.innerHTML = movie.title;
+			movies_html_id.appendChild(movieTitle);
+			movies_html_id.appendChild(buttons);
+		})
+	}
 
 
-	
+	// ******************************************* API Calls ******************************************
 
 	//Gets all matching movies as a follow up to draw from for reviews
 	function getAllMoviesApi()  {
@@ -167,7 +188,6 @@
 				dataType: 'json',
 				url: '/api/movies',
 				success: function(data) {
-					console.log('success', data);
 					all_movies = data;	
 					sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 					// delete the active movies from it			
@@ -175,15 +195,6 @@
 			})	
 		}
 		
-	}
-
-	// Sets the variable for array of movies in preparation for getting the reviews for active
-	function setMovieIdArray(){
-		array_of_movie_ids = []
-		for(var count = 0; count < active_movies.length; count++){
-			array_of_movie_ids.push(active_movies[count].id)
-		}
-		return array_of_movie_ids;
 	}
 
 	//Gets the reviews for the active movies being rated by the user
@@ -194,11 +205,45 @@
 			url: '/api/reviews/' + movie_ids,
 			success: function(data) {
 				reviews_active = data;
-				console.log('success', data);
 			}
 		})
 		return reviews_active;
 	}
+
+	//Gets initial 5 movies to load onto landing page
+	function getFirstMovies()  {
+		if( typeof all_movies == 'undefined'){
+			all_movies_check = sessionStorage['all_movies']
+			all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;	
+		}
+		if(all_movies.length > 0){
+			active_movies = all_movies.splice(0,5);
+			sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
+			return Promise.resolve(true);
+		}else if (all_movies.length == 0){
+			return $.ajax({
+				dataType: 'json',
+				url: '/api/movies/first-movies',
+				success: function(data) {
+					console.log('success', data);
+					active_movies = data;				
+				}						
+			})
+		}
+	}
+
+	// *********************************************** Helper Functions *******************************************
+
+	// Sets the variable for array of movies in preparation for getting the reviews for active
+	function setMovieIdArray(){
+		array_of_movie_ids = []
+		for(var count = 0; count < active_movies.length; count++){
+			array_of_movie_ids.push(active_movies[count].id)
+		}
+		return array_of_movie_ids;
+	}
+
+	
 	// Refreshes movies after all have been selected
 	//////////////////////////////////////////////////////////////////
 	function loadNextMovies(){
@@ -211,7 +256,6 @@
 		setMovieIdArray();
 		getActiveReviews()
 		.then(reorganizeReviews);
-		console.log('here come the new movies nicky!') 
 
 		// 	getFirstMovies()
 		// .then(getTopMatch)
@@ -234,7 +278,7 @@
 		reviews_active = active_reviews;
 	}
 
-	//
+	// Checks if all reviews have been clicked and calls load next movie if they have
 	function checkIfAllReviewed(){
 		var buttons = document.querySelectorAll('button');
 		var buttons_flag = true
@@ -249,58 +293,7 @@
 		}
 	}
 
-	// button is clicked
-	// user review hash is updated with movie_id and rating
-	// figure out which movie id it is, grab that movie id hash, loop through each review
-	// for each review, get critic review, id, name. update critics hash with 
-	//Update DOM with active movies
-	function updateDomWithMovies(){
-		var movies_html_id = document.querySelector("#movies");
-		active_movies.forEach((movie, i)=>{
-			var movieTitle 	= document.createElement('div');
-			movieTitle.className = 'title_' + (i+1);
-			var image 	= document.createElement('img');
-			var buttons = document.createElement('div');
-			$(buttons).attr('id', movie.id);
-			console.log(buttons + ' is buttons')
-			for(var i=1; i < 5; i++){
-				var button = document.createElement('button');
-				button.className = 'button_' + movie.id;
-				button.addEventListener('click', function() { 
-					var movie_and_rating = [];
-					match++;
-					sessionStorage.setItem('match', JSON.stringify(match));
-					movie_and_rating.push(this.innerHTML);
-					movie_and_rating.push(this.parentNode.id);
-					console.log(movie_and_rating)
-					// disable the buttons
-					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie.id);
-					disableButtons(".button_" + movie.id);
-					checkIfAllReviewed();
-					updateCriticResults(movie_and_rating);
-					updateUserReviews(movie_and_rating);
-					// call function to update critic object
-				})
-				button.innerHTML = i;
-				buttons.appendChild(button);
-			}
-			var havent_seen_button = document.createElement('button');
-			havent_seen_button.className = 'button_' + movie.id;
-			havent_seen_button.innerHTML = "Have not seen";
-			havent_seen_button.addEventListener('click', function() { 
-					console.log(this.parentNode);
-					//pass [-1,movie_id] to updateUserReviews
-					disableButtons('.button_' + movie.id);
-					checkIfAllReviewed();
-					updateUserReviews(['-1', this.parentNode.id]);
-				})
-			buttons.appendChild(havent_seen_button);
-			movieTitle.innerHTML = movie.title;
-			movies_html_id.appendChild(movieTitle);
-			movies_html_id.appendChild(buttons);
-		})
-	}
-
+	// Disables buttons - Called each time a review is made
 	function disableButtons(button_class){
 		buttons_array = document.querySelectorAll(button_class);
 		for(var i = 0; i < buttons_array.length; i++){
@@ -322,19 +315,4 @@
 		.then(getMatch)
 		.then(getAllMoviesApi)
 	})
-
-	
-
-	// list the movies info - for console just name
-
-	// take input, convert to integer, call a javascript method check reviews (unless they selected didn't see it then do nothing)
-		// check_reviews - [{movie_id: 5, reviews: [{critic_id: 5, score: 30}, {critic_id: 53, score: 99}], movie_id: 10, reviews: [{critic_id: 34, 
-		//score: 50}]}]
-		// update critics - iterates through reviews for that movie and updates critic_match array
-		// [{critic_id: 1, critic_name: "harry buttz", matches: 3, points: 56, percentage: 72}, {more critics}]
-		// so loop through it, during loop, compare each percentage if matches greater than 5, with top_three array
-		// if the percentage is higher, replace top three lowest
-		// have a function that prints out in console, top 3 critics, matches, percentage
-
-
 </script>

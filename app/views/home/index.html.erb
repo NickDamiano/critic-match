@@ -148,6 +148,8 @@
 				button.addEventListener('click', function() { 
 					var movie_and_rating = [];
 					match++;
+					this.className = 'clicked';
+					this.disabled = true;
 					sessionStorage.setItem('match', JSON.stringify(match));
 					movie_and_rating.push(this.innerHTML);
 					movie_and_rating.push(this.parentNode.id);
@@ -167,6 +169,8 @@
 			havent_seen_button.innerHTML = "Have not seen";
 			havent_seen_button.addEventListener('click', function() { 
 					//TODO pass [-1,movie_id] to updateUserReviews
+					this.className = 'clicked';
+					this.disabled = true;
 					disableButtons('.button_' + movie.id);
 					checkIfAllReviewed();
 					updateUserReviews(['-1', this.parentNode.id]);

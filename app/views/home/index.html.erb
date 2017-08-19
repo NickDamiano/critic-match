@@ -137,6 +137,8 @@
 	function updateDomWithMovies(){
 		var movies_html_id = document.querySelector("#movies");
 		active_movies.forEach((movie, i)=>{
+			var movie_element = document.createElement('div');
+			movie_element.className = 'movie';
 			var movieTitle 	= document.createElement('div');
 			movieTitle.className = 'title_' + (i+1);
 			var image 	= document.createElement('img');
@@ -176,9 +178,14 @@
 					updateUserReviews(['-1', this.parentNode.id]);
 				})
 			buttons.appendChild(havent_seen_button);
+			image.src = movie.image_uri;
+			image.style.height = '143px';
+			image.style.width = '98px';
 			movieTitle.innerHTML = movie.title;
-			movies_html_id.appendChild(movieTitle);
-			movies_html_id.appendChild(buttons);
+			movie_element.appendChild(image);
+			movie_element.appendChild(movieTitle);
+			movie_element.appendChild(buttons);
+			movies_html_id.appendChild(movie_element)
 		})
 	}
 

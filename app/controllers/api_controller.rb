@@ -6,6 +6,9 @@ class ApiController < ApplicationController
 	def get_first_movies
 		@movies = Movie.where("release_date > ?", 4.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
 		.limit(4).to_a
+		@movies.each do | movie | 
+			movie.title = movie.title.split.map(&:capitalize).join(' ')
+		end
 		@movies = @movies.to_a.map(&:serializable_hash).to_json
 		render :json => @movies
 	end
@@ -14,6 +17,9 @@ class ApiController < ApplicationController
 	def get_movies
 		@movies = Movie.where("release_date > ?", 4.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
 		.limit(500).to_a
+		@movies.each do | movie | 
+			movie.title = movie.title.split.map(&:capitalize).join(' ')
+		end
 		@movies = @movies.to_a.map(&:serializable_hash).to_json
 		render :json => @movies
 	end

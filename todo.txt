@@ -36,12 +36,11 @@ New Version
 
 
 Now
-- refactor variables to check for session storage and if it exists, return it to the variable that called it and if it doesn't exist. set it 
 - Get top 3 critics working either with an array or 3 separate variables
 - prevent duplicates for all
-- add a thumbnail next to movie title. 
 - Get styling for movie down
 - Style top 3 critics section
+- Fix movie titles so they are capitalized
 - Styling for css movies
 - Media queries to affect number of movies loaded and mobile view with easy buttons to press
 - recent scrape and cron job scrape

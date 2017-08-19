@@ -16,12 +16,12 @@
   <body>
 	 <div class="container">
 		<div class="row">
-			<a href="<%= root_path %>" class="col-md-6 offset-md-3" id="top_element">Critic Matcher</a>
+			<a href="<%= root_path %>"  id="top_element">Critic Matcher</a>
 		</div>
 	</div>
 	<div class="container">
 		<div class="row">
-			<div id="movies" class="col-md-6 offset-md-3">
+			<div id="movies" class="col-md-12">
 			</div>
 		</div>
 		<div class="row">
@@ -160,9 +160,10 @@
 			var movie_element = document.createElement('div');
 			movie_element.className = 'movie';
 			var movieTitle 	= document.createElement('div');
-			movieTitle.className = 'title_' + (i+1);
+			movieTitle.className = 'movie_title';
 			var image 	= document.createElement('img');
 			var buttons = document.createElement('div');
+			buttons.addClass = 'buttons';
 			$(buttons).attr('id', movie.id);
 			for(var i=1; i < 5; i++){
 				var button = document.createElement('button');

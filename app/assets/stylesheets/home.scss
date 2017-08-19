@@ -20,8 +20,16 @@
 	display: inline-block;
 }
 
-.title{
-	float: right;
+button{
+	float: left;
+	margin: 1.8px;
+}
+
+.button_first
+
+.movie_title{
+	margin: 1px;
+	margin-left: 2px;
 	display: inline-block;
 
 }
@@ -29,6 +37,8 @@
 img{
 	float:left;
 	display: inline-block;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .movie{

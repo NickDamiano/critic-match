@@ -1,24 +1,16 @@
 Order of tasks:
 
 Now
-- Bug movie_id in id = revies_active[i][i].movie_id in reorganize reviews is nil after several reviews
-	- then it fails on reviews.length in for loop statement in updateCriticResults
-
-- for top match, instead of looping, just have 3 different critics variables?
+- Get top 3 critics working either with an array or 3 separate variables
+- prevent duplicates for all
 - add styling for the number that is clicked
-- get button click events so after all movies have been rated it loads the next 5
-- eliminate duplicates of active from main, and anything thats been rated already from main. 
-	- Should do this by iterating through active movies and deleting any matching ids in all movies
-		- need to convert all movies array into array of movie objects
-- prevent duplicate reviews - 
-- see if there's a bug where the top match isn't updating even though there are matches
-- add thing to mark movie haven't seen - part of disable action - should update user session storage with a record so it doesn't get asked again
-- prevent user from reviewing a movie twice by clicking the same button multiple times. Disable or update review. probably disable. 
-- creating minimal styling for top 3 critics on page and update it with the change of movies
+- add a thumbnail next to movie title. 
+- Get styling for movie down
+- Style top 3 critics section
 - Styling for css movies
-- Media queries to affect number of movies loaded
+- Media queries to affect number of movies loaded and mobile view with easy buttons to press
 - recent scrape and cron job scrape
-- how do you write javascript tests?
+- Javascript tests with 
 
 Later
 - After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches

@@ -36,6 +36,7 @@ New Version
 
 
 Now
+- Fix styling for clicked button so it doesn't expand, just changes color. no shadows
 - Get top 3 critics working either with an array or 3 separate variables
 - prevent duplicates for all
 - Get styling for movie down

@@ -22,6 +22,7 @@
 	var critics_reviews;
 	var reviews_active;
 	var array_of_movie_ids =[];
+	var match;
 
 	// *********************************** Functions ************************************
 
@@ -95,6 +96,13 @@
 			updateTopMatch(top_match);
 		}
 	}
+	// sets variable which is iterated on each time a movie is reviewed
+	function getMatch(){
+		if(sessionStorage["match"] == undefined ){
+			sessionStorage.setItem('match', JSON.stringify(0));			
+		}
+		match = JSON.parse(sessionStorage['match']);
+	}
 
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
@@ -128,7 +136,7 @@
 			// check against top match and replace top match if score is higher
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
 			console.log('haaaaay')
-			if(percentage > top_match["percentage"] && total_matches > top_match["matches"]){
+			if(percentage > top_match["percentage"] && total_matches > ( match / 2)){
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
 				updateTopMatch(top_match);
@@ -259,7 +267,9 @@
 				var button = document.createElement('button');
 				button.className = 'button_' + movie.id;
 				button.addEventListener('click', function() { 
-					var movie_and_rating = []
+					var movie_and_rating = [];
+					match++;
+					sessionStorage.setItem('match', JSON.stringify(match));
 					movie_and_rating.push(this.innerHTML);
 					movie_and_rating.push(this.parentNode.id);
 					console.log(movie_and_rating)
@@ -309,6 +319,7 @@
 		.then(setMovieIdArray)
 		.then(getActiveReviews)
 		.then(reorganizeReviews)
+		.then(getMatch)
 		.then(getAllMoviesApi)
 	})
 

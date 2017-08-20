@@ -41,7 +41,8 @@ Now
 - Style top 3 critics section
 - Media queries to affect number of movies loaded and mobile view with easy buttons to press
 - recent scrape and cron job scrape
-- Javascript tests with 
+- push database to heroku
+- Javascript tests with mocha or jasmine
 
 Later
 - After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches

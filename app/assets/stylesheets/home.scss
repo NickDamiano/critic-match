@@ -2,36 +2,52 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#top_element{
-	font-size: 3em;
+
+
+#top_element, #top_element:hover{
+	font-size: 6em;
+	padding: 10px;
+	text-align: center;
+	font-family: 'Baloo Bhaijaan', cursive;
+	border: solid;
+	border-width: thin;
+	text-decoration: none;
+	color: white;
+	background-color: #2D86AA;
+}
+
+.movie{
+	float: left;
+	overflow:auto;
+	border-width: thin;
+	padding: 5px;
+	padding-left: none;
+	margin: 10px 10px 0px 5px;
 }
 
 .clicked{
-	background: #D3D3D3	;
-	text-shadow: none !important;
-	background-image: none;
-  	outline: 0;
-  	-webkit-box-shadow: none !important;
-          	box-shadow: none !important;
 }
 
 .buttons{
-	float: right;
 	display: inline-block;
 }
 
 button{
 	float: left;
 	margin: 1.8px;
+	
+	font-family: 'Roboto', sans-serif;
 }
 
 .button_first
 
 .movie_title{
-	margin: 1px;
+	text-align: center;
+	line-height: 5px;
 	margin-left: 10px;
 	display: inline-block;
-
+	font-family: 'Roboto', sans-serif;
+	font-weight: bold !important;
 }
 
 img{
@@ -42,10 +58,4 @@ img{
 	margin-right: 5px;
 }
 
-.movie{
-	float: left;
-	overflow:auto;
-	border: solid;
-	padding: 5px;
-	margin: 10px;
-}
+

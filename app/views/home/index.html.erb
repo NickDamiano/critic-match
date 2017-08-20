@@ -28,6 +28,7 @@
 			<div id="movies" class="col-md-10 col-md-offset-1">
 			</div>
 		</div>
+
 		<!-- set a div for 3 -->
 		
 	</div>
@@ -107,7 +108,13 @@
 		matches = top_match["matches"];
 		critic_id = top_match["critic_id"];
 		// set width to percent
-		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
+		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches;
+		$( "#top_match").animate({
+			width: percentage -15 + '%'
+		}, 400, function(){
+
+		});
+		// top_match_html.style.width = percentage - 15 + "%"
 	}
 
 	//Updates critic object upon each click of a rating
@@ -140,7 +147,7 @@
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
-			if(percentage > top_match["percentage"] && total_matches > ( match / 1.5)){
+			if(percentage > top_match["percentage"] && total_matches > ( match / 2)){
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
 				updateTopMatch(top_match);

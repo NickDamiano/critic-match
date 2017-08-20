@@ -2,9 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-
-
-
 #top_element, #top_element:hover{
 	font-size: 5em;
 	padding: 5px;
@@ -29,6 +26,10 @@
 
 .top_matches{
 	height: 4em;
+}
+
+#top_match{
+	width: 0%;
 }
 
 .movie{

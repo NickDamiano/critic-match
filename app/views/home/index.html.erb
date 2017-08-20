@@ -12,13 +12,16 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <link href="https://fonts.googleapis.com/css?family=Baloo+Bhaijaan|Fredoka+One|Ultra" rel="stylesheet">
-  </head>
+	<link href="https://fonts.googleapis.com/css?family=Lato:900i" rel="stylesheet">
   <body>
   	<div class="container">
   		<div class="row">
   			<a href="<%= root_path %>"  id="top_element" class="col-md-10 col-md-offset-1">Critic    Matcher</a>
   		</div>
+  		<div class="row top_matches">
+			<div id="top_match" class="critic col-md-10 col-md-offset-1" >
+			</div>
+		</div>
   	</div>
 	<div class="container">
 		<div class="row">
@@ -26,10 +29,7 @@
 			</div>
 		</div>
 		<!-- set a div for 3 -->
-		<div class="row">
-			<div id="top_match" >
-			</div>
-		</div>
+		
 	</div>
   </body>
 </html>
@@ -106,6 +106,7 @@
 		percentage = top_match["percentage"];
 		matches = top_match["matches"];
 		critic_id = top_match["critic_id"];
+		// set width to percent
 		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "percentage: " + percentage + " - " + 'matches: ' + matches;
 	}
 
@@ -139,7 +140,7 @@
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
-			if(percentage > top_match["percentage"] && total_matches > ( match / 2)){
+			if(percentage > top_match["percentage"] && total_matches > ( match / 1.5)){
 				top_match = critics_reviews[critic];
 				top_match["critic_id"] = critic;
 				updateTopMatch(top_match);
@@ -223,6 +224,7 @@
 				dataType: 'json',
 				url: '/api/movies',
 				success: function(data) {
+					console.log(data);
 					all_movies = data;	
 					sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 					// delete the active movies from it			

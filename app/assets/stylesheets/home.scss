@@ -4,16 +4,31 @@
 
 
 
+
 #top_element, #top_element:hover{
-	font-size: 6em;
-	padding: 10px;
+	font-size: 5em;
+	padding: 5px;
 	text-align: center;
-	font-family: 'Baloo Bhaijaan', cursive;
+	font-family: 'Lato', sans-serif;
+	font-weight: 800;
+	font-style: italic;
 	border: solid;
 	border-width: thin;
 	text-decoration: none;
 	color: white;
 	background-color: #2D86AA;
+}
+
+.critic{
+	margin-top: 1em;
+	background: yellow;
+	border: solid;
+	border-width: thin;
+
+}
+
+.top_matches{
+	height: 4em;
 }
 
 .movie{
@@ -25,7 +40,10 @@
 	margin: 10px 10px 0px 5px;
 }
 
-.clicked{
+@-moz-document url-prefix(){
+	.clicked{
+	background: darkgray;
+	}
 }
 
 .buttons{
@@ -39,13 +57,22 @@ button{
 	font-family: 'Roboto', sans-serif;
 }
 
+/* Remove button padding in FF */
+@-moz-document url-prefix(){
+	button{
+    	border: solid;
+    	border-width: 1px;
+	}
+
+}
+
 .movie_title{
 	height: 3em;
 	overflow-y: hidden;
 	word-wrap: break-word;
 	margin-left:10px;
 	font-weight: bold;
-}
+	font-family: 'Lato', sans-serif;}
 
 img{
 	max-width: 100%;

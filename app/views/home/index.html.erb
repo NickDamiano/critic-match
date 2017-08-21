@@ -64,7 +64,7 @@
 	// Sets an empty object in session storage if this is the first time they visit the site
 	function getTopMatch(){
 		if(sessionStorage["topMatch"] == undefined ){
-			top_match = {percentage: 0, matches: 0};
+			top_match = [{critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}];
 			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
 		}
 		top_match = JSON.parse(sessionStorage['topMatch']);
@@ -103,6 +103,11 @@
 
 	// run initially and when top critic match is identified in updateCriticResults. Updates HTML for top match
 	function updateTopMatch(top_match){
+		console.log("in update top match")
+		console.log(top_match[0]);
+		console.log(top_match[1]);
+		console.log(top_match[2]);
+		top_match = top_match[0]
 		var top_match_html = document.querySelector("#top_match");
 		percentage = top_match["percentage"];
 		matches = top_match["matches"];
@@ -114,6 +119,7 @@
 		}, 400, function(){
 
 		});
+		
 		// top_match_html.style.width = percentage - 15 + "%"
 	}
 
@@ -147,18 +153,34 @@
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
-			if(percentage > top_match["percentage"] && total_matches > ( match / 2)){
-				top_match = critics_reviews[critic];
-				top_match["critic_id"] = critic;
-				updateTopMatch(top_match);
-				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
-			}
-			if(top_match["critic_id"] == critic ){
-				top_match = critics_reviews[critic]
-				top_match["critic_id"] = critic;
+			//critic is the id of the critic and the key for the critic match
+			compareCriticsForTopMatch(critic);
+		}
+	}
+
+	//Check critic result against top_match
+	function compareCriticsForTopMatch(critic){
+		console.log("in compare critics")
+		for(var j=0; j<3;j++){
+			if(top_match[j]["critic_id"] == critic ){
+				console.log('in compareCritics else if')
+				top_match[j] = critics_reviews[critic]
+				top_match[j]["critic_id"] = critic;
 				updateTopMatch(top_match)
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
+				break;
+			} else if(top_match[j]["critic_id"] != critic && critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( match / 2)) {
+				console.log("in compareCriticsForTopMatch if")
+				top_match[j] = critics_reviews[critic];
+				top_match[j]["critic_id"] = critic;
+				updateTopMatch(top_match);
+				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
+				break;
 			}
+
+		}
+		for(var i = 0; i < 3; i++){
+			
 		}
 		sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));
 	}
@@ -300,16 +322,6 @@
 		setMovieIdArray();
 		getActiveReviews()
 		.then(reorganizeReviews);
-
-		// 	getFirstMovies()
-		// .then(getTopMatch)
-		// .then(getCriticsReviews)
-		// .then(getUserReviews)
-		// .then(updateDomWithMovies)
-		// .then(setMovieIdArray)
-		// .then(getActiveReviews)
-		// .then(reorganizeReviews)
-		// .then(getAllMoviesApi)
 	}
 
 	// Reorganizes reviews to be easily called by id number

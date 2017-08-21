@@ -18,6 +18,7 @@ UpdateCriticResults
 	normal: they click the button, it evaluates top match and updatesTopMatch as needed
 
 New Version
+movie titles are being cut off.
 	top match is an array of objects
 	when button is clicked, loop through array, 
 		- if critic ids match, update the array element and break. 
@@ -31,12 +32,14 @@ New Version
 	 - create 3 divs
 	 - set each div to a critic in one line each
 	 - append those divs to the parent object
-
+omg ok. if id is the same, 
 
 
 
 Now
 Front end
+- load top_match into dom on refresh
+- percentage loads everything with 0 percent width so it's very tall before the bar expands. the bar should expand first and then load the text data.
 - fix or remove animation
 - Get top 3 critics working either with an array or 3 separate variables
 - prevent duplicates for all

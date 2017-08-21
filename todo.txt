@@ -36,12 +36,18 @@ New Version
 
 
 Now
+Front end
+- fix or remove animation
 - Get top 3 critics working either with an array or 3 separate variables
 - prevent duplicates for all
+- if top_match is 0%, remove the border
 - Style top 3 critics section
 - Media queries to affect number of movies loaded and mobile view with easy buttons to press
+- Move javascript to js file
+Scraper
 - recent scrape and cron job scrape
 - push database to heroku
+- record video showing code and app
 - Javascript tests with mocha or jasmine
 
 Later

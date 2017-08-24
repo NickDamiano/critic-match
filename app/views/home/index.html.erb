@@ -161,19 +161,27 @@
 	}
 
 	//Check critic result against top_match
+	// if top_match[j] is the same critic as being evalued against, replace top_match[j] and break the loop
+	// if top_match[j] is barely matching, delete them
+	// else if top_match[j] meets the requirements for being a top match, set them to that critic
 	function compareCriticsForTopMatch(critic){
-		console.log("in compare critics")
 		for(var j=0; j<3;j++){
+      		var matches = top_match[j]["matches"];
 			if(top_match[j]["critic_id"] == critic ){
-				console.log('in compareCritics else if')
 				top_match[j] = critics_reviews[critic]
 				top_match[j]["critic_id"] = critic;
 				sortTopMatch(top_match);
 				updateTopMatch(top_match);
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 				break;
+			// to prevent someone from matching perfectly on first movie but that critic only has one or two movie reviews, we 
+        		// confirm the number of critic matches is at least 20% of the number of movies reviewed by the user
+			if( matches < (Object.keys(user_reviews).length / 5)){
+				top_match[j] = {critic_id: 0, percentage: 0, matches: 0};
+				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
+			}
+
 			} else if(top_match[j]["critic_id"] != critic && critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( match / 2)) {
-				console.log("in compareCriticsForTopMatch if")
 				top_match[j] = critics_reviews[critic];
 				top_match[j]["critic_id"] = critic;
 				sortTopMatch(top_match);
@@ -191,6 +199,7 @@
 		var second = 0;;
 		var third = 0;
 		for(var i = 0; i < 3; i++){
+			// todo tomorrow figure this out so it actually sorts
 			if( top_match[i]["percentage"] > first ){
 				first = top_match[i]
 			}else if( top_match[i]["percentage"] > second ){
@@ -199,9 +208,14 @@
 				third = top_match[i]
 			}
 		}
-		console.log("first: " + first);
-		console.log("second " + second);
-		console.log("third " +  third)
+		console.log("first second third below")
+		console.log(first.percentage);
+		console.log(second.percentage);
+		console.log(third.percentage);
+		console.log("ids below");
+		console.log(first.critic_id);
+		console.log(second.critic_id);
+		console.log(third.critic_id);
 		var sorted_critics = [first, second, third ]
 		console.log("sorted below");
 		console.log(sorted_critics);
@@ -275,7 +289,6 @@
 				dataType: 'json',
 				url: '/api/movies',
 				success: function(data) {
-					console.log(data);
 					all_movies = data;	
 					sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 					// delete the active movies from it			
@@ -313,7 +326,6 @@
 				dataType: 'json',
 				url: '/api/movies/first-movies',
 				success: function(data) {
-					console.log('success', data);
 					active_movies = data;				
 				}						
 			})
@@ -354,7 +366,6 @@
 			active_reviews[id] = reviews_active[i]
 		}
 		reviews_active = active_reviews;
-		console.log(reviews_active);
 	}
 
 	// Checks if all reviews have been clicked and calls load next movie if they have
@@ -391,7 +402,6 @@
 				all_movies[i].id == movie_ids[3] ||
 				all_movies[i].id == movie_ids[4] ||
 				all_movies[i].id == movie_ids[5] ){
-				console.log(all_movies[i].id)
 				all_movies.splice(i,1);
 				i--;
 			}

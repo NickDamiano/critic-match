@@ -155,6 +155,8 @@
 			// TODO extract this to its own method where we have a top 3 array and each is compared. 
 			//critic is the id of the critic and the key for the critic match
 			compareCriticsForTopMatch(critic);
+			sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));
+
 		}
 	}
 
@@ -166,23 +168,43 @@
 				console.log('in compareCritics else if')
 				top_match[j] = critics_reviews[critic]
 				top_match[j]["critic_id"] = critic;
-				updateTopMatch(top_match)
+				sortTopMatch(top_match);
+				updateTopMatch(top_match);
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 				break;
 			} else if(top_match[j]["critic_id"] != critic && critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( match / 2)) {
 				console.log("in compareCriticsForTopMatch if")
 				top_match[j] = critics_reviews[critic];
 				top_match[j]["critic_id"] = critic;
+				sortTopMatch(top_match);
 				updateTopMatch(top_match);
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 				break;
 			}
+		}
+	}
 
-		}
+	// sort top_critic 
+	function sortTopMatch(top_match){
+		// sorting below
+		var first = 0;;
+		var second = 0;;
+		var third = 0;
 		for(var i = 0; i < 3; i++){
-			
+			if( top_match[i]["percentage"] > first ){
+				first = top_match[i]
+			}else if( top_match[i]["percentage"] > second ){
+				second = top_match[i];
+			}else if( top_match[i]["percentage"] > third){
+				third = top_match[i]
+			}
 		}
-		sessionStorage.setItem('criticsReviews', JSON.stringify(critics_reviews));
+		console.log("first: " + first);
+		console.log("second " + second);
+		console.log("third " +  third)
+		var sorted_critics = [first, second, third ]
+		console.log("sorted below");
+		console.log(sorted_critics);
 	}
 
 	//Update DOM with active movies
@@ -332,6 +354,7 @@
 			active_reviews[id] = reviews_active[i]
 		}
 		reviews_active = active_reviews;
+		console.log(reviews_active);
 	}
 
 	// Checks if all reviews have been clicked and calls load next movie if they have
@@ -357,6 +380,24 @@
 		}
 	}
 
+	// Because we get two random sets of movies for active api and all api, we delete the active movies from all
+	// Need to iterate down because index resets after deleting 
+	function deleteActiveMoviesFromAll(){
+		var movie_ids = Object.keys(reviews_active)
+		for(var i=0;i<all_movies.length;i++){
+			if(	all_movies[i].id == movie_ids[0] ||
+				all_movies[i].id == movie_ids[1] ||
+				all_movies[i].id == movie_ids[2] ||
+				all_movies[i].id == movie_ids[3] ||
+				all_movies[i].id == movie_ids[4] ||
+				all_movies[i].id == movie_ids[5] ){
+				console.log(all_movies[i].id)
+				all_movies.splice(i,1);
+				i--;
+			}
+		}
+	}
+
 	// ******************************************** Main **************************************************
 	$( document ).ready(function() {
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
@@ -370,5 +411,6 @@
 		.then(reorganizeReviews)
 		.then(getMatch)
 		.then(getAllMoviesApi)
+		.then(deleteActiveMoviesFromAll)
 	})
 </script>

@@ -18,17 +18,17 @@ namespace :scrape do
     rake_support.scrape_all_reviews
   end
 
-  desc "Scrapes all from zero"
-  task :all => :environment do
-    # instantiate RakeSupport
-    # call scrape all indices
-    # call scrape all movies
-    # call scrape all reviews
-  end
-
   desc "Scrapes only the latest reviews not in db"
   task recent: :environment do
   	rake_support = RakeSupport.new
     rake_support.scrape_recent
+  end
+end
+
+namespace :delete do 
+
+  desc "Deletes duplicate movies"
+  task :duplicate_movies => :environment do 
+    p "deleting duplicate movies"
   end
 end

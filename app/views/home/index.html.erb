@@ -103,11 +103,9 @@
 
 	// run initially and when top critic match is identified in updateCriticResults. Updates HTML for top match
 	function updateTopMatch(top_match){
-		console.log("in update top match")
-		console.log(top_match[0]);
-		console.log(top_match[1]);
-		console.log(top_match[2]);
-		top_match = top_match[0]
+		console.log("in update top match");
+		console.log(top_match);
+		top_match = top_match[0];
 		var top_match_html = document.querySelector("#top_match");
 		percentage = top_match["percentage"];
 		matches = top_match["matches"];
@@ -184,9 +182,9 @@
 			} else if(top_match[j]["critic_id"] != critic && critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( match / 2)) {
 				top_match[j] = critics_reviews[critic];
 				top_match[j]["critic_id"] = critic;
-				sortTopMatch(top_match);
-				updateTopMatch(top_match);
-				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
+				result = sortTopMatch(top_match);
+				updateTopMatch(result);
+				sessionStorage.setItem('topMatch', JSON.stringify(result));
 				break;
 			}
 		}
@@ -195,30 +193,10 @@
 	// sort top_critic 
 	function sortTopMatch(top_match){
 		// sorting below
-		var first = 0;;
-		var second = 0;;
-		var third = 0;
-		for(var i = 0; i < 3; i++){
-			// todo tomorrow figure this out so it actually sorts
-			if( top_match[i]["percentage"] > first ){
-				first = top_match[i]
-			}else if( top_match[i]["percentage"] > second ){
-				second = top_match[i];
-			}else if( top_match[i]["percentage"] > third){
-				third = top_match[i]
-			}
-		}
-		console.log("first second third below")
-		console.log(first.percentage);
-		console.log(second.percentage);
-		console.log(third.percentage);
-		console.log("ids below");
-		console.log(first.critic_id);
-		console.log(second.critic_id);
-		console.log(third.critic_id);
-		var sorted_critics = [first, second, third ]
-		console.log("sorted below");
-		console.log(sorted_critics);
+		top_match = top_match.sort(function(a, b) {
+			return parseFloat(a.percentage) - parseFloat(b.percentage);
+		})
+		return top_match
 	}
 
 	//Update DOM with active movies

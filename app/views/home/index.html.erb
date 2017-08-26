@@ -163,28 +163,54 @@
 	// if top_match[j] is barely matching, delete them
 	// else if top_match[j] meets the requirements for being a top match, set them to that critic
 	function compareCriticsForTopMatch(critic){
-		for(var j=0; j<3;j++){
-      		var matches = top_match[j]["matches"];
-			if(top_match[j]["critic_id"] == critic ){
-				top_match[j] = critics_reviews[critic]
-				top_match[j]["critic_id"] = critic;
-				sortTopMatch(top_match);
-				updateTopMatch(top_match);
+		
+		// First we loop through the top match and update the top_match with the critic if they match
+		for(var i=0; i<3; i++){
+			if(top_match[i]["critic_id"] == critic ){
+				// update the current critic with the most current match information
+				top_match[i] = critics_reviews[critic]
+				// set the id property to the current critic
+				top_match[i]["critic_id"] = critic;
+				// sort the matches
+				result = sortTopMatch(top_match);
+				// update the top match html
+				updateTopMatch(result);
+				// save the matches into sessionstorage in case page is refreshed we can retrieve and display it 
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
-				break;
-			// to prevent someone from matching perfectly on first movie but that critic only has one or two movie reviews, we 
-        		// confirm the number of critic matches is at least 20% of the number of movies reviewed by the user
-			if( matches < (Object.keys(user_reviews).length / 5)){
+				critic = false;
+				// break the loop so we don't compare the same critic to any other of the top matches and have duplicates
+				return;
+				// if the current top match critic id is not the id of the one passed in, and the one passed in's percentage is higher than current one, and 
+				// the matches for this critic passed in is 50% of the current one so not some dude with 1 review
+			}
+		}
+		// if the critic matched in the above then we don't want them anymore
+		for(var j=0; j<3;j++){
+			// set variable for matches for the current critic 
+      		var matches = top_match[j]["matches"];
+      		// if the id of the current critic matches the id of the one passed in
+      		if( matches < (Object.keys(user_reviews).length / 5)){
 				top_match[j] = {critic_id: 0, percentage: 0, matches: 0};
+				console.log("resetting the top match to zero bro!!!!!")
+				console.log(" he has " + matches + 'and minimum match is ' + (Object.keys(user_reviews).length / 4));
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 			}
-
-			} else if(top_match[j]["critic_id"] != critic && critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( match / 2)) {
+			if(critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( matches / 2)) {
+				console.log("are the ids different")
+				console.log("the critic i'm comparing with is higher than a top match");
+				console.log(critic);
+				console.log(top_match[j]);
+				// replace current top match with passed in critic
 				top_match[j] = critics_reviews[critic];
+				// update current top match critic object with critic id passed in
 				top_match[j]["critic_id"] = critic;
+				// store result of sorting top matches
 				result = sortTopMatch(top_match);
+				// update top match in html
 				updateTopMatch(result);
+				// store top match 
 				sessionStorage.setItem('topMatch', JSON.stringify(result));
+				// break so we don't compare this passed in critic with anyone else
 				break;
 			}
 		}
@@ -242,7 +268,8 @@
 					this.disabled = true;
 					disableButtons('.button_' + movie.id);
 					checkIfAllReviewed();
-					updateUserReviews(['-1', this.parentNode.id]);
+					// if we update user reviews then have not seen count negatively against critic match rate
+					// updateUserReviews(['-1', this.parentNode.id]);
 				})
 			buttons.appendChild(havent_seen_button);
 			image.src = movie.image_uri;

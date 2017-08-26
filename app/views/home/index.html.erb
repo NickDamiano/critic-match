@@ -19,7 +19,15 @@
   			<a href="<%= root_path %>"  id="top_element" class="col-md-10 col-md-offset-1">Critic    Matcher</a>
   		</div>
   		<div class="row top_matches">
-			<div id="top_match" class="critic col-md-10 col-md-offset-1" >
+			<div id="top_match_1" class="critic col-md-10 col-md-offset-1" >
+			</div>
+		</div>
+		<div class="row top_matches">
+			<div id="top_match_2" class="critic col-md-10 col-md-offset-1" >
+			</div>
+		</div>
+		<div class="row top_matches">
+			<div id="top_match_3" class="critic col-md-10 col-md-offset-1" >
 			</div>
 		</div>
   	</div>
@@ -68,7 +76,7 @@
 			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
 		}
 		top_match = JSON.parse(sessionStorage['topMatch']);
-		if(top_match["percentage"] > 0){
+		if(top_match[0]["percentage"] > 0){
 			updateTopMatch(top_match);
 		}
 	}
@@ -105,20 +113,19 @@
 	function updateTopMatch(top_match){
 		console.log("in update top match");
 		console.log(top_match);
-		top_match = top_match[0];
-		var top_match_html = document.querySelector("#top_match");
-		percentage = top_match["percentage"];
-		matches = top_match["matches"];
-		critic_id = top_match["critic_id"];
-		// set width to percent
-		top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches;
-		$( "#top_match").animate({
-			width: percentage -15 + '%'
-		}, 400, function(){
-
-		});
-		
-		// top_match_html.style.width = percentage - 15 + "%"
+		// var top_match_element = document.querySelector("")
+		top_match.reverse();
+		for(var i=0; i<3; i++){
+			var top_match_html = document.querySelector("#top_match_" + (i+1));
+			percentage = top_match[i]["percentage"];
+			matches = top_match[i]["matches"];
+			critic_id = top_match[i]["critic_id"];
+			top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches;
+			$( "#top_match_" + (i+1)).animate({
+				width: percentage -15 + '%'
+			}, 400, function(){
+				});	
+		}		
 	}
 
 	//Updates critic object upon each click of a rating
@@ -191,15 +198,9 @@
       		// if the id of the current critic matches the id of the one passed in
       		if( matches < (Object.keys(user_reviews).length / 5)){
 				top_match[j] = {critic_id: 0, percentage: 0, matches: 0};
-				console.log("resetting the top match to zero bro!!!!!")
-				console.log(" he has " + matches + 'and minimum match is ' + (Object.keys(user_reviews).length / 4));
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 			}
 			if(critics_reviews[critic]["percentage"] > top_match[j]["percentage"] && critics_reviews[critic]["matches"] > ( matches / 2)) {
-				console.log("are the ids different")
-				console.log("the critic i'm comparing with is higher than a top match");
-				console.log(critic);
-				console.log(top_match[j]);
 				// replace current top match with passed in critic
 				top_match[j] = critics_reviews[critic];
 				// update current top match critic object with critic id passed in

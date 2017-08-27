@@ -16,6 +16,10 @@
 	background-color: #2D86AA;
 }
 
+a{
+	color:white;
+}
+
 .critic{
 	margin-top: .5em;
 
@@ -25,7 +29,6 @@
 	height: 1.7em;
 	width: 0%;
 	background: #0faa50;
-	color: white;
 	-webkit-transition:400ms linear;
 	-moz-transition:400ms linear;
 	-o-transition:400ms linear;
@@ -34,7 +37,6 @@
 }
 
 #top_match_2{
-	color:white;
 	height: 1.7em;
 	width: 0%;
 	background: #10467E;
@@ -46,7 +48,6 @@
 }
 
 #top_match_3{
-	color: white;
 	height: 1.7em;
 	width: 0%;
 	background: #BE4B00;

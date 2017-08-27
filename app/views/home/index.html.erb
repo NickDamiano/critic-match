@@ -274,8 +274,6 @@
 					this.disabled = true;
 					disableButtons('.button_' + movie.id);
 					checkIfAllReviewed();
-					// if we update user reviews then have not seen count negatively against critic match rate
-					// updateUserReviews(['-1', this.parentNode.id]);
 				})
 			buttons.appendChild(havent_seen_button);
 			image.src = movie.image_uri;
@@ -421,6 +419,10 @@
 
 	// ******************************************** Main **************************************************
 	$( document ).ready(function() {
+		var movie_element = document.getElementById('movies');
+		while(movie_element.firstChild){
+			movie_element.removeChild(movie_element.firstChild);
+		}
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
 		.then(getTopMatch)

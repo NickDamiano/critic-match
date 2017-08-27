@@ -122,7 +122,7 @@
 			critic_id = top_match[i]["critic_id"];
 			critic_name = top_match[i]["name"]
 			critic_publication = top_match[i]["publication"]
-			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name + " - " + critic_publication + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches + "</a>";
+			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name + " - " + critic_publication + " - " + percentage + "%" + " for " +  + matches + ' matches' + "</a>";
 			percentage = percentage - 16.7 + '%';
 			document.getElementById("top_match_" + (i+1)).style.width= percentage;
 			// $( "#top_match_" + (i+1)).animate({
@@ -205,7 +205,7 @@
 			// set variable for matches for the current critic 
       		var matches = top_match[j]["matches"];
       		// if the id of the current critic matches the id of the one passed in
-      		if( matches < (Object.keys(user_reviews).length / 5)){
+      		if( matches < (Object.keys(user_reviews).length / 4)){
 				top_match[j] = {critic_id: 0, percentage: 0, matches: 0};
 				sessionStorage.setItem('topMatch', JSON.stringify(top_match));
 			}

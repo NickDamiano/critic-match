@@ -1,4 +1,3 @@
-	<div class="container">
   		<div class="row top_matches">
 			<div id="top_match_1" class="critic col-md-10 col-md-offset-1" >
 			</div>
@@ -103,7 +102,7 @@
 			critic_publication = top_match[i]["publication"]
 			// add some sort of clarification here so they understand the match rate
 			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name + " - " + critic_publication + " - " + percentage + "%" + " for " +  + matches + ' matches' + "</a>";
-			percentage = percentage - 17.9 + '%';
+			percentage = percentage - 16.7 + '%';
 			document.getElementById("top_match_" + (i+1)).style.width= percentage;
 		}		
 	}

@@ -1,6 +1,7 @@
 Now
 
 Front end
+- center the movies div. when i moved to application.js it fucked up the style
 - Move javascript to js file
 - add critics page /critics/:id
 	- displays two bars with 0 space on top of each other with user and critic name next to it
@@ -22,7 +23,7 @@ stretch
 	critic matcher title gets smaller
 	critic name and percentage only
 	have only two movies centered and have some logic to prevent more
-	
+
 
 Bugs
 - when you click on the critic match header it flashes movies in a row below for a second before loading just the top six

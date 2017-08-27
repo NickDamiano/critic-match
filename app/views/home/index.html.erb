@@ -120,7 +120,9 @@
 			percentage = top_match[i]["percentage"];
 			matches = top_match[i]["matches"];
 			critic_id = top_match[i]["critic_id"];
-			top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches;
+			critic_name = top_match[i]["name"]
+			critic_publication = top_match[i]["publication"]
+			top_match_html.innerHTML = critic_name + " - " + critic_publication + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches;
 			percentage = percentage - 16.7 + '%';
 			document.getElementById("top_match_" + (i+1)).style.width= percentage;
 			// $( "#top_match_" + (i+1)).animate({
@@ -142,6 +144,8 @@
 		var reviews = reviews_active[movie_id];
 		for(var i=0; i < reviews.length; i++){
 			critic 				= reviews[i]["critic_id"];
+			name 				= reviews[i]["critic_first_name"] + " " + reviews[i]["critic_last_name"]
+			publication 		= reviews[i]["publication"]
 			score 				= reviews[i]["score"];
 			difference 			= Math.abs(rating - score);
 			// if critic exists do this
@@ -156,7 +160,9 @@
 				critics_reviews[critic] = {
 					"matches": 1,
 					"points" : difference,
-					"percentage": (100-difference)
+					"percentage": (100-difference),
+					"name": name,
+					"publication": publication
 				}
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher

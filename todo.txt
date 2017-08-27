@@ -1,8 +1,10 @@
 Now
 Front end
-- fix or remove animation
-- Style top 3 critics section
 - Move javascript to js file
+- add critics page /critics/:id
+	- displays two bars with 0 space on top of each other with user and critic name next to it
+	to the left is the thumbnail and name
+	we don't need api call, we can just find the movies array? or we do because of active or we can create a second object that holds all the movies and the active movies and acts as a reference for us to draw on when we are listing movies on critics page
 
 Scraper
 - recent scrape and cron job scrape
@@ -11,7 +13,6 @@ Scraper
 - Javascript tests with mocha or jasmine
 
 Later
-- After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
 - when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
 
 stretch
@@ -29,125 +30,4 @@ See critics who are reviewing movies today that have been active up to 20 years,
 - it would be cool if the app could detect which movies they were rating and which they weren't seeing and adjust the movies it asked them, like by genre without asking them. 
 - After you get a critic you can rate movies just with him or just him and the top 3 are compared to refine it the most?
 
--front page part 4 (Tuesday/Wednesday/Thursday)
-	- create restful critic page that shows all matched movies with closest matched at top and cool graphics
-	- create a button to wipe out results and start over
-	- have front end tests
-	- Get domain all set up
-	- post project in makersquare facebook and slack. 
 
-
--get scraper completely good (mostly good)
-- every api call should handle too many requests
-
-- build recent movies in theater scraper
-- build rss scraper
--write tests for scraper
-
-
-2. Create the Scraper
-3. Scrape movie reviews
-  - Get the movie name and save info for movie
-  - Get critic review and save info for critic, and critic review
-  - Hit next page 
-  (alternatively might be able to do it by critic and get all reviews or by publication)
-4. Create minimal front end with form and ajax that loads the next. maybe it just does one at a time anyway? 
-5. Fill out front end with bootstrap and styling
-6. Create Daily Scraper / Cronjob / rake task and set it to run
-
-For serving movies - it should start with movies in the last 3 years with reviews over 40, randomized, once that's exhausted it should go to above 30, above 20, etc and how does it keep track of the ones they've already reviewed? For first timers it has to load up a thing for movies, maybe 200 list
-
-Models
-
-- create user model with
-	- email
-	- password
-	(this is a stretch goal)
-
-- create temp user model
-	- id
-	- puts encyrpted thing in browser?
-
-- create a movie model
-	- title
-	- release_date
-	- genre
-	- Metacritic score
-	- Rotten tomatoes score
-- Create a critic model
-	- first name
-	- last name
-	- publications [ array ]
-	- link to their movie reviews?
-	- active boolean. have they posted a review in the last two months?
-- UserReview
-	- user_id
-	- movie_id
-	- score (1-5) integer
-- CriticReview
-	- critic_id
-	- movie_id 
-	- score (1-5) type integer
-	- Higher than metacritic - boolean
-	- lower than metacritic - boolean
-	- difference from metacritic - integer +30 or -50
-
-Controllers
-- Rating
-	- new
-		creates a new userReview record - hit with ajax
-	- 
-
-Integration
-- Landing page has the banner, the selection for genre, and when the button is clicked, shows the next partial which has at least one film with the appropriate
-5 buttons, haven't seen button, thumbnail, title
-
-Possible algorithms for matching
-- scores possible 1,2,3,4 hated it, meh, liked it, loved it and a box to type in a score 0-100 for people who want the most accurate result. It's one row of movies and the number of movies is based on the width of the screen where one or two movies for a phone. 
-- It might be easier to pull all critics out into a hash with points set to zero so i dont have to logically add them in as it goes and matches
-- the hash has number of reviews and then we calculate average difference not total. 
-- { movie_id: 1, critics: [{critic_id: 1, number_of_reviews: 8, point_difference: 83}], {critic_id: 2 }] }
-
-Initial Scraper
-- Go to movies page http://www.metacritic.com/browse/movies/title/dvd
-- Open a movie title
-- Click critic reviews
-- loop through all movie reviews capturing score, critic, and publication. When you finish callback to do the next movie
-- When that page is full, if there are more pages in pagination, go to the next and loop through it all
-- Then go back through on http://www.metacritic.com/browse/movies/title/theater for all theater results
-
-Daily Scraper ( Rake Task / Chron-job )
-- Go to http://www.metacritic.com/browse/movies/release-date/theaters/date and check the first 30 films. 
-- For each film, look to see if the critic review count has changed and if it has, find the newest reviews that match and save them
-- For each new film, scrape all reviews
-
-Additional thoughts
-- The movies asked about should continue to be from the last 2-3 years and be automated to update. movies that are rarely reviewed or marked as not seen less than 25% of the time should maybe be removed from being questioned if they are older than a certain date?
-- It should be movies from last 4 years at the oldest probably, and also it should look for only active critics. 
-
-
-
-# TODO for Sunday -
-#scrapers
-#  create rake tasks to scrape all, scrape letter range
-#  create method/class that can scrape http://www.metacritic.com/browse/movies/release-date/theaters/date
-#  create daily cron job to look for new movies in rss feed (XML) maybe using just a api request thing
-#  write tests for scrapers and use vcr gem
-#modify models for columns for review_uri and critic_uri etc also add image thumbnails
-#scrape the reviews (make sure no additions needed for models
-#  setup api for ajax return for queries on movie
-#start frontend
-# create title thing, initially log results in console
-# build css for movie element and have the page display approipriate number based on width
-# after you click on each element for the review have it reload with the appropriate number (checking
-	#media query again each time in case of resize or phone turn)
-# set up local storage logging for user reviews
-# when user clicks, ajax fires, gets all reviews as api, then javascript loops through each review, 
-# calculates point difference for that critic, updates local storage by critic id with point differential
-# and increments number of matched review and adds a percentage match field
-# log the top 3 with name, percentage, and count of reviews (skews towards an inactive critic who you match with a lot)
-# maybe we need a minimum match
-# do CSS styling for matching bars
-#stretch goals!
-# create critic page where it shows which movies, your score, their score, differential (but i need to store that)
-# create authentication

@@ -31,6 +31,11 @@ class ApiController < ApplicationController
 		# TODO refactor the below to make it one line and one query
 		movie_ids.each do | movie_id |
 			reviews = Movie.find(movie_id).critic_movies
+			reviews.each do | review | 
+				review.critic_first_name.capitalize!
+				review.critic_last_name.capitalize!
+				review.publication = review.publication.split.map(&:capitalize).join(' ')
+			end
 			reviews_array.push(reviews)
 		end
 		reviews = reviews_array.to_json

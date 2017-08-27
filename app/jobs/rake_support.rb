@@ -1,7 +1,17 @@
 class RakeSupport 
 
   def update_reviews_with_names
-    p "test"
+    result = CriticMovie.all
+    counter = 0
+    result.each do | review |
+      critic = Critic.find(review.critic_id)
+      review.critic_first_name = critic.first_name 
+      review.critic_last_name = critic.last_name
+      review.publication = critic.publication
+      p review.save
+      counter +=1
+      p counter
+    end
   end
 
 	def scrape_all_indices

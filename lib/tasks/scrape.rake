@@ -25,10 +25,11 @@ namespace :scrape do
   end
 end
 
-namespace :delete do 
+namespace :update do 
 
-  desc "Deletes duplicate movies"
-  task :duplicate_movies => :environment do 
-    p "deleting duplicate movies"
+  desc "Adds critic and publication names to movie review"
+  task :reviews => :environment do 
+    rake_support = RakeSupport.new
+    rake_support.update_reviews_with_names
   end
 end

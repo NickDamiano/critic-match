@@ -77,6 +77,7 @@
 		}
 		top_match = JSON.parse(sessionStorage['topMatch']);
 		if(top_match[0]["percentage"] > 0){
+			top_match.reverse();
 			updateTopMatch(top_match);
 		}
 	}
@@ -113,7 +114,6 @@
 	function updateTopMatch(top_match){
 		console.log("in update top match");
 		console.log(top_match);
-		// var top_match_element = document.querySelector("")
 		top_match.reverse();
 		for(var i=0; i<3; i++){
 			var top_match_html = document.querySelector("#top_match_" + (i+1));
@@ -121,10 +121,13 @@
 			matches = top_match[i]["matches"];
 			critic_id = top_match[i]["critic_id"];
 			top_match_html.innerHTML = "Critic ID: " + critic_id + " - " + "Percentage: " + percentage + " - " + 'Matches: ' + matches;
-			$( "#top_match_" + (i+1)).animate({
-				width: percentage -15 + '%'
-			}, 400, function(){
-				});	
+			percentage = percentage - 16.7 + '%';
+			document.getElementById("top_match_" + (i+1)).style.width= percentage;
+			// $( "#top_match_" + (i+1)).animate({
+			// 	width: percentage -15 + '%'
+			// }, 400, function(){
+			// 	});	
+			// adjustCriticWidth("top_match_" + i);
 		}		
 	}
 
@@ -223,7 +226,7 @@
 		top_match = top_match.sort(function(a, b) {
 			return parseFloat(a.percentage) - parseFloat(b.percentage);
 		})
-		return top_match
+		return top_match;
 	}
 
 	//Update DOM with active movies

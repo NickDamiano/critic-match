@@ -24,15 +24,25 @@
 #top_match_1{
 	height: 1.7em;
 	width: 0%;
-	background: #2ECC71;
+	background: #0faa50;
 	color: white;
+	-webkit-transition:400ms linear;
+	-moz-transition:400ms linear;
+	-o-transition:400ms linear;
+	-ms-transition:400ms linear;
+	transition:400ms linear;
 }
 
 #top_match_2{
 	color:white;
 	height: 1.7em;
 	width: 0%;
-	background: #10467E
+	background: #10467E;
+	-webkit-transition:400ms linear;
+	-moz-transition:400ms linear;
+	-o-transition:400ms linear;
+	-ms-transition:400ms linear;
+	transition:400ms linear;
 }
 
 #top_match_3{
@@ -40,6 +50,11 @@
 	height: 1.7em;
 	width: 0%;
 	background: #BE4B00;
+	-webkit-transition:400ms linear;
+	-moz-transition:400ms linear;
+	-o-transition:400ms linear;
+	-ms-transition:400ms linear;
+	transition:400ms linear;
 }
 
 #top_match{

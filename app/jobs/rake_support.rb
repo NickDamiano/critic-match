@@ -1,5 +1,9 @@
 class RakeSupport 
 
+  def update_reviews_with_names
+    p "test"
+  end
+
 	def scrape_all_indices
 		index_pages = []
 	    scraper = MetacriticScraper.new 

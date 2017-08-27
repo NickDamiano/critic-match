@@ -1,50 +1,9 @@
-Order of tasks:
-
-							Old version
-
-updateTopMatch - 
-	- gets html element, gets percentage, matches, and id, then sets innerhtml to result
-getTopMatch - 
-	- runs on page load to pull out existig top match into variable and call
-	update top match. if not exist then it sets it as a single object
-UpdateCriticResults
-	- if percentage is higher and matches is higher call UpdateTopMatch
-	- if the ids match with the top match, we just update top match with
-	updateTopMatch
-	- session store top match
-
-	order: get top match on page load, then updatecriticresults on review button click, then update Top match html
-
-	normal: they click the button, it evaluates top match and updatesTopMatch as needed
-
-New Version
-movie titles are being cut off.
-	top match is an array of objects
-	when button is clicked, loop through array, 
-		- if critic ids match, update the array element and break. 
-		- else if percentage is higher and matches is = or higher, replace that element with current critic
-		- Session store
-		- call update Top match with new result as parameter
-	Update Top match	
-	 - sort the objects by percentage
-	 - if top 3 result already, destroy parent node
-	 - create a div with a class to contain the top 3 and append it 
-	 - create 3 divs
-	 - set each div to a critic in one line each
-	 - append those divs to the parent object
-omg ok. if id is the same, 
-
-
-
 Now
 Front end
-- percentage loads everything with 0 percent width so it's very tall before the bar expands. the bar should expand first and then load the text data.
 - fix or remove animation
-- Get top 3 critics working either with an array or 3 separate variables
-- if top_match is 0%, remove the border
 - Style top 3 critics section
-- Media queries to affect number of movies loaded and mobile view with easy buttons to press
 - Move javascript to js file
+
 Scraper
 - recent scrape and cron job scrape
 - push database to heroku
@@ -54,6 +13,9 @@ Scraper
 Later
 - After scraper is done, add field to reviews for author name by creating a rake task that gets each review in batches, gets the critic name, updates the record and saves the record. tricky part is the batches
 - when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
+
+stretch
+- add mobile support
 
 Bugs
 - when you click on the critic match header it flashes movies in a row below for a second before loading just the top six

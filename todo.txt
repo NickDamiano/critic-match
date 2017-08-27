@@ -19,6 +19,10 @@ Later
 
 stretch
 - add mobile support
+	critic matcher title gets smaller
+	critic name and percentage only
+	have only two movies centered and have some logic to prevent more
+	
 
 Bugs
 - when you click on the critic match header it flashes movies in a row below for a second before loading just the top six

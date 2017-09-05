@@ -85,22 +85,28 @@ class RakeSupport
       			p "closing the file, movie_page is #{movie_page}"
       			end
       		end
-
   		end
 	end
 
 	def save_data(result, movie_page)
-		first = result.first 
-  		if first.nil?
-			File.open("failed_movie_scrapes.yml", "a") do |f|
-      			f.write(movie_page.to_yaml)
-      			f.close
-      			return
-      		end
+		
+  		if result == [] || result.nil?
+  			File.open("failed_movie_scrapes.yml", "a") do |f|
+        			f.write(movie_page.to_yaml)
+        			f.close
+        			return
+        		end
   		end
-
+      # if movie_page == "/movie/la-vida-inmoral-de-la-pareja-ideal"
+      #   binding.pry
+      #   p 'hi'
+      # end
+      first = result.first 
   		saver = Saver.new
   		movie = saver.save_movie(first)
+      # this line gets rid of existing recent reviews so we don't have duplicates. we scrape recent and maybe 10 people have written reviews
+      # a week later 20 have so we don't want those same 10. just start fresh.
+      movie.critic_movies.delete_all
   		result.each do | review | 
     		critic = saver.save_critic(review)
     		review = saver.save_review(review, movie, critic)

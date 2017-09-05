@@ -7,6 +7,7 @@ Learned
 - rails api returns
 -javascript promises
 - planning, using pseudocode, writing out models and things ahead of time and thinking critically 
+cronjobs and whenever gem, yaml dump into production database, pushing database to herokuok
 
 Bugs
 - would scrape the link, then try to go to critic-reviews of that link, main link would resolve to different name with number changed to number but that wouldn't happen for critic reviews

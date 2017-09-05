@@ -32,9 +32,11 @@ class ApiController < ApplicationController
 		movie_ids.each do | movie_id |
 			reviews = Movie.find(movie_id).critic_movies
 			reviews.each do | review | 
-				review.critic_first_name.capitalize!
-				review.critic_last_name.capitalize!
-				review.publication = review.publication.split.map(&:capitalize).join(' ')
+				if review.critic_first_name
+					review.critic_first_name.capitalize!
+					review.critic_last_name.capitalize!
+					review.publication = review.publication.split.map(&:capitalize).join(' ')
+				end
 			end
 			reviews_array.push(reviews)
 		end

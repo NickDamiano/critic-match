@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+#cron job gem
+gem 'whenever', '~>0.9.7'
 #jquery for some relaxin' ajaxin'
 gem 'jquery-rails', '~> 4.1.1'
 # bootstrap stylin'

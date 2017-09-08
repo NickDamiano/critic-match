@@ -378,9 +378,7 @@
 	}
 
 	// ******************************************** Main **************************************************
-
-	$( document).on('turbolinks:load', main);
-	$( document ).ready( main )
+	$( document).ready( main );
 	$( document ).ready(displayCriticInfo)
 
 	function main(){

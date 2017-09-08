@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: critic-match_production
-  username: critic-match
+  username: nickdamiano
   password: <%= ENV['CRITIC-MATCH_DATABASE_PASSWORD'] %>

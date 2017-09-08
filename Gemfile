@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+#yaml dumper
+gem 'yaml_db'
 #cron job gem
 gem 'whenever', '~>0.9.7'
 #jquery for some relaxin' ajaxin'

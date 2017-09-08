@@ -1,14 +1,13 @@
 Now
 
 Front end
-- Move javascript to js file
 - add critics page /critics/:id
+	- put if statement to run js to set up critics page based off data. no thumbnails just movie titles with bars below or maybe it's the user score on left, movie name in middle? i don't know figure out how to style this
 	- displays two bars with 0 space on top of each other with user and critic name next to it
 	to the left is the thumbnail and name
 	we don't need api call, we can just find the movies array? or we do because of active or we can create a second object that holds all the movies and the active movies and acts as a reference for us to draw on when we are listing movies on critics page
 - make sure i'm not pulling duplicates or that there are no duplicate movies
 Scraper
-- fix cron job for production database
 - push database to heroku
 - record video showing code and app
 - Javascript tests with mocha or jasmine

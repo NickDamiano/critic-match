@@ -17,7 +17,7 @@ set :output, "#{path}/log/whenever.log"
 #   runner "AnotherModel.prune_old_records"
 # end
 
-every 1.day, :at => '10:16 pm' do 
+every 1.day, :at => '09:10 pm' do 
 	rake "scrape:recent"
 end
 

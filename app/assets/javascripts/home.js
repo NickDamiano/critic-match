@@ -187,6 +187,8 @@
 	//Update DOM with active movies
 	function updateDomWithMovies(){
 		var movies_html_id = document.querySelector("#movies");
+        // TOdo Swap out the movie_element foreach with regular array or each
+        // because it's breaking precompile
 		active_movies.forEach((movie, i)=>{
 			var movie_element = document.createElement('div');
 			movie_element.className = 'movie';

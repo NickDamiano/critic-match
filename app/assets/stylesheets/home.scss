@@ -61,8 +61,18 @@ a{
 	transition:400ms linear;
 }
 
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+  .movie{
+  	float: left;
+  }
+
+}
+
 .movie{
-	float: right;
+	float: left;
 	border-width: thin;
 	padding: 5px;
 	padding-left: none;

@@ -187,9 +187,10 @@
 	//Update DOM with active movies
 	function updateDomWithMovies(){
 		var movies_html_id = document.querySelector("#movies");
-        // TOdo Swap out the movie_element foreach with regular array or each
+        // Todo Swap out the movie_element foreach with regular array or each
         // because it's breaking precompile
-		active_movies.forEach((movie, i)=>{
+        for(var k=0;k < active_movies.length; k++){
+            movie = active_movies[k];
 			var movie_element = document.createElement('div');
 			movie_element.className = 'movie';
 			var movieTitle 	= document.createElement('div');
@@ -242,7 +243,7 @@
 			if(movies_html_id){
 				movies_html_id.appendChild(movie_element)
 			}
-		})
+		}
 	}
 
 

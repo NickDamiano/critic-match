@@ -211,8 +211,9 @@
 					movie_and_rating.push(this.innerHTML);
 					movie_and_rating.push(this.parentNode.id);
 					// disable the buttons
-					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie.id);
-					disableButtons(".button_" + movie.id);
+                    var movie_id = this.parentElement.id
+					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie_id);
+					disableButtons(".button_" + movie_id);
 					checkIfAllReviewed();
 					updateCriticResults(movie_and_rating);
 					updateUserReviews(movie_and_rating);
@@ -228,7 +229,8 @@
 					//TODO pass [-1,movie_id] to updateUserReviews
 					this.className = 'clicked';
 					this.disabled = true;
-					disableButtons('.button_' + movie.id);
+                    var movie_id = this.parentElement.id
+					disableButtons('.button_' + movie_id);
 					checkIfAllReviewed();
 				})
 			buttons.appendChild(havent_seen_button);

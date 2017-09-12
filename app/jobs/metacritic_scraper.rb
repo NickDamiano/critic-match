@@ -1,3 +1,4 @@
+
 class MetacriticScraper
 
 	attr_accessor :agent

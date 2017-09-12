@@ -1,6 +1,3 @@
-require 'Mechanize'
-require 'pry-byebug'
-
 class MetacriticScraper
 
 	attr_accessor :agent

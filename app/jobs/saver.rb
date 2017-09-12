@@ -1,4 +1,3 @@
-require 'pry-byebug'
 class Saver
 
 	# takes a hash

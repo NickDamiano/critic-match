@@ -387,7 +387,7 @@
 	$( document ).ready(displayCriticInfo)
 
 	function main(){
-
+        console.log('did i compile?')
 		var movie_element = document.getElementById('movies');
 		// TODO fix this with controller specific js
 		if(movie_element){

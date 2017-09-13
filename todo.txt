@@ -1,6 +1,8 @@
 Now
 
 Front end
+- recent scrapes seem to be getting null names? oh shit because i don't have names set into it? only with the rake task??? check that.
+
 - get media queries working - make title smaller, fix offset for the names, maybe make the font for the critic names smaller. make the 
 - for session storage or for critic, add an array of matched movies. 
 - then for critic page, do an api call to get the reviews for the critic

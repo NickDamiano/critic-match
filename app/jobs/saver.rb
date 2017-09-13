@@ -52,8 +52,11 @@ class Saver
 	def save_review(review_info, movie_object, critic_object)
 		# also have code to prevent duplicate record
 		p "about to save the review for #{review_info[:author_name]} review of #{review_info[:movie_title]}  }"
+		critic_first_name = critic_object[:first_name]
+		critic_last_name = critic_object[:last_name]
+		publication = critic_object[:publication]
 		review = critic_object.critic_movies.create(movie_id: movie_object.id, 
-			score: review_info[:score])
+			score: review_info[:score], critic_first_name: critic_first_name, critic_last_name: critic_last_name, publication: publication)
 		review
 	end
 end

@@ -65,8 +65,6 @@
 
 	// run initially and when top critic match is identified in updateCriticResults. Updates HTML for top match
 	function updateTopMatch(top_match){
-		console.log("in update top match");
-		console.log(top_match);
 		top_match.reverse();
 		for(var i=0; i<3; i++){
 			var top_match_html = document.querySelector("#top_match_" + (i+1));
@@ -92,11 +90,11 @@
 		var movie_id 	= movie_and_rating[1];
 		var reviews = reviews_active[movie_id];
 		for(var i=0; i < reviews.length; i++){
-			critic 				= reviews[i]["critic_id"];
-			name 				= reviews[i]["critic_first_name"] + " " + reviews[i]["critic_last_name"]
-			publication 		= reviews[i]["publication"]
-			score 				= reviews[i]["score"];
-			difference 			= Math.abs(rating - score);
+			var critic 				= reviews[i]["critic_id"];
+			var name 				= reviews[i]["critic_first_name"] + " " + reviews[i]["critic_last_name"]
+			var publication 		= reviews[i]["publication"]
+			var score 				= reviews[i]["score"];
+			var difference 			= Math.abs(rating - score);
 			// if critic exists do this
 			if(critic in critics_reviews){
 				critics_reviews[critic]["matches"] += 1;
@@ -104,14 +102,16 @@
 				total_matches 	= critics_reviews[critic]["matches"];
 				total_points 	= critics_reviews[critic]["points"];
 				critics_reviews[critic]["percentage"] = Math.round(100 - (total_points / total_matches));
-				percentage = critics_reviews[critic]["percentage"]
+				percentage = critics_reviews[critic]["percentage"];
+                critics_reviews[critic]["movies"].push([movie_id, score]);
 			}else if(!(critic in critics_reviews)){
 				critics_reviews[critic] = {
 					"matches": 1,
 					"points" : difference,
 					"percentage": (100-difference),
 					"name": name,
-					"publication": publication
+					"publication": publication,
+                    "movies": [movie_id, score]
 				}
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher
@@ -379,7 +379,6 @@
 
 	function displayCriticInfo(){
 		critic_id = document.URL.split('/')[4]
-		console.log(critic_id)
 	}
 
 	// ******************************************** Main **************************************************
@@ -387,7 +386,6 @@
 	$( document ).ready(displayCriticInfo)
 
 	function main(){
-        console.log('did i compile?')
 		var movie_element = document.getElementById('movies');
 		// TODO fix this with controller specific js
 		if(movie_element){

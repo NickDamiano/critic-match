@@ -111,7 +111,7 @@
 					"percentage": (100-difference),
 					"name": name,
 					"publication": publication,
-                    "movies": [movie_id, score]
+                    "movies": [[movie_id, score]]
 				}
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher
@@ -301,6 +301,17 @@
 		}
 	}
 
+    function getMovieBatch(movie_ids) {
+        return $.ajax({
+            datatype: 'json',
+            url: '/api/movies/' + movie_ids,
+            success: function(data) {
+                movies = data;
+            }
+        })
+        return JSON.parse(movies);
+    }
+
 	// *********************************************** Helper Functions *******************************************
 
 	// Sets the variable for array of movies in preparation for getting the reviews for active
@@ -377,13 +388,51 @@
 		}
 	}
 
-	function displayCriticInfo(){
-		critic_id = document.URL.split('/')[4]
-	}
+    // ******************************************** Critic **************************************************
+
+    function criticPage(){
+        var url = document.URL.split('/')
+        if(url.length == 5){
+            // run critic page javascript
+            var critic_id = Number(url[4])
+            console.log(critic_id)
+            var critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
+            var criticReviews = critics_reviews[critic_id].movies;
+            var user_reviews = JSON.parse(sessionStorage['userReviews']);
+            // so then it loops through criticReviews, gets the id and score,
+            // then calls users review by id and converts the score to 0-100
+            // then calls a method which creates an html element and attaches it
+            // then does the next one
+            var movies_array = [];
+            for(var i=0;i<criticReviews.length;i++){
+                movies_array.push(criticReviews[i][0])
+            }
+            var movies = getMovieBatch(movies_array);
+            console.log(movies);
+            for(var i=0;i<criticReviews.length;i++){
+                var movie_id = criticReviews[i][0];
+                var critic_score = criticReviews[i][1];
+                var user_review = user_reviews[movie_id] * 25 - 10
+                var movie_element = document.createElement('div');
+                // set inner html to title.
+                // create element for critic score put his name and score
+                // create element for user
+                // add these to movie_element, then do it again, scores should float
+                // tricky part is the name so it doesn't overrun
+
+                console.log(movie_id);
+                console.log(critic_score);
+                console.log(user_review);
+            }
+            console.log(criticReviews);
+            console.log(user_reviews);
+        }
+    }
+ 
 
 	// ******************************************** Main **************************************************
 	$( document).ready( main );
-	$( document ).ready(displayCriticInfo)
+    $( document ).ready(criticPage);
 
 	function main(){
 		var movie_element = document.getElementById('movies');

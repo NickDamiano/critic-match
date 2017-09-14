@@ -14,7 +14,6 @@ Front end
 	we don't need api call, we can just find the movies array? or we do because of active or we can create a second object that holds all the movies and the active movies and acts as a reference for us to draw on when we are listing movies on critics page
 - make sure i'm not pulling duplicates or that there are no duplicate movies
 Scraper
-- push database to heroku
 - record video showing code and app
 - Javascript tests with mocha or jasmine
 

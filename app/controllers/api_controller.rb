@@ -24,6 +24,18 @@ class ApiController < ApplicationController
 		render :json => @movies
 	end
 
+	def get_movie_batch
+		movies_array = []
+		movie_ids = params[:id].split(',').map{ |number| number.to_i }
+		movie_ids.each do | movie_id |
+			movie = Movie.find(movie_id)
+			movie.title = movie.title.split.map(&:capitalize).join(' ');
+			movies_array.push(movie)
+		end
+		movies = movies_array.to_json
+		render :json => movies
+	end
+
 	def get_reviews
 		reviews_array = []
 		movie_ids = params[:id].split(',').map{ |number| number.to_i }

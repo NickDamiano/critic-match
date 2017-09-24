@@ -76,7 +76,11 @@
 			// add some sort of clarification here so they understand the match rate
 			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name  + " - " + percentage + "%" + " for " + matches + ' matches'  + " - " + critic_publication + "</a>";
 			percentage = percentage - 16.7 + '%';
-			document.getElementById("top_match_" + (i+1)).style.width= percentage;
+			if ( $(window).width() > 480) {      
+				document.getElementById("top_match_" + (i+1)).style.width= percentage;
+			}else {
+  				document.getElementById("top_match_" + (i+1)).style.width= 100;
+			}
 		}		
 	}
 

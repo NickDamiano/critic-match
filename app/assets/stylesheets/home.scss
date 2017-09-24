@@ -2,6 +2,19 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+  .movie{
+  	float: left;
+  }
+  
+  #top_element{
+  	font-size: 2em;
+  }
+}
+
 #top_element, #top_element:hover{
 	font-size: 5em;
 	padding: 5px;
@@ -61,15 +74,7 @@ a{
 	transition:400ms linear;
 }
 
-@media only screen 
-  and (min-device-width: 320px) 
-  and (max-device-width: 480px)
-  and (-webkit-min-device-pixel-ratio: 2) {
-  .movie{
-  	float: left;
-  }
 
-}
 
 .movie{
 	float: left;

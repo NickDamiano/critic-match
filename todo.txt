@@ -4,9 +4,7 @@ Front end
 - recent scrapes seem to be getting null names? oh shit because i don't have names set into it? only with the rake task??? check that.
 
 - get media queries working - make title smaller, fix offset for the names, maybe make the font for the critic names smaller. make the 
-- for session storage or for critic, add an array of matched movies. 
-- then for critic page, do an api call to get the reviews for the critic
-- then loop through userReviews
+- then loop through userReviews and critics_reviews
 - add critics page /critics/:id
 	- put if statement to run js to set up critics page based off data. no thumbnails just movie titles with bars below or maybe it's the user score on left, movie name in middle? i don't know figure out how to style this
 	- displays two bars with 0 space on top of each other with user and critic name next to it

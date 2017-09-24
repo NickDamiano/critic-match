@@ -79,7 +79,7 @@
 			if ( $(window).width() > 480) {      
 				document.getElementById("top_match_" + (i+1)).style.width= percentage;
 			}else {
-  				document.getElementById("top_match_" + (i+1)).style.width= 100;
+  				document.getElementById("top_match_" + (i+1)).style.width= "100%";
 			}
 		}		
 	}

@@ -78,9 +78,9 @@
 			percentage = percentage - 16.7 + '%';
 			if ( $(window).width() > 480) {      
 				document.getElementById("top_match_" + (i+1)).style.width= percentage;
-			}else {
-  				document.getElementById("top_match_" + (i+1)).style.width= "100%";
+				continue;
 			}
+  			document.getElementById("top_match_" + (i+1)).style.width= "100%";
 		}		
 	}
 

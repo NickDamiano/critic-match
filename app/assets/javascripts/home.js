@@ -74,7 +74,7 @@
 			critic_name = top_match[i]["name"]
 			critic_publication = top_match[i]["publication"]
 			// add some sort of clarification here so they understand the match rate
-			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name + " - " + critic_publication + " - " + percentage + "%" + " for " +  + matches + ' matches' + "</a>";
+			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name  + " - " + percentage + "%" + " for " + matches + ' matches'  + " - " + critic_publication + "</a>";
 			percentage = percentage - 16.7 + '%';
 			document.getElementById("top_match_" + (i+1)).style.width= percentage;
 		}		

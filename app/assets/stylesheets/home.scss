@@ -6,15 +6,34 @@
   and (min-device-width: 320px) 
   and (max-device-width: 480px)
   and (-webkit-min-device-pixel-ratio: 2) {
-  .movie{
-  	 -webkit-appearance: none;
-  	 float: left;
-  	 margin-left: 1px;
-  }
-  
-  #top_element{
-  	font-size: 2em;
-  }
+	  .movie{
+	  	 -webkit-appearance: none;
+	  	 float: left;
+	  	 margin: 0 0 0 0 !important;
+	  	 width: 5em;
+	  }
+
+	  img{
+	  	height:50%;
+	  }
+
+	  #movies{
+	  	width: 80%;
+	  }
+	  
+	  #top_element{
+	  	font-size: 2em;
+	  }
+}
+
+
+.movie{
+	display: inline-block;
+	border-width: thin;
+	padding: 5px;
+	padding-left: none;
+	width: 12em;
+	margin: 15px 15px 0px 10px;
 }
 
 #top_element, #top_element:hover{
@@ -86,14 +105,6 @@ a{
 
 
 
-.movie{
-	display: inline-block;
-	border-width: thin;
-	padding: 5px;
-	padding-left: none;
-	width: 12em;
-	margin: 10px 10px 0px 5px;
-}
 
 @-moz-document url-prefix(){
 	.clicked{

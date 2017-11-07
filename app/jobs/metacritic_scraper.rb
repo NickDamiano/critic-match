@@ -68,7 +68,7 @@ class MetacriticScraper
 			sleep(120)
 			scrape_thumbnail(movie_uri_base)
 		end
-		image_uri = page.search(".fl.inset_right2 img")[0].attributes["src"].value
+		image_uri = page.search(".summary_img")[0].attributes["src"].value
 	end
 
 	def log_failed(movie_uri)

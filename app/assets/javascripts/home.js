@@ -205,11 +205,11 @@
 			$(buttons).attr('id', movie.id);
 			for(var i=1; i < 5; i++){
 				var button = document.createElement('button');
-				button.className = 'button_' + movie.id;
+				button.className = 'button_' + movie.id + ' btn btn-default btn-sm';
 				button.addEventListener('click', function() { 
 					var movie_and_rating = [];
 					match++;
-					this.className = 'clicked';
+					this.className = 'clicked btn btn-primary btn-sm';
 					this.disabled = true;
 					sessionStorage.setItem('match', JSON.stringify(match));
 					movie_and_rating.push(this.innerHTML);
@@ -227,11 +227,11 @@
 				buttons.appendChild(button);
 			}
 			var havent_seen_button = document.createElement('button');
-			havent_seen_button.className = 'button_' + movie.id;
+			havent_seen_button.className = 'button_' + movie.id + ' btn btn-default btn-sm havent_seen';
 			havent_seen_button.innerHTML = "Have not seen";
 			havent_seen_button.addEventListener('click', function() { 
 					//TODO pass [-1,movie_id] to updateUserReviews
-					this.className = 'clicked';
+					this.className = 'clicked btn btn-primary btn-sm';
 					this.disabled = true;
                     var movie_id = this.parentElement.id
 					disableButtons('.button_' + movie_id);
@@ -291,7 +291,7 @@
 			all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;	
 		}
 		if(all_movies.length > 0){
-			active_movies = all_movies.splice(0,6);
+			active_movies = all_movies.splice(0,4);
 			sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 			return Promise.resolve(true);
 		}else if (all_movies.length == 0){

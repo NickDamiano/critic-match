@@ -2,7 +2,10 @@ Now
 
 Front end
 - recent scrapes seem to be getting null names? oh shit because i don't have names set into it? only with the rake task??? check that.
-
+- omg fuck mobile. the javascript isn't working, the media queries aren't doing shit. fuck css. fuck mobile fuck all this bullshit i hate this so much. 
+- i think remove the damn link for the critic and just have it be a single page app for now. get mobile working on it at least at some point. 
+- no idea why it stays at 0% instead of becoming 100%. 
+- do some hacky stuff so even though it pulls 6 moies we only show two at a time for mobile
 - get media queries working - make title smaller, fix offset for the names, maybe make the font for the critic names smaller. make the 
 - then loop through userReviews and critics_reviews
 - add critics page /critics/:id

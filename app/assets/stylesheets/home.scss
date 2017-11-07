@@ -29,6 +29,10 @@
 	background-color: #00CED1;
 }
 
+#movies{
+	text-align: center;
+}
+
 a{
 	color:white;
 }
@@ -81,11 +85,11 @@ a{
 
 
 .movie{
-	float: left;
+	display: inline-block;
 	border-width: thin;
 	padding: 5px;
 	padding-left: none;
-	width: 11em;
+	width: 12em;
 	margin: 10px 10px 0px 5px;
 }
 
@@ -124,11 +128,10 @@ button{
 
 img{
 	
-	width: 120px !important;
-	height: 175px !important;
+	width: 125px !important;
+	height: 182px !important;
 	display: block;
 	margin: 0 auto;
-	margin-right: 20px;
 
 }
 

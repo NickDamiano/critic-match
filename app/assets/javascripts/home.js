@@ -26,7 +26,7 @@
 	function getTopMatch(){
 		if(sessionStorage["topMatch"] == undefined ){
 			top_match = [{critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}];
-			sessionStorage.setItem('topMatch', JSON.stringify(top_match));			
+			sessionStorage.setItem('topMatch', JSON.stringify(top_match));	
 		}
 		top_match = JSON.parse(sessionStorage['topMatch']);
 		if(top_match[0]["percentage"] > 0){

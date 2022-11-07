@@ -12,7 +12,26 @@
 
 	// *********************************** Get Session Variables section ************************************
 
-	
+	// all_movies session storage
+	//	[
+	//		{
+	//			"id":276,
+	//			"title":"Working Woman",
+	//			"release_date":"2019-03-29",
+	//			"genre":null,
+	//			"metacritic_score":79,
+	//			"rotten_tomatoes_score":null,
+	//			"created_at":"2022-05-17T21:06:48.764Z",
+	//			"updated_at":"2022-05-17T21:06:48.764Z",
+	//			"movie_uri":"http://www.metacritic.com/movie/working-woman",
+	//			"image_uri":"https://static.metacritic.com/images/products/movies/0/257ef46511e88924815dab9681108cd7-250h.jpg"
+	//		},
+	//{
+		//"id":703,"title":"A Short History Of Decay","release_date":"2014-05-16","genre":null,"metacritic_score":54,
+		//"rotten_tomatoes_score":null,"created_at":"2022-05-18T19:12:44.305Z","updated_at":"2022-05-18T19:12:44.305Z",
+		//"movie_uri":"http://www.metacritic.com/movie/a-short-history-of-decay","image_uri":"https://static.metacritic.com/images/products/movies/9/464bec03d4c704ff1f1b60687b6b2783-250h.jpg"},
+		//{"id":870,"title":"Wedding Doll","release_date":"2016-04-15","genre":null,"metacritic_score":66,"rotten_tomatoes_score":null,"created_at":"2022-05-19T05:23:35.270Z","updated_at":"2022-05-19T05:23:35.270Z",
+		//"movie_uri":"htt
 
 	// sets variable which is iterated on each time a movie is reviewed
 	function getMatch(){
@@ -203,7 +222,7 @@
 			var buttons = document.createElement('div');
 			buttons.addClass = 'buttons';
 			$(buttons).attr('id', movie.id);
-			for(var i=1; i < 5; i++){
+			for(var i=1; i < 6; i++){
 				var button = document.createElement('button');
 				button.className = 'button_' + movie.id + ' btn btn-default';
 				button.addEventListener('click', function() { 
@@ -291,7 +310,7 @@
 			all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;	
 		}
 		if(all_movies.length > 0){
-			active_movies = all_movies.splice(0,4);
+			active_movies = all_movies.splice(0,1);
 			sessionStorage.setItem('all_movies', JSON.stringify(all_movies));
 			return Promise.resolve(true);
 		}else if (all_movies.length == 0){
@@ -416,7 +435,8 @@
             for(var i=0;i<criticReviews.length;i++){
                 var movie_id = criticReviews[i][0];
                 var critic_score = criticReviews[i][1];
-                var user_review = user_reviews[movie_id] * 25 - 10
+                var user_review = user_reviews[movie_id] * 20 - 10 // why is this minus 10 ? i changed it to 20 to reflect 5 levels. I think it's -10 becaause 
+                // I didn't want it to be 25 but rather 15 / 40 / 65 / 90
                 var movie_element = document.createElement('div');
                 // set inner html to title.
                 // create element for critic score put his name and score

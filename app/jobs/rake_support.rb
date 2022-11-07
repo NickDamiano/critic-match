@@ -1,3 +1,5 @@
+
+
 class RakeSupport 
 
   def update_reviews_with_names
@@ -36,6 +38,9 @@ class RakeSupport
 	    end
 	end
 
+	# Create instance of MetacriticScraper, load the index pages, iterate through the index pages
+	# scrape the movies urls, push the links from that index page into movies_page array, after scraping
+	# write to movies_list.yml all movie pages to scrape link. 
 	def scrape_all_movies
 		scraper = MetacriticScraper.new
 		index_pages = YAML.load_file('index_pages.yml')
@@ -44,13 +49,17 @@ class RakeSupport
   			result = scraper.scrape_for_movies(index_page)
   			movies_pages += result
   			p "CURRENT INDEX PAGE IS #{index_page}"
+
+  			# because we get blocked scraping - we write the movies list each time
+  			File.open("movies_list.yml", "w+") do |f|
+	      	f.write(movies_pages.to_yaml)
+	      	f.close
+	    	end
+
   			sleep(rand(2..3))
   		end
 
-  		File.open("movies_list.yml", "w+") do |f|
-	      f.write(movies_pages.to_yaml)
-	      f.close
-	    end
+  		
 	end
 
 	def scrape_all_reviews
@@ -63,13 +72,13 @@ class RakeSupport
   			movie_list = YAML.load_file('movies_list.yml').reverse
   			movie_page = movie_list.first
       		p "ABOUT TO SCRAPE #{movie_page}"
-      		sleep(80)
+      		sleep(rand(10..80))
   			result = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_page}")
       		# Grab first review to pull movie info out and save it if it's not nil
       		if result
       			p "in scrape_all_reviews about to save data"
       			save_data(result, movie_page)
-      			# pop off first line (this movie) and save back to yaml
+      			# pop off first line (this movie) and save back to yaml so we don't duplicate it again later
       			movie_list.shift
       			File.open("movies_list.yml", "w+") do |f|
       				f.write(movie_list.to_yaml)

@@ -1,8 +1,13 @@
+
+note - maybe after 20 reviews or something, it narrows down to a specific group of critics then finds the movies they rated in common and asks those?
+
 Now
+
+
 
 Front end
 - recent scrapes seem to be getting null names? oh shit because i don't have names set into it? only with the rake task??? check that.
-- omg fuck mobile. the javascript isn't working, the media queries aren't doing shit. fuck css. fuck mobile fuck all this bullshit i hate this so much. 
+- fix media queries
 - i think remove the damn link for the critic and just have it be a single page app for now. get mobile working on it at least at some point. 
 - no idea why it stays at 0% instead of becoming 100%. 
 - do some hacky stuff so even though it pulls 6 moies we only show two at a time for mobile
@@ -14,6 +19,23 @@ Front end
 	to the left is the thumbnail and name
 	we don't need api call, we can just find the movies array? or we do because of active or we can create a second object that holds all the movies and the active movies and acts as a reference for us to draw on when we are listing movies on critics page
 - make sure i'm not pulling duplicates or that there are no duplicate movies
+- Change it to best of 5 instead of 4 - i think i did this to look pretty - 	
+- movies should be random right now it seems like it's just alphabetical reverse order. not sure if it's just that the front end is bugged 
+- resdesign the banner color and font - I don't like it
+- Look into removing session storage but probably not worth it - just ship it man
+- some issues - design problems are there are so many movies and i haven't seen that many so i'm mostly clicking havne't seen - so i can list a bunhc of movies but that makes it hard on mobile, i can try to refine by genre, but i don't know how
+- questions for the user
+	- what is a movie you loved that most people hated
+	- what is a movie you hated that most people loved
+	- what genres do you watch the most
+- whats the best - 2 reviews with high match or 10 reviews with slightly lower match? what's the minimum number of movies rated percentage
+- maybe after 30 reviews or something it takes top 20 critics matched so far and compares among them? or some point it narrows the critics its comparing to?
+- I need to make sure that i am really matching correctly 
+
+
+- maybe the larger the metacritic score difference between what you rated and what average critic score is - the heavier that match is weighted versus ones that are obvious like everyone loves toy story YES. THIS SEEMS THE BEST APPROACH
+- also i think it should be one movie at a time because you don't have to click all over
+
 Scraper
 - record video showing code and app
 - Javascript tests with mocha or jasmine

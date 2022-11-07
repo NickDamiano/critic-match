@@ -47,14 +47,14 @@ class MetacriticScraper
 		movies_uri = []
 		begin
 			page = @agent.get(uri)
-		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError, Net::HTTPServiceUnavailable
 			sleep(61)
 			page = @agent.get(uri)
 		end
 		# gets array of movies
-		movies = page.search("#mantle_skin .title a")
+		movies = page.search("a.title")
 		movies.each_with_index do |movie, i| 
-			movie_uri = page.search("#mantle_skin .title a")[i].attributes["href"].value
+			movie_uri = page.search("a.title")[i].attributes["href"].value
 			movies_uri.push(movie_uri)
 		end
 		movies_uri
@@ -63,12 +63,15 @@ class MetacriticScraper
 	def scrape_thumbnail(movie_uri_base)
 		# thumbnail_link = movie_uri_base[0..-16]
 		begin
+			sleep(30)
 			page = @agent.get(movie_uri_base)
-		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError, Net::HTTPServiceUnavailable
 			sleep(120)
 			scrape_thumbnail(movie_uri_base)
 		end
-		image_uri = page.search(".summary_img")[0].attributes["src"].value
+		# There are two types of metacritic image links, some pages have a trailer gif thing running in the background and the image is a different class so we handle that
+		image_uri = page.search(".summary_img")
+		image_uri = image_uri.none? ? page.search(".c-cmsImage")[0].children[1].attributes["src"].text : page.search(".summary_img")[0].attributes["src"].value
 	end
 
 	def log_failed(movie_uri)
@@ -85,13 +88,14 @@ class MetacriticScraper
 		movie_uri = "#{movie_uri_base}/critic-reviews"
 		begin
 			page = @agent.get(movie_uri)
-		rescue
+		rescue Net::HTTPServiceUnavailable
 			p "in review scraper rescue block"
 			log_failed(movie_uri)
 			sleep(100)
 			return nil
 		end
-		reviews = page.search("#mantle_skin .pad_top1")
+		reviews = page.search(".review")
+
 		if reviews.nil? || reviews.empty?
 			log_failed(movie_uri_base)
 			return nil
@@ -100,8 +104,9 @@ class MetacriticScraper
 
 		# iterate through reviews
 		reviews.each_with_index do |review, i|
+			# returns metacritic score
 			score = reviews[i].search(".metascore_w")
-
+			# binding.pry
 			# Not all author's have their own page so we check
 			author_uri = reviews[i].search(".author a")
 			author_uri = author_uri.empty? ? "none" : author_uri[0].attributes["href"].value
@@ -113,16 +118,22 @@ class MetacriticScraper
 				p "about to scrape the review for index #{i}"
 
 				# some authors don't have names
+				# Get the overall average metascore
 				metacritic_score = page.search(".larger").text
+
+
 				movie_title = page.css("h1").text
 				release_date = page.css(".label+ span").text
 				# some movies never get a release date on metacritic so scrape first review date
+				# 
 				if release_date == "TBA"
-					release_date = page.css(".pad_btm1:nth-child(1) .date").text
+					release_date = page.css(".review:nth-child(1) .date").text
 				end
 				author_name = reviews[i].search(".author").empty? ? "none" : reviews[i].search(".author").children[0].text
-				publication_name = reviews[i].search(".source a")[0].nil? ? "none" : reviews[i].search(".source a")[0].text
-				publication_uri = reviews[0].search(".source a")[0].attributes["href"].value
+				# binding.pry
+				possible_publication_name = reviews[i].search(".source a")[0].text
+				publication_name = possible_publication_name.nil? ? reviews[i].search(".source a")[0].children[0].attributes["title"].text : possible_publication_name 
+				publication_uri = reviews[i].search(".source a")[0].attributes["href"].text
 				review_collection.push({score: score, author_name: author_name, author_uri: author_uri, 
 					publication_name: publication_name, publication_uri: publication_uri, movie_title: movie_title,
 					image_thumbnail: image_thumbnail, release_date: release_date, movie_uri: movie_uri_base, 

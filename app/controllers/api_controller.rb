@@ -1,6 +1,8 @@
 class ApiController < ApplicationController
-	# Threshold for number of movie reviews per movie
-	CUTOFF = 35
+	# Threshold for number of movie reviews per movie.
+	# the problem this is solving is there are a lot of freaking movies made and it's showing movies that I've never seen, which is why i thought about organizing
+	# by genre - since showing me horror and romantic movies
+	CUTOFF = 10
 
 	# To quickly load landing page, only grabs 5 movies, then ajax calls the rest in the background
 	def get_first_movies
@@ -15,7 +17,7 @@ class ApiController < ApplicationController
 
 	# probably want to get above 40 or 45 reviews for the movies asked about, then if those are exhausted, get more with lower number of revies
 	def get_movies
-		@movies = Movie.where("release_date > ?", 4.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
+		@movies = Movie.order("RANDOM()").where("release_date > ?", 10.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
 		.limit(500).to_a
 		@movies.each do | movie | 
 			movie.title = movie.title.split.map(&:capitalize).join(' ')

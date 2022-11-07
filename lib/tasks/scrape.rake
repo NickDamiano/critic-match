@@ -1,3 +1,9 @@
+# 1. We scrape index pages to get the pages we need to scrape movies of
+# 2. We scrape all movie links
+# 3. We scrape all reviews
+# 4. We update publication names to movie review
+
+
 namespace :scrape do
 
   desc "Scrapes all index pages into a yaml file index_pages.yml"

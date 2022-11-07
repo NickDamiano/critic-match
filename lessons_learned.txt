@@ -16,4 +16,5 @@ Bugs
 design challenges
 - how do you serve movies effectively? threshold for number of reviews? ask about genre
 - how many reviews per page? do you have login? do you use session or local variables?
-- 
+- how do you match the most efficiently? First attempt was to 
+- Very few 0 score movies so scores range from 10 to 90

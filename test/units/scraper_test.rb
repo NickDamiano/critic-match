@@ -24,6 +24,7 @@ class ScraperTest < ActiveSupport::TestCase
   	VCR.use_cassette("movie_list_b2") do 
   		uri = "http://www.metacritic.com/browse/movies/title/dvd/b?page=1"
   		result = scraper.scrape_for_movies(uri)
+      binding.pry
   		first = "/movie/batman-v-superman-dawn-of-justice"
   		assert_equal 95, result.count 
   		assert_equal first, result[0]

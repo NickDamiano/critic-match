@@ -2,6 +2,7 @@
 note - maybe after 20 reviews or something, it narrows down to a specific group of critics then finds the movies they rated in common and asks those?
 
 Now
+look at scraping the genre from each movie page and adding that as a column. then present a list of genres to the user first time up
 
 
 

@@ -14,11 +14,11 @@ class MetacriticScraper
 		page = ''
 		begin
 			page = @agent.get(uri)
-		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError, Net::HTTPServiceUnavailable
 			sleep(61)
 			return nil
 		end
-		movie_links = page.search("#mantle_skin .title_wrapper a")
+		movie_links = page.search("a.title")
 	end
 
 	def scrape_for_index(letter)

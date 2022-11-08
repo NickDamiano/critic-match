@@ -114,7 +114,8 @@ class RakeSupport
   		saver = Saver.new
   		movie = saver.save_movie(first)
       # this line gets rid of existing recent reviews so we don't have duplicates. we scrape recent and maybe 10 people have written reviews
-      # a week later 20 have so we don't want those same 10. just start fresh.
+      # a week later 20 have so we don't want those same 10. just start fresh. Oh wow I was just going to try to address this edge case and old nick did already
+      # Thanks old nick!
       movie.critic_movies.delete_all
   		result.each do | review | 
     		critic = saver.save_critic(review)

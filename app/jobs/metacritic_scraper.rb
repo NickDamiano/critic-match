@@ -132,7 +132,7 @@ class MetacriticScraper
 				author_name = reviews[i].search(".author").empty? ? "none" : reviews[i].search(".author").children[0].text
 				# binding.pry
 				possible_publication_name = reviews[i].search(".source a")[0].text
-				publication_name = possible_publication_name.nil? ? reviews[i].search(".source a")[0].children[0].attributes["title"].text : possible_publication_name 
+				publication_name = possible_publication_name == "" ? reviews[i].search(".source a")[0].children[0].attributes["title"].text : possible_publication_name 
 				publication_uri = reviews[i].search(".source a")[0].attributes["href"].text
 				review_collection.push({score: score, author_name: author_name, author_uri: author_uri, 
 					publication_name: publication_name, publication_uri: publication_uri, movie_title: movie_title,

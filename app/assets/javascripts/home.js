@@ -106,11 +106,13 @@
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
 		//convert to 0-100 to match up with critic reviews
+		console.log(movie_and_rating)
 		var total_matches;
 		var total_points;
 		var percentage;
-		var rating 	= (movie_and_rating[0] * 25) - 10;
+		var rating 	= (movie_and_rating[0] * 20) - 10;
 		var movie_id 	= movie_and_rating[1];
+		var movie_name 	= movie_and_rating[2]
 		var reviews = reviews_active[movie_id];
 		for(var i=0; i < reviews.length; i++){
 			var critic 				= reviews[i]["critic_id"];
@@ -126,7 +128,7 @@
 				total_points 	= critics_reviews[critic]["points"];
 				critics_reviews[critic]["percentage"] = Math.round(100 - (total_points / total_matches));
 				percentage = critics_reviews[critic]["percentage"];
-                critics_reviews[critic]["movies"].push([movie_id, score]);
+                critics_reviews[critic]["movies"].push([movie_name, movie_id, score]);
 			}else if(!(critic in critics_reviews)){
 				critics_reviews[critic] = {
 					"matches": 1,
@@ -134,7 +136,7 @@
 					"percentage": (100-difference),
 					"name": name,
 					"publication": publication,
-                    "movies": [[movie_id, score]]
+                    "movies": [[movie_name, movie_id, score]]
 				}
 			}
 			//if critic does not exist in database do this check against top match and replace top match if score is higher
@@ -224,15 +226,17 @@
 			$(buttons).attr('id', movie.id);
 			for(var i=1; i < 6; i++){
 				var button = document.createElement('button');
-				button.className = 'button_' + movie.id + ' btn btn-default';
+				button.className = 'button_' + movie.id + ' btn btn-primary';
 				button.addEventListener('click', function() { 
 					var movie_and_rating = [];
 					match++;
 					this.className = 'clicked btn btn-primary';
 					this.disabled = true;
 					sessionStorage.setItem('match', JSON.stringify(match));
+					// Pushes the score and then push the movie id then the movie name
 					movie_and_rating.push(this.innerHTML);
 					movie_and_rating.push(this.parentNode.id);
+					movie_and_rating.push(document.getElementsByClassName("movie_title")[0].innerHTML)
 					// disable the buttons
                     var movie_id = this.parentElement.id
 					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie_id);
@@ -246,11 +250,11 @@
 				buttons.appendChild(button);
 			}
 			var havent_seen_button = document.createElement('button');
-			havent_seen_button.className = 'button_' + movie.id + ' btn btn-default havent_seen';
+			havent_seen_button.className = 'button_' + movie.id + ' btn btn-primary havent_seen';
 			havent_seen_button.innerHTML = "Have not seen";
 			havent_seen_button.addEventListener('click', function() { 
 					//TODO pass [-1,movie_id] to updateUserReviews
-					this.className = 'clicked btn btn-primary havent_seen';
+					this.className = 'clicked btn btn-default havent_seen';
 					this.disabled = true;
                     var movie_id = this.parentElement.id
 					disableButtons('.button_' + movie_id);
@@ -306,6 +310,7 @@
 	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
 		if( typeof all_movies == 'undefined'){
+			//todo look at below line to see if it's what's pulling same movies again
 			all_movies_check = sessionStorage['all_movies']
 			all_movies = (typeof all_movies_check == 'string' ) ? JSON.parse(all_movies_check) : [] ;	
 		}
@@ -426,11 +431,16 @@
             // then calls users review by id and converts the score to 0-100
             // then calls a method which creates an html element and attaches it
             // then does the next one
+
+            // This part gets the list of ids for movies and does a batch pull to get those movies and
+            //	store them into movies variable
             var movies_array = [];
             for(var i=0;i<criticReviews.length;i++){
-                movies_array.push(criticReviews[i][0])
+                movies_array.push(criticReviews[i][1])
             }
+            console.log(movies_array)
             var movies = getMovieBatch(movies_array);
+
             console.log(movies);
             for(var i=0;i<criticReviews.length;i++){
                 var movie_id = criticReviews[i][0];
@@ -438,6 +448,9 @@
                 var user_review = user_reviews[movie_id] * 20 - 10 // why is this minus 10 ? i changed it to 20 to reflect 5 levels. I think it's -10 becaause 
                 // I didn't want it to be 25 but rather 15 / 40 / 65 / 90
                 var movie_element = document.createElement('div');
+                critic_compare = document.getElementById("critic_compare")
+                movie_element.innerHTML = critic_id
+                critic_compare.append(movie_element)
                 // set inner html to title.
                 // create element for critic score put his name and score
                 // create element for user

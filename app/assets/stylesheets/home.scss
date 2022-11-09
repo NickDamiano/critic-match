@@ -42,7 +42,7 @@
 }
 
 #top_element, #top_element:hover{
-	font-size: 4em;
+	font-size: 6em;
 	padding: 5px;
 	text-align: center;
 	font-family: 'Lato', sans-serif;
@@ -50,7 +50,7 @@
 	font-style: italic;
 	text-decoration: none;
 	color: white;
-	background-color: #00CED1;
+	background-color: #0C6291;
 }
 
 #movies{
@@ -66,7 +66,9 @@ a{
 }
 
 .havent_seen{
-	width: 10.5em;
+	width: 13em;
+	clear:left;
+	margin-top: 2px;
 }
 
 #top_match_1{
@@ -117,8 +119,8 @@ a{
 }
 
 button{
-	float: left;
 	margin: 1.8px;
+	margin-top: 10px;
 	
 	font-family: 'Roboto', sans-serif;
 }

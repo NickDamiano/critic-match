@@ -106,7 +106,6 @@
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
 		//convert to 0-100 to match up with critic reviews
-		console.log(movie_and_rating)
 		var total_matches;
 		var total_points;
 		var percentage;
@@ -301,10 +300,9 @@
 			datatype: 'json',
 			url: '/api/reviews/' + movie_ids,
 			success: function(data) {
-				reviews_active = data;
+				reviews_active = JSON.stringify(data);
 			}
 		})
-		return reviews_active;
 	}
 
 	//Gets initial 5 movies to load onto landing page
@@ -333,11 +331,11 @@
         return $.ajax({
             datatype: 'json',
             url: '/api/movies/' + movie_ids,
+            "timeout": 5000,
             success: function(data) {
-                movies = data;
+                var movies = JSON.stringify(data);
             }
         })
-        return JSON.parse(movies);
     }
 
 	// *********************************************** Helper Functions *******************************************
@@ -423,7 +421,6 @@
         if(url.length == 5){
             // run critic page javascript
             var critic_id = Number(url[4])
-            console.log(critic_id)
             var critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
             var criticReviews = critics_reviews[critic_id].movies;
             var user_reviews = JSON.parse(sessionStorage['userReviews']);
@@ -439,9 +436,14 @@
                 movies_array.push(criticReviews[i][1])
             }
             console.log(movies_array)
-            var movies = getMovieBatch(movies_array);
+            console.log("movies below")
+            var movies_response = getMovieBatch(movies_array).then(function(data){
+            	console.log(data)
+            });
+            
+            // I think we need a new data structure here
+            // var movies_compared = {movie_id: 199, movie_name: "hot to trot", metacritic_score: "93", critic_score: "91", user_score: "99"}
 
-            console.log(movies);
             for(var i=0;i<criticReviews.length;i++){
                 var movie_id = criticReviews[i][0];
                 var critic_score = criticReviews[i][1];
@@ -456,13 +458,7 @@
                 // create element for user
                 // add these to movie_element, then do it again, scores should float
                 // tricky part is the name so it doesn't overrun
-
-                console.log(movie_id);
-                console.log(critic_score);
-                console.log(user_review);
             }
-            console.log(criticReviews);
-            console.log(user_reviews);
         }
     }
  

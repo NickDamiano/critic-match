@@ -30,13 +30,16 @@ class ApiController < ApplicationController
 	def get_movie_batch
 		movies_array = []
 		movie_ids = params[:id].split(',').map{ |number| number.to_i }
+		puts movie_ids
 		movie_ids.each do | movie_id |
 			movie = Movie.find(movie_id)
 			movie.title = movie.title.split.map(&:capitalize).join(' ');
 			movies_array.push(movie)
 		end
 		movies = movies_array.to_json
+		puts movies
 		render :json => movies
+		# Is the above really needed if we're returning movies to_json
 	end
 
 	def get_reviews

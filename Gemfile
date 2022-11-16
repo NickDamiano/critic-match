@@ -5,6 +5,10 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+
+gem "actionpack", ">= 5.2.6.2"
+gem "activesupport", ">= 5.2.4.3"
+gem "actionview", ">= 5.2.7.1"
 #yaml dumper
 gem 'yaml_db'
 #cron job gem
@@ -18,7 +22,8 @@ gem 'rails', '~> 5.1.1'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
-gem 'puma', '~> 3.7'
+gem "puma", ">= 4.3.12"
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets

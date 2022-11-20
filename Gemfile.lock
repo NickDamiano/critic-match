@@ -280,7 +280,7 @@ DEPENDENCIES
   pg (~> 1.1)
   pry-byebug (~> 3.4)
   puma (~> 3.7)
-  rails (~> 6.0)
+  rails (~> 6.1)
   sass-rails (~> 5.0)
   selenium-webdriver
   simplecov (~> 0.14.1)

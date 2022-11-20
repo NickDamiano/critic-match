@@ -45,6 +45,9 @@ gem 'pry-byebug', '~>3.4'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+gem 'net-smtp', require: false
+gem 'net-imap', require: false
+gem 'net-pop', require: false
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

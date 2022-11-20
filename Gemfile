@@ -4,7 +4,7 @@ git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
-ruby '2.6.10'
+ruby '3.1.1'
 #yaml dumper
 gem 'yaml_db'
 #cron job gem
@@ -36,7 +36,7 @@ gem 'jbuilder', '~> 2.5'
 
 # Make rails console pretty
 gem 'hirb', '~>0.7.3'
-
+gem 'net-smtp'
 # Web scraper Mechanize
 gem 'mechanize', '~>2.7'
 # Pry bye bug to pause execution

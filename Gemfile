@@ -39,7 +39,6 @@ gem 'jbuilder', '~> 2.5'
 
 # Make rails console pretty
 gem 'hirb', '~>0.7.3'
-gem 'net-smtp'
 # Web scraper Mechanize
 gem 'mechanize', '~>2.7'
 # Pry bye bug to pause execution

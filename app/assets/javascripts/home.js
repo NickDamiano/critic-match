@@ -418,6 +418,15 @@
 
     // ******************************************** Critic **************************************************
 
+    function sortFunction(a, b) {
+	    if (a[0] === b[0]) {
+	        return 0;
+	    }
+	    else {
+	        return (a[0] < b[0]) ? -1 : 1;
+	    }
+	}
+
     function criticPage(){
         var url = document.URL.split('/')
         if(url.length == 5){
@@ -464,22 +473,14 @@
                 critic_page_info.push(critic_user_movie)
             }
 
-            // Reorder the array by score difference here TODO
-            for(i=0;i<critic_page_info.length;i++){
-        		for(j=0;j<critic_page_info.length-i-1;j++)
-        		{
-        			if(critic_page_info[i][0] > critic_page_info[i+1][0])
-        			{
-        				var temp = critic_page_info[i];
-        				critic_page_info[i] = critic_page_info[i+1];
-        				critic_page_info[i+1] = temp;
-        				
-        			}
-        		}
 
-        	}
 
-        	console.log(critic_page_info)
+			
+
+            // Reorder the array by score difference here
+            critic_page_info.sort(sortFunction)
+
+        	
             // Create and add the table rows cells
             for(var i=0;i<critic_page_info.length;i++){
             	// Get the table element

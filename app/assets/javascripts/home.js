@@ -110,6 +110,7 @@
 		var total_matches;
 		var total_points;
 		var percentage;
+		// This is where we set if it's 20/40/60/80/100 or 10/30/50/70/90. -10 changes it to the latter and is current system
 		var rating 	= (movie_and_rating[0] * 20) - 10;
 		var movie_id 	= movie_and_rating[1];
 		var movie_name 	= movie_and_rating[2]
@@ -304,7 +305,6 @@
 				reviews_active = data;
 			}
 		})
-		return reviews_active;
 	}
 
 	//Gets initial 5 movies to load onto landing page
@@ -422,47 +422,85 @@
         var url = document.URL.split('/')
         if(url.length == 5){
             // run critic page javascript
-            var critic_id = Number(url[4])
-            console.log(critic_id)
-            var critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
-            var criticReviews = critics_reviews[critic_id].movies;
-            var user_reviews = JSON.parse(sessionStorage['userReviews']);
-            // so then it loops through criticReviews, gets the id and score,
-            // then calls users review by id and converts the score to 0-100
-            // then calls a method which creates an html element and attaches it
-            // then does the next one
+            // Extract the ID from the URL
+            var critic_id = url[4]
 
-            // This part gets the list of ids for movies and does a batch pull to get those movies and
-            //	store them into movies variable
+            // Retrieve the storage object showing reviews from every critic within the scope of movies we also rated
+            	// so far
+            var critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
+
+            // Retrieve the movies reviewed for the current critic we are comparing with which includes movie name, movie id
+            // and critic score
+            //[ "The Grudge", "5331", 38 ]
+            var criticReviews = critics_reviews[critic_id]["movies"];
+            
+            // Retrieve the user reviews from session storage which is a hash of movie id as key and user score as value
+            // { 130: "2", 2182: "2", 3007: "3"}
+            var user_reviews = JSON.parse(sessionStorage['userReviews']);
+
+            // 
             var movies_array = [];
             for(var i=0;i<criticReviews.length;i++){
                 movies_array.push(criticReviews[i][1])
             }
-            console.log(movies_array)
             var movies = getMovieBatch(movies_array);
 
-            console.log(movies);
-            for(var i=0;i<criticReviews.length;i++){
-                var movie_id = criticReviews[i][0];
-                var critic_score = criticReviews[i][1];
-                var user_review = user_reviews[movie_id] * 20 - 10 // why is this minus 10 ? i changed it to 20 to reflect 5 levels. I think it's -10 becaause 
-                // I didn't want it to be 25 but rather 15 / 40 / 65 / 90
-                var movie_element = document.createElement('div');
-                critic_compare = document.getElementById("critic_compare")
-                movie_element.innerHTML = critic_id
-                critic_compare.append(movie_element)
-                // set inner html to title.
-                // create element for critic score put his name and score
-                // create element for user
-                // add these to movie_element, then do it again, scores should float
-                // tricky part is the name so it doesn't overrun
+           	// loop through to create new data structure
+            var toAppend = []
+            // contains the array for what we will append on the critic page
+            var critic_page_info = []
 
-                console.log(movie_id);
-                console.log(critic_score);
-                console.log(user_review);
+            for(var i=0;i<criticReviews.length;i++){
+            	var movie_name = criticReviews[i][0]
+                var movie_id = criticReviews[i][1];
+                var critic_score = criticReviews[i][2];
+                var user_review = user_reviews[movie_id] * 20 - 10 
+                var critic_user_movie = []
+                var score_difference = Math.abs(Number(critic_score) - Number(user_review))
+
+                // Create data structure with smallest difference to largest difference {movie_id}
+                //[Score Difference, Critic Score, User Score, Movie Title]
+                critic_user_movie = [score_difference, critic_score, user_review, movie_name, movie_id]
+                critic_page_info.push(critic_user_movie)
             }
-            console.log(criticReviews);
-            console.log(user_reviews);
+
+            // Reorder the array by score difference here TODO
+            for(i=0;i<critic_page_info.length;i++){
+        		for(j=0;j<critic_page_info.length-i-1;j++)
+        		{
+        			if(critic_page_info[i][0] > critic_page_info[i+1][0])
+        			{
+        				var temp = critic_page_info[i];
+        				critic_page_info[i] = critic_page_info[i+1];
+        				critic_page_info[i+1] = temp;
+        				
+        			}
+        		}
+
+        	}
+
+        	console.log(critic_page_info)
+            // Create and add the table rows cells
+            for(var i=0;i<critic_page_info.length;i++){
+            	// Get the table element
+	            var critic_results 	= document.getElementById("critic_results")
+	            // Create a new row
+	            var new_row = critic_results.insertRow()
+
+	            for(var j=0;j<4;j++){
+	            	
+
+		            // Create a new cell
+		            var new_cell = new_row.insertCell()
+
+		            // Create the text for the
+		            var new_text = document.createTextNode(critic_page_info[i][j])
+
+		            // Append the text to the cell
+		            new_cell.appendChild(new_text)
+	            }
+            }
+            
         }
     }
  

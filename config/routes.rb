@@ -7,5 +7,5 @@ Rails.application.routes.draw do
   get '/api/movies/:id', to: 'api#get_movie_batch'
   get '/api/reviews/initial', to: 'api#get_initial_reviews'
   get '/api/reviews/:id', to: 'api#get_reviews'
-  get '/critic/:id', to: 'home#critic'
+  get '/critic/:id', to: 'critic#critic'
 end

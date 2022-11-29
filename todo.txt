@@ -1,22 +1,27 @@
 
 
+
+
 Now
 2. Fix when movies are loaded again that it retains old movies and pulls duplicates
 3. create a critic page to show how your reviews stack against their reviews then show top 5 movies they liked with the greatest difference between 
 metacritic average and theirs
 
 
+Hard questions
+- whats the best - 2 reviews with high match or 10 reviews with slightly lower match? what's the minimum number of movies rated percentage
 
-look at scraping the genre from each movie page and adding that as a column. then present a list of genres to the user first time up
+
+
 
 
 
 Front end
 - recent scrapes seem to be getting null names? oh shit because i don't have names set into it? only with the rake task??? check that.
 - fix media queries
-- i think remove the damn link for the critic and just have it be a single page app for now. get mobile working on it at least at some point. 
-- no idea why it stays at 0% instead of becoming 100%. 
-- do some hacky stuff so even though it pulls 6 moies we only show two at a time for mobile
+
+
+
 - get media queries working - make title smaller, fix offset for the names, maybe make the font for the critic names smaller. make the 
 - then loop through userReviews and critics_reviews
 - add critics page /critics/:id
@@ -24,17 +29,11 @@ Front end
 	- displays two bars with 0 space on top of each other with user and critic name next to it
 	to the left is the thumbnail and name
 	we don't need api call, we can just find the movies array? or we do because of active or we can create a second object that holds all the movies and the active movies and acts as a reference for us to draw on when we are listing movies on critics page
+
+
 - make sure i'm not pulling duplicates or that there are no duplicate movies
-- Change it to best of 5 instead of 4 - i think i did this to look pretty - 	
-- movies should be random right now it seems like it's just alphabetical reverse order. not sure if it's just that the front end is bugged 
-- resdesign the banner color and font - I don't like it
-- Look into removing session storage but probably not worth it - just ship it man
-- some issues - design problems are there are so many movies and i haven't seen that many so i'm mostly clicking havne't seen - so i can list a bunhc of movies but that makes it hard on mobile, i can try to refine by genre, but i don't know how
-- questions for the user
-	- what is a movie you loved that most people hated
-	- what is a movie you hated that most people loved
-	- what genres do you watch the most
-- whats the best - 2 reviews with high match or 10 reviews with slightly lower match? what's the minimum number of movies rated percentage
+-	TODO write a test for the api endpoint for pulling the movies to verify that it filters out duplicates after pulling twice from the api
+
 - maybe after 30 reviews or something it takes top 20 critics matched so far and compares among them? or some point it narrows the critics its comparing to?
 - I need to make sure that i am really matching correctly 
 
@@ -47,13 +46,15 @@ Scraper
 - Javascript tests with mocha or jasmine
 
 Later
-- when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
+
 
 stretch
 - add mobile support
 	critic matcher title gets smaller
 	critic name and percentage only
 	have only two movies centered and have some logic to prevent more
+- add genre exclusion
+- when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. this would reduce the database a lot 
 
 
 Bugs

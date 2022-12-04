@@ -7,6 +7,7 @@
 	var reviews_active;
 	var array_of_movie_ids =[];
 	var match;
+	var seen_movies = []
 
 	// *********************************** Functions ************************************
 
@@ -93,7 +94,7 @@
 			critic_name = top_match[i]["name"]
 			critic_publication = top_match[i]["publication"]
 			// add some sort of clarification here so they understand the match rate
-			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name  + " - " + percentage + "%" + " for " + matches + ' matches'  + " - " + critic_publication + "</a>";
+			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name  + " - " + percentage + "%" + " for " + matches + ' matches'  + "  " + critic_publication + "</a>";
 			percentage = percentage - 16.7 + '%';
 			if ( $(window).width() > 480) {      
 				document.getElementById("top_match_" + (i+1)).style.width= percentage;
@@ -106,10 +107,10 @@
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
 		//convert to 0-100 to match up with critic reviews
-		console.log(movie_and_rating)
 		var total_matches;
 		var total_points;
 		var percentage;
+
 		// This is where we set if it's 20/40/60/80/100 or 10/30/50/70/90. -10 changes it to the latter and is current system
 		var rating 	= (movie_and_rating[0] * 20) - 10;
 		var movie_id 	= movie_and_rating[1];
@@ -121,6 +122,7 @@
 			var publication 		= reviews[i]["publication"]
 			var score 				= reviews[i]["score"];
 			var difference 			= Math.abs(rating - score);
+
 			// if critic exists do this
 			if(critic in critics_reviews){
 				critics_reviews[critic]["matches"] += 1;
@@ -512,13 +514,12 @@
 
 	function main(){
 		var movie_element = document.getElementById('movies');
-		// TODO fix this with controller specific js
 		if(movie_element){
 			movie_element.removeChild(movie_element.firstChild);
 		}
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
-		.then(getTopMatch)
+		.then(getTopMatch) 					
 		.then(getCriticsReviews)
 		.then(getUserReviews)
 		.then(updateDomWithMovies)

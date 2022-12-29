@@ -31,7 +31,16 @@
 	  }
 }
 
-#critic_name{
+.critic_subtext{
+	text-align: left;
+	width: 83.3%;
+	padding-left: 0;
+	margin: 0 auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.critic_titles{
 	text-align: left;
 	width: 83.3%;
 	padding-left: 0;
@@ -156,6 +165,10 @@ button{
 	margin-top: 10px;
 	
 	font-family: 'Roboto', sans-serif;
+}
+
+.hidden_matches{
+	visibility: hidden;
 }
 
 /* Remove button padding in FF */

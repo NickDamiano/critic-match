@@ -124,6 +124,7 @@ class RakeSupport
 
 	end
 
+	# TODO fix this bug that is making movie scrapes create a CriticMovie record where the movie_id is broken
 	def scrape_recent
 		recent_movies = []
 		scraper = MetacriticScraper.new

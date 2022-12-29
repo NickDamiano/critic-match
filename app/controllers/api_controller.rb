@@ -49,6 +49,81 @@ class ApiController < ApplicationController
 		render :json => movies
 	end
 
+	# create the reviews array, pull the critic id and find all reviews (critic_movies), push the reviews into the array,
+	# convert it to json and return it
+	def get_all_single_critic_movies
+		reviews_array = []
+		critic_id = params[:id]
+		reviews = Critic.find(critic_id).critic_movies
+		reviews_array.push(reviews)
+		reviews = reviews_array.to_json
+		render :json => reviews
+	end
+
+	def get_5_positive_grain
+		positive_grain_array = []
+		critics_movies_hash = {}
+		critic_id = params[:id]
+		reviews = Critic.find(critic_id).critic_movies
+
+		# create array of movies to pull batch from because it's super expensive to hit the database 1300 times per user request
+		movies_array = []
+		reviews.each do | review |
+			movies_array.push(review.movie_id)
+		end
+
+		# Get an array of movie objects that the critic has seen
+		critics_movies = Movie.find(movies_array)
+		# [{some movie}, {some other movie}]
+
+		# create a hash with movie id as key so we can grab the metacritic score to create our new object
+		critics_movies.each do | movie | 
+			critics_movies_hash[movie.id] = {"metacritic_score": movie.metacritic_score, "movie_name": movie.title}
+		end
+
+		# Create the unsorted result
+		# reviews are all the objects showing the critics id, the movies id, and the score of the critic
+		# we iterate through each of those reviews
+		# we assign the movie's id to a variable
+		# we then print object from the critics_movie_hash showing metascore and movie name
+		# we then store the metacritic score from that object into a variable named metascore
+		# we then store the movie name from that has into a movie name variable
+		# we then print the critic score, movie name, metascore, movie id, calculate the difference
+		# for critic and meta and then create an object that we will then sort through to get the top or bottom
+		# 5 to then return as JSON
+		reviews.each do | review |
+			movie_id = 	review.movie_id
+			metascore 	= critics_movies_hash[movie_id][:metacritic_score]
+			movie_name 	= critics_movies_hash[movie_id][:movie_name]
+			critic_score = review.score
+			difference	= critic_score - metascore 
+			single_movie = {"movie_name": movie_name, "metascore": metascore, "critic_score": critic_score, "difference": difference, }
+			positive_grain_array.push(single_movie)
+			# {movie_id: 3, critic_score: 34, metascore: 50, difference: -16, }
+		end
+
+		# Sort the result
+		positive_grain_array.sort_by! { |k| k[:difference]}
+		negative_grain = positive_grain_array.first(5)
+		positive_grain = positive_grain_array.pop(5)
+		negative_positive = negative_grain + positive_grain
+		negative_positive = negative_positive.to_json
+		render :json => negative_positive
+
+		# TODO Monday
+		# it's breaking on a nil class for a movie metacriti score saying the movie is nil
+		# i just neeed to finish this section here
+		# I also need to look into why it's so incredibly slow all o a sudden
+
+
+			
+		# Iterate through array and sort by difference
+	end
+
+	def get_5_negative_grain
+
+	end
+
 	# 
 	def get_reviews
 		reviews_array = []

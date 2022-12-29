@@ -45,6 +45,7 @@
 	// Sets an empty object in session storage if this is the first time they visit the site
 	function getTopMatch(){
 		if(sessionStorage["topMatch"] == undefined ){
+			// Set the placeholder for this object to be updated with results later
 			top_match = [{critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}];
 			sessionStorage.setItem('topMatch', JSON.stringify(top_match));	
 		}
@@ -52,6 +53,9 @@
 		if(top_match[0]["percentage"] > 0){
 			top_match.reverse();
 			updateTopMatch(top_match);
+			// hide the top matches
+			var matches = document.getElementById("critic_bars")
+			matches.classList.remove("hidden_matches")
 		}
 	}
 
@@ -245,6 +249,10 @@
 					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie_id);
 					disableButtons(".button_" + movie_id);
 					checkIfAllReviewed();
+					// Remove hidden class if it's prsent
+					var matches = document.getElementById("critic_bars")
+					matches.classList.remove("hidden_matches")
+
 					updateCriticResults(movie_and_rating);
 					updateUserReviews(movie_and_rating);
 					// call function to update critic object
@@ -308,6 +316,25 @@
 			}
 		})
 	}
+	//todo delete
+	function findAgainstPositive(data){
+		console.log(data)
+		// Oh my. the metacritic score isn't in criticreview but in movie
+	}
+
+	//Gets the reviews for the active movies being rated by the user
+	function getAllSingleCriticReviews(critic_id) {
+		return $.ajax({
+			datatype: 'json',
+			url: '/api/grain-positive/' + critic_id,
+			success: function(data) {
+				findAgainstPositive(data);
+				reviews_active = data;
+			}
+		})
+	}
+
+
 
 	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
@@ -339,7 +366,6 @@
                 movies = data;
             }
         })
-        return JSON.parse(movies);
     }
 
 	// *********************************************** Helper Functions *******************************************
@@ -475,6 +501,53 @@
                 critic_page_info.push(critic_user_movie)
             }
 
+            // Do API call to get critic critic_movies where date is last 12 months
+
+            // Sort by the score and take the top 5 scores and build the table data
+
+            // Do API call to get top 5 negative and positive against the grain
+            var single_critic_reviews = getAllSingleCriticReviews(critic_id)
+
+            // Loop through and 
+            for(var i=0;i<single_critic_reviews.length;i++){
+            	console.log(single_critic_reviews[i])
+            }
+    //         create_table "critic_movies", force: :cascade do |t|
+    // t.bigint "critic_id"
+    // t.bigint "movie_id"
+    // t.integer "score"
+    // t.date "date"
+    // t.datetime "created_at", null: false
+    // t.datetime "updated_at", null: false
+    // t.string "critic_first_name"
+    // t.string "critic_last_name"
+    // t.string "publication"
+    // t.index ["critic_id"], name: "index_critic_movies_on_critic_id"
+    // t.index ["movie_id"], name: "index_critic_movies_on_movie_id"
+  // end
+            
+
+            // Create the table data for each of the respective tables same as with the first table
+			// Create and add the table rows cells
+            // for(var i=0;i<critic_page_info.length;i++){
+            // 	// Get the table element
+	           //  var critic_results 	= document.getElementById("critic_results")
+	           //  // Create a new row
+	           //  var new_row = critic_results.insertRow()
+
+	           //  for(var j=0;j<4;j++){
+		          //   // Create a new cell
+		          //   var new_cell = new_row.insertCell()
+
+		          //   // Create the text for the
+		          //   var new_text = document.createTextNode(critic_page_info[i][j])
+
+		          //   // Append the text to the cell
+		          //   new_cell.appendChild(new_text)
+	           //  }
+            // }
+            
+
 
 
 			
@@ -491,8 +564,6 @@
 	            var new_row = critic_results.insertRow()
 
 	            for(var j=0;j<4;j++){
-	            	
-
 		            // Create a new cell
 		            var new_cell = new_row.insertCell()
 

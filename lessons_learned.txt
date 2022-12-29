@@ -18,3 +18,7 @@ design challenges
 - how many reviews per page? do you have login? do you use session or local variables?
 - how do you match the most efficiently? First attempt was to 
 - Very few 0 score movies so scores range from 10 to 90
+
+This project is a good example of why I love to code. Sometimes we wonder something like, I wish I knew blank, how can i find that out, oh it doesn't really exist or is not in a form that is very helpful to me, I can build it to quote bob the builder
+
+I learned that when you add features you didn't originally scope out, the data structure you built can be insufficient and it can cause a heavy toll for your database calls and front end processing storage etc. and if you have to scrape for 2 weeks to get everything without getting blocked, the idea of changing the data structure is not a fun one. And that there should be something faster with scraping i can do

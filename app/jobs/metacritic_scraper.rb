@@ -43,6 +43,37 @@ class MetacriticScraper
 		letter_pages
 	end
 
+	def scrape_for_movies_last_365(uri)
+		#release_date = page.search(".clamp-details span")
+		movies_uri = []
+		begin
+			page = @agent.get(uri)
+		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError, Net::HTTPServiceUnavailable
+			sleep(61)
+			page = @agent.get(uri)
+		end
+		# gets array of movies
+		movies = page.search("a.title")
+		movies.each_with_index do |movie, i| 
+			# Get the movie uri to scrape
+			movie_uri 		= page.search("a.title")[i].attributes["href"].value
+
+			# get the date for the movie to be scraped and compare if for last year
+			movie_release 	= page.search(".clamp-details")[i].children[1].children.text
+
+			# if the movie release is to be announced we skip to next iteration
+			next if movie_release == "TBA"
+
+			puts movie_release + " is movie_release "
+			movie_release_date = movie_release.to_date
+
+			if movie_release_date > 1.year.ago
+				movies_uri.push(movie_uri)
+			end
+		end
+		movies_uri
+	end
+
 	def scrape_for_movies(uri)
 		movies_uri = []
 		begin
@@ -63,7 +94,7 @@ class MetacriticScraper
 	def scrape_thumbnail(movie_uri_base)
 		# thumbnail_link = movie_uri_base[0..-16]
 		begin
-			sleep(30)
+			sleep(5)
 			page = @agent.get(movie_uri_base)
 		rescue Net::HTTPTooManyRequests, Mechanize::ResponseReadError, Net::HTTPServiceUnavailable
 			sleep(120)
@@ -80,6 +111,12 @@ class MetacriticScraper
 	      f.close
 	    end
 	end
+
+	# scrapes all the reviews from a single movie's URI and returns array of review objects
+	# review_collection.push({score: score, author_name: author_name, author_uri: author_uri, 
+	# publication_name: publication_name, publication_uri: publication_uri, movie_title: movie_title,
+	# image_thumbnail: image_thumbnail, release_date: release_date, movie_uri: movie_uri_base, 
+	# metacritic_score: metacritic_score })
 
 	def scrape_one_movies_reviews(movie_uri_base)
 

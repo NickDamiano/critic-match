@@ -12,6 +12,7 @@ cronjobs and whenever gem, yaml dump into production database, pushing database 
 Bugs
 - would scrape the link, then try to go to critic-reviews of that link, main link would resolve to different name with number changed to number but that wouldn't happen for critic reviews
 - top match wouldn't count up because the logic was if the user review was a higher percentage but it didn't automatically update if it were the same critic
+- logic was to get recent movies it would scrape the data create a movie object then pass that to a method that would use it to associate the rviews when the reviews were saved, it would delete existing reviews to prevent duplicates but then it wouldn't delete the movie, so when it would look for the return object of the movie being saved, it wouldn't be there because the movie was already in the database. so then trying to save with that object would mean the id of the review object would be nil, which would cause all sorts of problems when trying to calculate review stuff. so I traced that bug and added a thign to delete a movie if it existed when re-scraping. I would rescrape when getting the recent movies. ok so it wasn't the thing i thought it was. it was the delete_all versus destroy_all and one deleting associations and one not leaving things orphaned. if there were reviews for a movie and we deleted them it would somehow keep those reviews but sever the association. very confusing but solved.
 
 design challenges
 - how do you serve movies effectively? threshold for number of reviews? ask about genre

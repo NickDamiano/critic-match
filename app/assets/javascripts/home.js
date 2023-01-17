@@ -318,7 +318,6 @@
 	}
 	//todo delete
 	function findAgainstPositive(data){
-		console.log(data)
 		// Oh my. the metacritic score isn't in criticreview but in movie
 	}
 
@@ -497,84 +496,99 @@
 
                 // Create data structure with smallest difference to largest difference {movie_id}
                 //[Score Difference, Critic Score, User Score, Movie Title]
-                critic_user_movie = [score_difference, critic_score, user_review, movie_name, movie_id]
+                critic_user_movie = [score_difference, critic_score, user_review, movie_name]
                 critic_page_info.push(critic_user_movie)
+                critic_page_info.sort(sortFunction)
             }
+
+            // Append the critic match results from critic_page_info
+            appendTable(critic_page_info, "critic_results")
 
             // Do API call to get critic critic_movies where date is last 12 months
 
             // Sort by the score and take the top 5 scores and build the table data
 
             // Do API call to get top 5 negative and positive against the grain
-            var single_critic_reviews = getAllSingleCriticReviews(critic_id)
+            getAllSingleCriticReviews(critic_id).then(function(single_critic_reviews){
+            	// convert to an array of values
+            	var positive_grain = [];
+            	var negative_grain = [];
+            	var recommendations = []
 
-            // Loop through and 
-            for(var i=0;i<single_critic_reviews.length;i++){
-            	console.log(single_critic_reviews[i])
+            	for(var i=0;i<5;i++){
+            		var movie_name = single_critic_reviews[i]["movie_name"]
+            		var metascore = single_critic_reviews[i]["metascore"]
+            		var critic_score = single_critic_reviews[i]["critic_score"]
+            		var difference = single_critic_reviews[i]["difference"]
+            		var movie_data = [difference, critic_score, metascore, movie_name]
+            		positive_grain.push(movie_data)
+            	}
+
+            	appendTable(positive_grain, "grain_positive")
+
+            	for(var i=5;i<10;i++){
+            		var movie_name = single_critic_reviews[i]["movie_name"]
+            		var metascore = single_critic_reviews[i]["metascore"]
+            		var critic_score = single_critic_reviews[i]["critic_score"]
+            		var difference = single_critic_reviews[i]["difference"]
+            		var movie_data = [difference, critic_score, metascore, movie_name]
+            		negative_grain.push(movie_data)
+            	}
+
+	            appendTable(negative_grain, "grain_negative")
+
+
+	            // Figure out here if the critic wasn't active in the last year or 
+	            // the movies they reviewed was less than 5? how to handle this?
+	            // Also the movie id is returned not movie name
+	            for(var i=10;i<15;i++){
+	            	
+            		var movie_name = single_critic_reviews[i]["movie_name"]
+            		var metascore = single_critic_reviews[i]["metascore"]
+            		if(metascore == 0){
+            			metascore = "None"
+            		}
+
+            		var critic_score = single_critic_reviews[i]["score"]
+
+
+            			
+            		var recommendation = [movie_name, critic_score]
+            		recommendations.push(recommendation)
+            	}
+            	
+            	// uncomment this to get recommendations working again and uncomment the html code for it. 
+            	// Right now this works but the scraper missed some records for people in the last year and
+            	// That needs to be solved and re-scraped before implementing this.
+            	// TODO I bet this is related to whatever bug was causing reviews to 
+            	// Save with a nil critic id or something and i deleted those. so we need to re-scrape
+            	// but how to do it without destroying the old one while it scrapes for weeks?
+	            appendTable(recommendations, "recommendations")
+            });
+        }
+    }
+
+    // pass in the table ID and critic_page_info 
+    function appendTable(table_data, table_head_id_name){
+	// Create and add the table rows cells
+        for(var i=0;i<table_data.length;i++){
+        	// Get the table element
+            var table_head_id 	= document.getElementById(table_head_id_name)
+            var num_columns 	= table_data[0].length
+            // Create a new row
+            var new_row = table_head_id.insertRow()
+
+            // Create 4 cells in each row
+            for(var j=0;j<num_columns;j++){
+	            // Create a new cell
+	            var new_cell = new_row.insertCell()
+
+	            // Create the text for the
+	            var new_text = document.createTextNode(table_data[i][j])
+
+	            // Append the text to the cell
+	            new_cell.appendChild(new_text)
             }
-    //         create_table "critic_movies", force: :cascade do |t|
-    // t.bigint "critic_id"
-    // t.bigint "movie_id"
-    // t.integer "score"
-    // t.date "date"
-    // t.datetime "created_at", null: false
-    // t.datetime "updated_at", null: false
-    // t.string "critic_first_name"
-    // t.string "critic_last_name"
-    // t.string "publication"
-    // t.index ["critic_id"], name: "index_critic_movies_on_critic_id"
-    // t.index ["movie_id"], name: "index_critic_movies_on_movie_id"
-  // end
-            
-
-            // Create the table data for each of the respective tables same as with the first table
-			// Create and add the table rows cells
-            // for(var i=0;i<critic_page_info.length;i++){
-            // 	// Get the table element
-	           //  var critic_results 	= document.getElementById("critic_results")
-	           //  // Create a new row
-	           //  var new_row = critic_results.insertRow()
-
-	           //  for(var j=0;j<4;j++){
-		          //   // Create a new cell
-		          //   var new_cell = new_row.insertCell()
-
-		          //   // Create the text for the
-		          //   var new_text = document.createTextNode(critic_page_info[i][j])
-
-		          //   // Append the text to the cell
-		          //   new_cell.appendChild(new_text)
-	           //  }
-            // }
-            
-
-
-
-			
-
-            // Reorder the array by score difference here
-            critic_page_info.sort(sortFunction)
-
-        	
-            // Create and add the table rows cells
-            for(var i=0;i<critic_page_info.length;i++){
-            	// Get the table element
-	            var critic_results 	= document.getElementById("critic_results")
-	            // Create a new row
-	            var new_row = critic_results.insertRow()
-
-	            for(var j=0;j<4;j++){
-		            // Create a new cell
-		            var new_cell = new_row.insertCell()
-
-		            // Create the text for the
-		            var new_text = document.createTextNode(critic_page_info[i][j])
-
-		            // Append the text to the cell
-		            new_cell.appendChild(new_text)
-	            }
-            }
-            
         }
     }
  

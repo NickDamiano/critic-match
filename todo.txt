@@ -1,6 +1,9 @@
 
-Today
-Get against the grain movies working
+
+
+update scraper to add date
+
+
 
 Next couple of days
 Look at mobile
@@ -35,6 +38,9 @@ NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
 
 Why is the movie ID nil for the CriticMovie Object?
+
+Notes
+Is there something inherently wrong about the database models that makes this so slow
 
 
 

@@ -20,7 +20,7 @@ class ApiController < ApplicationController
 	# Stretch change limit - reduce it and create the system to reduce duplicates on second call since we're pulling random. 
 	def get_movies
 		@movies = Movie.order("RANDOM()").where("release_date > ?", 10.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) >= #{CUTOFF}")
-		.limit(1000).to_a
+		.limit(750).to_a
 		@movies.each do | movie | 
 			movie.title = movie.title.split.map(&:capitalize).join(' ')
 		end
@@ -60,7 +60,12 @@ class ApiController < ApplicationController
 		render :json => reviews
 	end
 
+	# this is the method hit for the critic page that gets both positive and negative and recommendations
 	def get_5_positive_grain
+		placeholder_review = CriticMovie.new
+		placeholder_review.score = 0 
+		top_5 			=	[placeholder_review,placeholder_review,placeholder_review,placeholder_review,
+			placeholder_review]
 		positive_grain_array = []
 		critics_movies_hash = {}
 		critic_id = params[:id]
@@ -78,7 +83,8 @@ class ApiController < ApplicationController
 
 		# create a hash with movie id as key so we can grab the metacritic score to create our new object
 		critics_movies.each do | movie | 
-			critics_movies_hash[movie.id] = {"metacritic_score": movie.metacritic_score, "movie_name": movie.title}
+			puts movie.id
+			critics_movies_hash[movie.id] = {"metacritic_score": movie.metacritic_score, "movie_name": movie.title.titleize}
 		end
 
 		# Create the unsorted result
@@ -92,36 +98,50 @@ class ApiController < ApplicationController
 		# for critic and meta and then create an object that we will then sort through to get the top or bottom
 		# 5 to then return as JSON
 		reviews.each do | review |
-			movie_id = 	review.movie_id
-			metascore 	= critics_movies_hash[movie_id][:metacritic_score]
-			movie_name 	= critics_movies_hash[movie_id][:movie_name]
-			critic_score = review.score
+			movie_id 		= 	review.movie_id
+			movie_name 		= critics_movies_hash[movie_id][:movie_name]
+			critic_score 	= review.score
+			metascore 		= critics_movies_hash[movie_id][:metacritic_score]
+
+			# If the review is less than a year ago, it can be evaluated for our top 5 
+			if review.date >= 1.year.ago
+				# get the lowest value index and compare the review against that
+				top_5.sort_by! { |k| k[:score]}
+				print(top_5[0])
+				if critic_score > top_5[0][:score]
+					movie_name 		= critics_movies_hash[movie_id][:movie_name]
+					critic_score 	= review.score
+					metascore 		= critics_movies_hash[movie_id][:metacritic_score]
+					recommend_object = { "movie_name": movie_name, score: critic_score,
+						"metascore": metascore }
+					top_5[0] = recommend_object
+				end
+			end	
+			# if the score is 0 then that means it was a TBD meaning not enough critic votes and it was converted to 0
+			# we do not want this in our array because it will create artificially high or low against the grain scores that are false so
+			# we skip this loop iteration and evaluate the next one
+			if metascore == 0
+				next
+			end
 			difference	= critic_score - metascore 
 			single_movie = {"movie_name": movie_name, "metascore": metascore, "critic_score": critic_score, "difference": difference, }
 			positive_grain_array.push(single_movie)
 			# {movie_id: 3, critic_score: 34, metascore: 50, difference: -16, }
 		end
 
-		# Sort the result
+		# if there were not enough reviews to establish a metacritic score it's set to TBD which translates to 0 when it's scraped into the 
+		# 	int type. So if the review is 0 we reject it
+		top_5.reject! {| review | review[:score] == 0} 
+
+		# Sort the result, put it into an array and convert to json
 		positive_grain_array.sort_by! { |k| k[:difference]}
 		negative_grain = positive_grain_array.first(5)
 		positive_grain = positive_grain_array.pop(5)
-		negative_positive = negative_grain + positive_grain
+		negative_positive = positive_grain.reverse! + negative_grain.reverse! + top_5
 		negative_positive = negative_positive.to_json
+
+
 		render :json => negative_positive
-
-		# TODO Monday
-		# it's breaking on a nil class for a movie metacriti score saying the movie is nil
-		# i just neeed to finish this section here
-		# I also need to look into why it's so incredibly slow all o a sudden
-
-
-			
-		# Iterate through array and sort by difference
-	end
-
-	def get_5_negative_grain
-
 	end
 
 	# 

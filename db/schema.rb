@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_20_033639) do
+ActiveRecord::Schema.define(version: 2023_01_17_084454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "critic_movies", force: :cascade do |t|
     t.bigint "critic_id"
-    t.bigint "movie_id"
+    t.bigint "movie_id", null: false
     t.integer "score"
     t.date "date"
     t.datetime "created_at", null: false

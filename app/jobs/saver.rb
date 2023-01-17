@@ -23,6 +23,10 @@ class Saver
 		movie
 	end
 
+	def update_and_save_reviewdate
+		
+	end
+
 	def save_critic(critic_info)
 		p "about to save critic #{critic_info[:author_name]}"
 		first_name = critic_info[:author_name].split(" ")[0].downcase
@@ -55,13 +59,15 @@ class Saver
 		critic_first_name = critic_object[:first_name]
 		critic_last_name = critic_object[:last_name]
 		publication = critic_object[:publication]
+		# binding.pry
 		review = critic_object.critic_movies.create(movie_id: movie_object.id, 
-			score: review_info[:score], critic_first_name: critic_first_name, critic_last_name: critic_last_name, publication: publication)
+			score: review_info[:score], date: movie_object.release_date, 
+			critic_first_name: critic_first_name, critic_last_name: critic_last_name, publication: publication)
 		review
 	end
 end
 
-=begin 
+=begin
 
 [{:score=>"70",
   :author_name=>"Rob Staeger",

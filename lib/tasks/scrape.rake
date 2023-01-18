@@ -52,4 +52,10 @@ namespace :update do
     rake_support = RakeSupport.new
     rake_support.update_reviews_with_dates
   end
+
+  desc "Updates critic object to if they're active or not" 
+  task :critic_active => :environment do 
+    rake_support = RakeSupport.new
+    rake_support.determine_active_critics
+  end
 end

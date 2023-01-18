@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_17_084454) do
+ActiveRecord::Schema.define(version: 2023_01_17_210926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2023_01_17_084454) do
     t.string "critic_uri"
     t.string "publication_uri"
     t.string "publication"
+    t.boolean "active?"
   end
 
   create_table "movies", force: :cascade do |t|

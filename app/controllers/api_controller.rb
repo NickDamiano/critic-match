@@ -19,7 +19,7 @@ class ApiController < ApplicationController
 	# This gets x number random movies released within the last ten years with movie review count greater than 10 reviews
 	# Stretch change limit - reduce it and create the system to reduce duplicates on second call since we're pulling random. 
 	def get_movies
-		@movies = Movie.order("RANDOM()").where("release_date > ?", 10.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) >= #{CUTOFF}")
+		@movies = Movie.order("RANDOM()").where("release_date > ?", 2.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) >= #{CUTOFF}")
 		.limit(750).to_a
 		@movies.each do | movie | 
 			movie.title = movie.title.split.map(&:capitalize).join(' ')
@@ -83,7 +83,6 @@ class ApiController < ApplicationController
 
 		# create a hash with movie id as key so we can grab the metacritic score to create our new object
 		critics_movies.each do | movie | 
-			puts movie.id
 			critics_movies_hash[movie.id] = {"metacritic_score": movie.metacritic_score, "movie_name": movie.title.titleize}
 		end
 
@@ -103,11 +102,10 @@ class ApiController < ApplicationController
 			critic_score 	= review.score
 			metascore 		= critics_movies_hash[movie_id][:metacritic_score]
 
-			# If the review is less than a year ago, it can be evaluated for our top 5 
-			if review.date >= 1.year.ago
+			# If the review is less than two years ago, it can be evaluated for our top 5 
+			if review.date >= 2.year.ago
 				# get the lowest value index and compare the review against that
 				top_5.sort_by! { |k| k[:score]}
-				print(top_5[0])
 				if critic_score > top_5[0][:score]
 					movie_name 		= critics_movies_hash[movie_id][:movie_name]
 					critic_score 	= review.score
@@ -135,7 +133,9 @@ class ApiController < ApplicationController
 
 		# Sort the result, put it into an array and convert to json
 		positive_grain_array.sort_by! { |k| k[:difference]}
+		top_5.sort_by! { |k| k[:score]}.reverse!
 		negative_grain = positive_grain_array.first(5)
+		negative_grain.reverse!
 		positive_grain = positive_grain_array.pop(5)
 		negative_positive = positive_grain.reverse! + negative_grain.reverse! + top_5
 		negative_positive = negative_positive.to_json
@@ -165,6 +165,7 @@ class ApiController < ApplicationController
 		render :json => reviews
 	end
 
+	# todo add later for faster group of reviews initially how it was before
 	def get_initial_reviews
 
 		# return api call for just one review

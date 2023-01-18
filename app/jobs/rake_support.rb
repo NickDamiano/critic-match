@@ -16,6 +16,25 @@ class RakeSupport
     end
   end
 
+  # get all critics, iterate through them, if they have a review within the last 2 years then mark them active
+  # or not and save them. This is used to determine which critics to check against when evaluating matches with the
+  # user
+  def determine_active_critics
+  	result = Critic.all
+  	result.each do | critic |
+  		reviews_1_year_ago = critic.critic_movies.where("date > ?", 2.year.ago)
+  		if reviews_1_year_ago.any?
+  			critic.active = true
+  			puts critic.first_name + critic.last_name + " is active"
+  		else
+  			critic.active = false
+  			puts critic.first_name + critic.last_name + " is not active"
+
+  		end
+  		critic.save
+  	end
+  end
+
   def update_reviews_with_dates
     result = CriticMovie.all
     counter = 0
@@ -100,7 +119,7 @@ class RakeSupport
   			movie_list = YAML.load_file('movies_list.yml').reverse
   			movie_page = movie_list.first
       		p "ABOUT TO SCRAPE #{movie_page}"
-      		sleep(rand(10..20))
+      		sleep(rand(2..8))
   			result = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_page}")
 
       		# Grab first review to pull movie info out and save it if it's not nil. If it's nil we remove the movie
@@ -127,10 +146,11 @@ class RakeSupport
   		end
 	end
 
-	# TODO fix this bug that is making movie scrapes create a CriticMovie record where the movie_id is broken 
+	# gets the url links for the new release in theaters page then scrapes the reviews then saves the data into db
 	def scrape_recent
 		recent_movies = []
 		scraper = MetacriticScraper.new
+
 		# import file with recent reviews hash that shows movie-uri and number of reviews
 		recent_movie_links = scraper.scrape_recent_movies
 		recent_movie_links.each_with_index do | movie_link, i |
@@ -157,15 +177,17 @@ class RakeSupport
   		# if the movie exists we delete the reviews and the movie to rescrape it. used when scraping recent movies
   		# that have new reviews added over several days or rescraping periods. Else we save the movie and the associated reviews
   		if movie.any?
-  			movie[0].critic_movies.destroy_all
-  			movie[0].destroy
+  			review_ids = []
+  			reviews_to_delete = movie[0].critic_movies
+  			reviews_to_delete.each do | review | 
+  				review_ids.push(review.id)
+  			end
+  			CriticMovie.delete(review_ids)
   		end
   		movie = saver.save_movie(first)
   		result.each do | review | 
     		critic = saver.save_critic(review)
     		review = saver.save_review(review, movie, critic)
-    		puts review.movie_id
-    		puts "movie id above"
 			end
   		
 

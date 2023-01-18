@@ -35,8 +35,9 @@ class Saver
 		publication = critic_info[:publication_name].downcase
 		publication_uri = critic_info[:publication_uri].downcase
 		# critic = Critic. this line gets critic record if it exists and skips below block
-		critic = Critic.find_by(first_name: first_name, last_name: last_name, publication: 
-			publication)
+		# The issue with this is either we do it like this and when they change publications it's a new critic object
+		# or we potentially have two different critics with the same name saved together?
+		critic = Critic.find_by(first_name: first_name, last_name: last_name)
 		if critic 
 			p "CRITIC ALREADY EXISTS IN DATABASE"
 			return critic 
@@ -59,7 +60,6 @@ class Saver
 		critic_first_name = critic_object[:first_name]
 		critic_last_name = critic_object[:last_name]
 		publication = critic_object[:publication]
-		# binding.pry
 		review = critic_object.critic_movies.create(movie_id: movie_object.id, 
 			score: review_info[:score], date: movie_object.release_date, 
 			critic_first_name: critic_first_name, critic_last_name: critic_last_name, publication: publication)

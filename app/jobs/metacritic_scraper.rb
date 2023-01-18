@@ -67,7 +67,7 @@ class MetacriticScraper
 			puts movie_release + " is movie_release "
 			movie_release_date = movie_release.to_date
 
-			if movie_release_date > 1.year.ago
+			if movie_release_date < 3.years.ago and movie_release_date > 10.years.ago
 				movies_uri.push(movie_uri)
 			end
 		end
@@ -125,7 +125,7 @@ class MetacriticScraper
 		movie_uri = "#{movie_uri_base}/critic-reviews"
 		begin
 			page = @agent.get(movie_uri)
-		rescue Net::HTTPServiceUnavailable
+		rescue Net::HTTPServiceUnavailable, Net::HTTPInternalServerError
 			p "in review scraper rescue block"
 			log_failed(movie_uri)
 			sleep(100)
@@ -143,7 +143,6 @@ class MetacriticScraper
 		reviews.each_with_index do |review, i|
 			# returns metacritic score
 			score = reviews[i].search(".metascore_w")
-			# binding.pry
 			# Not all author's have their own page so we check
 			author_uri = reviews[i].search(".author a")
 			author_uri = author_uri.empty? ? "none" : author_uri[0].attributes["href"].value
@@ -167,7 +166,6 @@ class MetacriticScraper
 					release_date = page.css(".review:nth-child(1) .date").text
 				end
 				author_name = reviews[i].search(".author").empty? ? "none" : reviews[i].search(".author").children[0].text
-				# binding.pry
 				possible_publication_name = reviews[i].search(".source a")[0].text
 				publication_name = possible_publication_name == "" ? reviews[i].search(".source a")[0].children[0].attributes["title"].text : possible_publication_name 
 				publication_uri = reviews[i].search(".source a")[0].attributes["href"].text

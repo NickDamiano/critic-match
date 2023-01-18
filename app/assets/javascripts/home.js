@@ -511,6 +511,7 @@
             // Do API call to get top 5 negative and positive against the grain
             getAllSingleCriticReviews(critic_id).then(function(single_critic_reviews){
             	// convert to an array of values
+            	console.log(single_critic_reviews)
             	var positive_grain = [];
             	var negative_grain = [];
             	var recommendations = []

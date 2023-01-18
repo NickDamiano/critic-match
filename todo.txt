@@ -1,5 +1,5 @@
 
-
+So now when i destroy all it also destroys the critic and creates a new critic i think 
 
 update scraper to add date
 
@@ -10,21 +10,13 @@ Look at mobile
 Look at creating some sort of intro / instructions
 Test actual api call for recent scrape and invidivual movie scrape
 Set up the scheduler / cron job
-Figure out what did i put for how the top 3 matches work because i've rated 5 movies so far and it's still showing 1 result
 
 
 Later
 Fix when movies are loaded again that it retains old movies and pulls duplicates to reduce api calls. 
 Remove the code for multiple moves on a page
-- add genre exclusion - this needs to happen there are so many movies I haven't seen
 See why scraper fails sometimes despite rescue 
 Figure faster way to do against the grain
-- I want to add a movie page where it shows the title of the movie and the reviewers below with the score and names
-- I want the movies hyperlinked to /movie/:id from the critic page
-- I want the critics hyperlinked from the movies page
-- I want to be able to review some movies, see top critics, click the critics, see matches, see a movie that i know i liked that others didn't like, then click 
-	on the movie
-- Ideally the critic page displays movies for a critic matched at top if there are any then the other ifelds then all movies reviewed with highest metacritic difference
 
 
 Scraper
@@ -36,8 +28,6 @@ Bugs
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
-
-Why is the movie ID nil for the CriticMovie Object?
 
 Notes
 Is there something inherently wrong about the database models that makes this so slow

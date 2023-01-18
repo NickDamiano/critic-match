@@ -11,4 +11,5 @@ Rails.application.routes.draw do
   get '/api/grain-positive/:id', to: 'api#get_5_positive_grain'
   get '/api/grain-negative/:id', to: 'api#get_5_negative_grain'
   get '/critic/:id', to: 'critic#critic'
+  get '/about', to: 'home#about'
 end

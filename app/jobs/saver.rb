@@ -23,6 +23,10 @@ class Saver
 		movie
 	end
 
+	def update_and_save_reviewdate
+		
+	end
+
 	def save_critic(critic_info)
 		p "about to save critic #{critic_info[:author_name]}"
 		first_name = critic_info[:author_name].split(" ")[0].downcase
@@ -31,8 +35,9 @@ class Saver
 		publication = critic_info[:publication_name].downcase
 		publication_uri = critic_info[:publication_uri].downcase
 		# critic = Critic. this line gets critic record if it exists and skips below block
-		critic = Critic.find_by(first_name: first_name, last_name: last_name, publication: 
-			publication)
+		# The issue with this is either we do it like this and when they change publications it's a new critic object
+		# or we potentially have two different critics with the same name saved together?
+		critic = Critic.find_by(first_name: first_name, last_name: last_name)
 		if critic 
 			p "CRITIC ALREADY EXISTS IN DATABASE"
 			return critic 
@@ -56,12 +61,13 @@ class Saver
 		critic_last_name = critic_object[:last_name]
 		publication = critic_object[:publication]
 		review = critic_object.critic_movies.create(movie_id: movie_object.id, 
-			score: review_info[:score], critic_first_name: critic_first_name, critic_last_name: critic_last_name, publication: publication)
+			score: review_info[:score], date: movie_object.release_date, 
+			critic_first_name: critic_first_name, critic_last_name: critic_last_name, publication: publication)
 		review
 	end
 end
 
-=begin 
+=begin
 
 [{:score=>"70",
   :author_name=>"Rob Staeger",

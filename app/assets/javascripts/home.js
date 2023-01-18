@@ -7,6 +7,7 @@
 	var reviews_active;
 	var array_of_movie_ids =[];
 	var match;
+	var seen_movies = []
 
 	// *********************************** Functions ************************************
 
@@ -44,6 +45,7 @@
 	// Sets an empty object in session storage if this is the first time they visit the site
 	function getTopMatch(){
 		if(sessionStorage["topMatch"] == undefined ){
+			// Set the placeholder for this object to be updated with results later
 			top_match = [{critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}, {critic_id: 0, percentage: 0, matches: 0}];
 			sessionStorage.setItem('topMatch', JSON.stringify(top_match));	
 		}
@@ -51,6 +53,9 @@
 		if(top_match[0]["percentage"] > 0){
 			top_match.reverse();
 			updateTopMatch(top_match);
+			// hide the top matches
+			var matches = document.getElementById("critic_bars")
+			matches.classList.remove("hidden_matches")
 		}
 	}
 
@@ -93,7 +98,7 @@
 			critic_name = top_match[i]["name"]
 			critic_publication = top_match[i]["publication"]
 			// add some sort of clarification here so they understand the match rate
-			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name  + " - " + percentage + "%" + " for " + matches + ' matches'  + " - " + critic_publication + "</a>";
+			top_match_html.innerHTML = "<a href='/critic/" + critic_id + "'" + ">" + critic_name  + " - " + percentage + "%" + " for " + matches + ' matches'  + "  " + critic_publication + "</a>";
 			percentage = percentage - 16.7 + '%';
 			if ( $(window).width() > 480) {      
 				document.getElementById("top_match_" + (i+1)).style.width= percentage;
@@ -106,10 +111,11 @@
 	//Updates critic object upon each click of a rating
 	function updateCriticResults(movie_and_rating){
 		//convert to 0-100 to match up with critic reviews
-		console.log(movie_and_rating)
 		var total_matches;
 		var total_points;
 		var percentage;
+
+		// This is where we set if it's 20/40/60/80/100 or 10/30/50/70/90. -10 changes it to the latter and is current system
 		var rating 	= (movie_and_rating[0] * 20) - 10;
 		var movie_id 	= movie_and_rating[1];
 		var movie_name 	= movie_and_rating[2]
@@ -120,6 +126,7 @@
 			var publication 		= reviews[i]["publication"]
 			var score 				= reviews[i]["score"];
 			var difference 			= Math.abs(rating - score);
+
 			// if critic exists do this
 			if(critic in critics_reviews){
 				critics_reviews[critic]["matches"] += 1;
@@ -242,6 +249,10 @@
 					buttons_to_be_disabled = document.querySelectorAll(".button_" + movie_id);
 					disableButtons(".button_" + movie_id);
 					checkIfAllReviewed();
+					// Remove hidden class if it's prsent
+					var matches = document.getElementById("critic_bars")
+					matches.classList.remove("hidden_matches")
+
 					updateCriticResults(movie_and_rating);
 					updateUserReviews(movie_and_rating);
 					// call function to update critic object
@@ -304,8 +315,25 @@
 				reviews_active = data;
 			}
 		})
-		return reviews_active;
 	}
+	//todo delete
+	function findAgainstPositive(data){
+		// Oh my. the metacritic score isn't in criticreview but in movie
+	}
+
+	//Gets the reviews for the active movies being rated by the user
+	function getAllSingleCriticReviews(critic_id) {
+		return $.ajax({
+			datatype: 'json',
+			url: '/api/grain-positive/' + critic_id,
+			success: function(data) {
+				findAgainstPositive(data);
+				reviews_active = data;
+			}
+		})
+	}
+
+
 
 	//Gets initial 5 movies to load onto landing page
 	function getFirstMovies()  {
@@ -337,7 +365,6 @@
                 movies = data;
             }
         })
-        return JSON.parse(movies);
     }
 
 	// *********************************************** Helper Functions *******************************************
@@ -418,51 +445,151 @@
 
     // ******************************************** Critic **************************************************
 
+    function sortFunction(a, b) {
+	    if (a[0] === b[0]) {
+	        return 0;
+	    }
+	    else {
+	        return (a[0] < b[0]) ? -1 : 1;
+	    }
+	}
+
     function criticPage(){
         var url = document.URL.split('/')
         if(url.length == 5){
             // run critic page javascript
-            var critic_id = Number(url[4])
-            console.log(critic_id)
-            var critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
-            var criticReviews = critics_reviews[critic_id].movies;
-            var user_reviews = JSON.parse(sessionStorage['userReviews']);
-            // so then it loops through criticReviews, gets the id and score,
-            // then calls users review by id and converts the score to 0-100
-            // then calls a method which creates an html element and attaches it
-            // then does the next one
+            // Extract the ID from the URL
+            var critic_id = url[4]
 
-            // This part gets the list of ids for movies and does a batch pull to get those movies and
-            //	store them into movies variable
+            // Retrieve the storage object showing reviews from every critic within the scope of movies we also rated
+            	// so far
+            var critics_reviews = JSON.parse(sessionStorage['criticsReviews']);
+
+            // Retrieve the movies reviewed for the current critic we are comparing with which includes movie name, movie id
+            // and critic score
+            //[ "The Grudge", "5331", 38 ]
+            var criticReviews = critics_reviews[critic_id]["movies"];
+            
+            // Retrieve the user reviews from session storage which is a hash of movie id as key and user score as value
+            // { 130: "2", 2182: "2", 3007: "3"}
+            var user_reviews = JSON.parse(sessionStorage['userReviews']);
+
+            // 
             var movies_array = [];
             for(var i=0;i<criticReviews.length;i++){
                 movies_array.push(criticReviews[i][1])
             }
-            console.log(movies_array)
             var movies = getMovieBatch(movies_array);
 
-            console.log(movies);
-            for(var i=0;i<criticReviews.length;i++){
-                var movie_id = criticReviews[i][0];
-                var critic_score = criticReviews[i][1];
-                var user_review = user_reviews[movie_id] * 20 - 10 // why is this minus 10 ? i changed it to 20 to reflect 5 levels. I think it's -10 becaause 
-                // I didn't want it to be 25 but rather 15 / 40 / 65 / 90
-                var movie_element = document.createElement('div');
-                critic_compare = document.getElementById("critic_compare")
-                movie_element.innerHTML = critic_id
-                critic_compare.append(movie_element)
-                // set inner html to title.
-                // create element for critic score put his name and score
-                // create element for user
-                // add these to movie_element, then do it again, scores should float
-                // tricky part is the name so it doesn't overrun
+           	// loop through to create new data structure
+            var toAppend = []
+            // contains the array for what we will append on the critic page
+            var critic_page_info = []
 
-                console.log(movie_id);
-                console.log(critic_score);
-                console.log(user_review);
+            for(var i=0;i<criticReviews.length;i++){
+            	var movie_name = criticReviews[i][0]
+                var movie_id = criticReviews[i][1];
+                var critic_score = criticReviews[i][2];
+                var user_review = user_reviews[movie_id] * 20 - 10 
+                var critic_user_movie = []
+                var score_difference = Math.abs(Number(critic_score) - Number(user_review))
+
+                // Create data structure with smallest difference to largest difference {movie_id}
+                //[Score Difference, Critic Score, User Score, Movie Title]
+                critic_user_movie = [score_difference, critic_score, user_review, movie_name]
+                critic_page_info.push(critic_user_movie)
+                critic_page_info.sort(sortFunction)
             }
-            console.log(criticReviews);
-            console.log(user_reviews);
+
+            // Append the critic match results from critic_page_info
+            appendTable(critic_page_info, "critic_results")
+
+            // Do API call to get critic critic_movies where date is last 12 months
+
+            // Sort by the score and take the top 5 scores and build the table data
+
+            // Do API call to get top 5 negative and positive against the grain
+            getAllSingleCriticReviews(critic_id).then(function(single_critic_reviews){
+            	// convert to an array of values
+            	console.log(single_critic_reviews)
+            	var positive_grain = [];
+            	var negative_grain = [];
+            	var recommendations = []
+
+            	for(var i=0;i<5;i++){
+            		var movie_name = single_critic_reviews[i]["movie_name"]
+            		var metascore = single_critic_reviews[i]["metascore"]
+            		var critic_score = single_critic_reviews[i]["critic_score"]
+            		var difference = single_critic_reviews[i]["difference"]
+            		var movie_data = [difference, critic_score, metascore, movie_name]
+            		positive_grain.push(movie_data)
+            	}
+
+            	appendTable(positive_grain, "grain_positive")
+
+            	for(var i=5;i<10;i++){
+            		var movie_name = single_critic_reviews[i]["movie_name"]
+            		var metascore = single_critic_reviews[i]["metascore"]
+            		var critic_score = single_critic_reviews[i]["critic_score"]
+            		var difference = single_critic_reviews[i]["difference"]
+            		var movie_data = [difference, critic_score, metascore, movie_name]
+            		negative_grain.push(movie_data)
+            	}
+
+	            appendTable(negative_grain, "grain_negative")
+
+
+	            // Figure out here if the critic wasn't active in the last year or 
+	            // the movies they reviewed was less than 5? how to handle this?
+	            // Also the movie id is returned not movie name
+	            for(var i=10;i<15;i++){
+	            	
+            		var movie_name = single_critic_reviews[i]["movie_name"]
+            		var metascore = single_critic_reviews[i]["metascore"]
+            		if(metascore == 0){
+            			metascore = "None"
+            		}
+
+            		var critic_score = single_critic_reviews[i]["score"]
+
+
+            			
+            		var recommendation = [movie_name, critic_score]
+            		recommendations.push(recommendation)
+            	}
+            	
+            	// uncomment this to get recommendations working again and uncomment the html code for it. 
+            	// Right now this works but the scraper missed some records for people in the last year and
+            	// That needs to be solved and re-scraped before implementing this.
+            	// TODO I bet this is related to whatever bug was causing reviews to 
+            	// Save with a nil critic id or something and i deleted those. so we need to re-scrape
+            	// but how to do it without destroying the old one while it scrapes for weeks?
+	            appendTable(recommendations, "recommendations")
+            });
+        }
+    }
+
+    // pass in the table ID and critic_page_info 
+    function appendTable(table_data, table_head_id_name){
+	// Create and add the table rows cells
+        for(var i=0;i<table_data.length;i++){
+        	// Get the table element
+            var table_head_id 	= document.getElementById(table_head_id_name)
+            var num_columns 	= table_data[0].length
+            // Create a new row
+            var new_row = table_head_id.insertRow()
+
+            // Create 4 cells in each row
+            for(var j=0;j<num_columns;j++){
+	            // Create a new cell
+	            var new_cell = new_row.insertCell()
+
+	            // Create the text for the
+	            var new_text = document.createTextNode(table_data[i][j])
+
+	            // Append the text to the cell
+	            new_cell.appendChild(new_text)
+            }
         }
     }
  
@@ -473,13 +600,12 @@
 
 	function main(){
 		var movie_element = document.getElementById('movies');
-		// TODO fix this with controller specific js
 		if(movie_element){
 			movie_element.removeChild(movie_element.firstChild);
 		}
 		// here get the width with a mediaquery and put that in a variable and then call number of movies for that width below
 		getFirstMovies()
-		.then(getTopMatch)
+		.then(getTopMatch) 					
 		.then(getCriticsReviews)
 		.then(getUserReviews)
 		.then(updateDomWithMovies)

@@ -24,11 +24,18 @@ namespace :scrape do
     rake_support.scrape_all_reviews
   end
 
-  desc "Scrapes only the latest reviews not in db"
+  desc "Scrapes only the latest reviews not in db from the new releases"
   task recent: :environment do
   	rake_support = RakeSupport.new
     rake_support.scrape_recent
   end
+
+  desc "Scrapes movies in the last year"
+  task last_365: :environment do
+    rake_support = RakeSupport.new
+    rake_support.scrape_last_365
+  end
+
 end
 
 namespace :update do 
@@ -37,5 +44,18 @@ namespace :update do
   task :reviews => :environment do 
     rake_support = RakeSupport.new
     rake_support.update_reviews_with_names
+  end
+
+  desc "Updates the nil dates on reviews with the date from
+  their associated movie" 
+  task :review_dates => :environment do 
+    rake_support = RakeSupport.new
+    rake_support.update_reviews_with_dates
+  end
+
+  desc "Updates critic object to if they're active or not" 
+  task :critic_active => :environment do 
+    rake_support = RakeSupport.new
+    rake_support.determine_active_critics
   end
 end

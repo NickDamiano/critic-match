@@ -1,71 +1,36 @@
 
+So now when i destroy all it also destroys the critic and creates a new critic i think 
 
-Now
-2. Fix when movies are loaded again that it retains old movies and pulls duplicates
-3. create a critic page to show how your reviews stack against their reviews then show top 5 movies they liked with the greatest difference between 
-metacritic average and theirs
+update scraper to add date
 
 
 
-look at scraping the genre from each movie page and adding that as a column. then present a list of genres to the user first time up
+Next couple of days
+Look at mobile
+Look at creating some sort of intro / instructions
+Test actual api call for recent scrape and invidivual movie scrape
+Set up the scheduler / cron job
 
 
+Later
+Fix when movies are loaded again that it retains old movies and pulls duplicates to reduce api calls. 
+Remove the code for multiple moves on a page
+See why scraper fails sometimes despite rescue 
+Figure faster way to do against the grain
 
-Front end
-- recent scrapes seem to be getting null names? oh shit because i don't have names set into it? only with the rake task??? check that.
-- fix media queries
-- i think remove the damn link for the critic and just have it be a single page app for now. get mobile working on it at least at some point. 
-- no idea why it stays at 0% instead of becoming 100%. 
-- do some hacky stuff so even though it pulls 6 moies we only show two at a time for mobile
-- get media queries working - make title smaller, fix offset for the names, maybe make the font for the critic names smaller. make the 
-- then loop through userReviews and critics_reviews
-- add critics page /critics/:id
-	- put if statement to run js to set up critics page based off data. no thumbnails just movie titles with bars below or maybe it's the user score on left, movie name in middle? i don't know figure out how to style this
-	- displays two bars with 0 space on top of each other with user and critic name next to it
-	to the left is the thumbnail and name
-	we don't need api call, we can just find the movies array? or we do because of active or we can create a second object that holds all the movies and the active movies and acts as a reference for us to draw on when we are listing movies on critics page
-- make sure i'm not pulling duplicates or that there are no duplicate movies
-- Change it to best of 5 instead of 4 - i think i did this to look pretty - 	
-- movies should be random right now it seems like it's just alphabetical reverse order. not sure if it's just that the front end is bugged 
-- resdesign the banner color and font - I don't like it
-- Look into removing session storage but probably not worth it - just ship it man
-- some issues - design problems are there are so many movies and i haven't seen that many so i'm mostly clicking havne't seen - so i can list a bunhc of movies but that makes it hard on mobile, i can try to refine by genre, but i don't know how
-- questions for the user
-	- what is a movie you loved that most people hated
-	- what is a movie you hated that most people loved
-	- what genres do you watch the most
-- whats the best - 2 reviews with high match or 10 reviews with slightly lower match? what's the minimum number of movies rated percentage
-- maybe after 30 reviews or something it takes top 20 critics matched so far and compares among them? or some point it narrows the critics its comparing to?
-- I need to make sure that i am really matching correctly 
-
-
-- maybe the larger the metacritic score difference between what you rated and what average critic score is - the heavier that match is weighted versus ones that are obvious like everyone loves toy story YES. THIS SEEMS THE BEST APPROACH
-- also i think it should be one movie at a time because you don't have to click all over
 
 Scraper
 - record video showing code and app
 - Javascript tests with mocha or jasmine
 
-Later
-- when reviews are done. delete all movie reviews that are older than 5 years and movies that are older than 5 years. 
-
-stretch
-- add mobile support
-	critic matcher title gets smaller
-	critic name and percentage only
-	have only two movies centered and have some logic to prevent more
-
 
 Bugs
-- when you click on the critic match header it flashes movies in a row below for a second before loading just the top six
 - figure out why in theater scraper fails at "rought night" saying 
 NoMethodError: undefined method `search' for nil:NilClass
 /Users/nickdamiano/code/critic-match/critic-match/app/jobs/metacritic_scraper.rb:94:in `scrape_one_movies_reviews'
-- all movies has 12 movies temporarily because it pulls 6 and also gets 6 more which means when i do delete active from all it deletes 12 instead of 6 whenever i'm refreshing the page. if i just load it once and click on the movies it will not have that problem.
 
-Ideas for later
-See critics who are reviewing movies today that have been active up to 20 years, if it's significant, try it with them where you find a list of cult movies and mix those in with each page. also probably have to see first last name and maybe combine
-- it would be cool if the app could detect which movies they were rating and which they weren't seeing and adjust the movies it asked them, like by genre without asking them. 
-- After you get a critic you can rate movies just with him or just him and the top 3 are compared to refine it the most?
+Notes
+Is there something inherently wrong about the database models that makes this so slow
+
 
 

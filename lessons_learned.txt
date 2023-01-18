@@ -12,9 +12,14 @@ cronjobs and whenever gem, yaml dump into production database, pushing database 
 Bugs
 - would scrape the link, then try to go to critic-reviews of that link, main link would resolve to different name with number changed to number but that wouldn't happen for critic reviews
 - top match wouldn't count up because the logic was if the user review was a higher percentage but it didn't automatically update if it were the same critic
+- logic was to get recent movies it would scrape the data create a movie object then pass that to a method that would use it to associate the rviews when the reviews were saved, it would delete existing reviews to prevent duplicates but then it wouldn't delete the movie, so when it would look for the return object of the movie being saved, it wouldn't be there because the movie was already in the database. so then trying to save with that object would mean the id of the review object would be nil, which would cause all sorts of problems when trying to calculate review stuff. so I traced that bug and added a thign to delete a movie if it existed when re-scraping. I would rescrape when getting the recent movies. ok so it wasn't the thing i thought it was. it was the delete_all versus destroy_all and one deleting associations and one not leaving things orphaned. if there were reviews for a movie and we deleted them it would somehow keep those reviews but sever the association. very confusing but solved.
 
 design challenges
 - how do you serve movies effectively? threshold for number of reviews? ask about genre
 - how many reviews per page? do you have login? do you use session or local variables?
 - how do you match the most efficiently? First attempt was to 
 - Very few 0 score movies so scores range from 10 to 90
+
+This project is a good example of why I love to code. Sometimes we wonder something like, I wish I knew blank, how can i find that out, oh it doesn't really exist or is not in a form that is very helpful to me, I can build it to quote bob the builder
+
+I learned that when you add features you didn't originally scope out, the data structure you built can be insufficient and it can cause a heavy toll for your database calls and front end processing storage etc. and if you have to scrape for 2 weeks to get everything without getting blocked, the idea of changing the data structure is not a fun one. And that there should be something faster with scraping i can do

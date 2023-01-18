@@ -31,6 +31,45 @@
 	  }
 }
 
+.critic_subtext{
+	text-align: left;
+	width: 83.3%;
+	padding-left: 0;
+	margin: 0 auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.critic_titles{
+	text-align: left;
+	width: 83.3%;
+	padding-left: 0;
+	margin: 0 auto;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+#critic_compare{
+	margin: auto;
+}
+
+table{
+	width: 83.3% !important;
+	margin: 0 auto;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+td{
+	
+  font-size:1.8em; 
+  font-weight: 300;
+  line-height:1em;
+  text-align: left;
+  color: black;
+  padding-right: 3em;
+}
+
 
 .movie{
 	display: inline-block;
@@ -73,6 +112,7 @@ a{
 
 #top_match_1{
 	height: 1.7em;
+	font-size: 1.3em;
 	width: 0%;
 	background: #0faa50;
 	-webkit-transition:400ms linear;
@@ -85,6 +125,7 @@ a{
 #top_match_2{
 	padding-top: 1px;
 	height: 1.7em;
+	font-size: 1.3em;
 	width: 0%;
 	background: #10467E;
 	-webkit-transition:400ms linear;
@@ -96,6 +137,7 @@ a{
 
 #top_match_3{
 	padding-top: 1px;
+	font-size: 1.3em;
 	height: 1.7em;
 	width: 0%;
 	background: #BE4B00;
@@ -123,6 +165,10 @@ button{
 	margin-top: 10px;
 	
 	font-family: 'Roboto', sans-serif;
+}
+
+.hidden_matches{
+	visibility: hidden;
 }
 
 /* Remove button padding in FF */

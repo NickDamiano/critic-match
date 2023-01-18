@@ -1,0 +1,39 @@
+
+<h1 class="critic_titles" id="critic_name"><%= @critic.first_name.capitalize + " " +  @critic.last_name.capitalize %> VS. You</h1>
+<div id="critic_compare"></div>
+<table id="critic_results" class="table">
+	<th>Score Diff</th>
+	<th>Critic Score</th>
+	<th>User Score</th>
+	<th>Movie Title</th>
+</table>
+
+
+<h1 class="critic_titles">Against the Grain Movies - Positive</h1>
+<p class="critic_subtext"> Movies the critic liked the most that other critics hated</p>
+<table id="grain_positive" class="table">
+	<th>Score Diff</th>
+	<th>Critic Score</th>
+	<th>Meta Score</th>
+	<th>Movie Title</th>
+</table>
+
+<h1 class="critic_titles">Against the Grain Movies - Negative</h1>
+<p class="critic_subtext"> Movies the critic hated the most that other critics liked</p>
+<table id="grain_negative" class="table">
+	<th>Score Diff</th>
+	<th>Critic Score</th>
+	<th>Meta Score</th>
+	<th>Movie Title</th>
+</table>
+
+<h1 class="critic_titles">Critic Recent Recommendations</h1>
+<p class="critic_subtext">Top Movies <%= @critic.first_name.capitalize + " " +  @critic.last_name.capitalize %> liked from the last 2 years</p>
+<table id="recommendations" class="table">
+	<th>Movie Title</th>
+	<th>Critic Score</th>
+	
+</table>
+
+
+	

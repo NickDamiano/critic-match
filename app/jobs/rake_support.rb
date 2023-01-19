@@ -119,7 +119,7 @@ class RakeSupport
   			movie_list = YAML.load_file('movies_list.yml').reverse
   			movie_page = movie_list.first
       		p "ABOUT TO SCRAPE #{movie_page}"
-      		sleep(rand(2..8))
+      		sleep(rand(10..20))
   			result = scraper.scrape_one_movies_reviews("http://www.metacritic.com#{movie_page}")
 
       		# Grab first review to pull movie info out and save it if it's not nil. If it's nil we remove the movie

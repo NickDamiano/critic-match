@@ -542,7 +542,7 @@
 	            // Figure out here if the critic wasn't active in the last year or 
 	            // the movies they reviewed was less than 5? how to handle this?
 	            // Also the movie id is returned not movie name
-	            for(var i=10;i<15;i++){
+	            for(var i=10;i<20;i++){
 	            	
             		var movie_name = single_critic_reviews[i]["movie_name"]
             		var metascore = single_critic_reviews[i]["metascore"]

@@ -3,11 +3,11 @@ class ApiController < ApplicationController
 	# the problem this is solving is there are a lot of freaking movies made and it's showing movies that I've never seen, which is why i thought about organizing
 	# by genre - since showing me horror and romantic movies
 	# CUTOFF is the minimum number of movie reviews for it to be considered
-	CUTOFF = 10
+	CUTOFF = 5
 
-	# To quickly load landing page, only grabs 5 movies, then ajax calls the rest in the background
+	# To quickly load landing page, only grabs 1 movies, then ajax calls the rest in the background
 	def get_first_movies
-		@movies = Movie.where("release_date > ?", 10.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
+		@movies = Movie.where("release_date > ?", 3.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) > #{CUTOFF}")
 		.limit(1).to_a
 		@movies.each do | movie | 
 			movie.title = movie.title.split.map(&:capitalize).join(' ')
@@ -16,10 +16,10 @@ class ApiController < ApplicationController
 		render :json => @movies
 	end
 
-	# This gets x number random movies released within the last ten years with movie review count greater than 10 reviews
+	# This gets x number random movies released within the last 3 years with movie review count greater than 8 reviews
 	# Stretch change limit - reduce it and create the system to reduce duplicates on second call since we're pulling random. 
 	def get_movies
-		@movies = Movie.order("RANDOM()").where("release_date > ?", 2.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) >= #{CUTOFF}")
+		@movies = Movie.order("RANDOM()").where("release_date > ?", 3.years.ago).order('random()').joins(:critic_movies).group('movies.id').having("count(movie_id) >= #{CUTOFF}")
 		.limit(750).to_a
 		@movies.each do | movie | 
 			movie.title = movie.title.split.map(&:capitalize).join(' ')
@@ -65,6 +65,7 @@ class ApiController < ApplicationController
 		placeholder_review = CriticMovie.new
 		placeholder_review.score = 0 
 		top_5 			=	[placeholder_review,placeholder_review,placeholder_review,placeholder_review,
+			placeholder_review,placeholder_review,placeholder_review,placeholder_review,placeholder_review,
 			placeholder_review]
 		positive_grain_array = []
 		critics_movies_hash = {}
@@ -103,7 +104,7 @@ class ApiController < ApplicationController
 			metascore 		= critics_movies_hash[movie_id][:metacritic_score]
 
 			# If the review is less than two years ago, it can be evaluated for our top 5 
-			if review.date >= 2.year.ago
+			if review.date >= 3.year.ago
 				# get the lowest value index and compare the review against that
 				top_5.sort_by! { |k| k[:score]}
 				if critic_score > top_5[0][:score]

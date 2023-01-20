@@ -3,7 +3,7 @@ class ApiController < ApplicationController
 	# the problem this is solving is there are a lot of freaking movies made and it's showing movies that I've never seen, which is why i thought about organizing
 	# by genre - since showing me horror and romantic movies
 	# CUTOFF is the minimum number of movie reviews for it to be considered
-	CUTOFF = 5
+	CUTOFF = 8
 
 	# To quickly load landing page, only grabs 1 movies, then ajax calls the rest in the background
 	def get_first_movies

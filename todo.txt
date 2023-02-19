@@ -2,6 +2,10 @@
 So now when i destroy all it also destroys the critic and creates a new critic i think 
 
 update scraper to add date
+fix the damn end of movies or see why it is repeating movies
+it's hard to believe i did 500 movies?
+center the css 
+if you click back and forth on critics and go back to the main page it does another pull? or does it?
 
 
 
